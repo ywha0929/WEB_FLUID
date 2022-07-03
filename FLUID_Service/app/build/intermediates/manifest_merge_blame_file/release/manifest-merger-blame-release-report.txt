@@ -1,0 +1,95 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.hmsl.fluidmanager"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="29"
+8-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="32" />
+9-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:5:5-66
+11-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:5:22-64
+12
+13    <application
+13-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:7:5-34:19
+14        android:allowBackup="true"
+14-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:8:9-35
+15        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+15-->[androidx.core:core:1.7.0] /home/ywha0929/.gradle/caches/transforms-3/9339927e08badd09bc5459e4ba900d5f/transformed/core-1.7.0/AndroidManifest.xml:24:18-86
+16        android:extractNativeLibs="false"
+17        android:icon="@mipmap/ic_launcher"
+17-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:9:9-43
+18        android:label="@string/app_name"
+18-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:10:9-41
+19        android:roundIcon="@mipmap/ic_launcher_round"
+19-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:11:9-54
+20        android:supportsRtl="true"
+20-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:12:9-35
+21        android:theme="@style/Theme.FLUIDManager" >
+21-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:13:9-50
+22        <activity
+22-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:14:9-22:20
+23            android:name="com.hmsl.fluidmanager.MainActivity"
+23-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:15:13-41
+24            android:exported="true" >
+24-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:16:13-36
+25            <intent-filter>
+25-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:17:13-21:29
+26                <action android:name="android.intent.action.MAIN" />
+26-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:18:17-69
+26-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:18:25-66
+27
+28                <category android:name="android.intent.category.LAUNCHER" />
+28-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:20:17-77
+28-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:20:27-74
+29            </intent-filter>
+30        </activity>
+31
+32        <service
+32-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:24:9-32:19
+33            android:name="com.hmsl.fluidmanager.FLUIDManagerService"
+33-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:25:13-48
+34            android:enabled="true"
+34-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:26:13-35
+35            android:exported="true" >
+35-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:27:13-36
+36            <intent-filter>
+36-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:28:13-31:29
+37                <action android:name="com.hmsl.fluidmanager.MY_Service" />
+37-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:29:17-75
+37-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:29:25-72
+38
+39                <category android:name="android.intent.category.DEFAULT" />
+39-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:30:17-76
+39-->/home/ywha0929/FLUID/FLUIDManager/app/src/main/AndroidManifest.xml:30:27-73
+40            </intent-filter>
+41        </service>
+42
+43        <provider
+43-->[androidx.emoji2:emoji2:1.0.0] /home/ywha0929/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:26:9-34:20
+44            android:name="androidx.startup.InitializationProvider"
+44-->[androidx.emoji2:emoji2:1.0.0] /home/ywha0929/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:27:13-67
+45            android:authorities="com.hmsl.fluidmanager.androidx-startup"
+45-->[androidx.emoji2:emoji2:1.0.0] /home/ywha0929/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:28:13-68
+46            android:exported="false" >
+46-->[androidx.emoji2:emoji2:1.0.0] /home/ywha0929/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:29:13-37
+47            <meta-data
+47-->[androidx.emoji2:emoji2:1.0.0] /home/ywha0929/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:31:13-33:52
+48                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+48-->[androidx.emoji2:emoji2:1.0.0] /home/ywha0929/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:32:17-75
+49                android:value="androidx.startup" />
+49-->[androidx.emoji2:emoji2:1.0.0] /home/ywha0929/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:33:17-49
+50            <meta-data
+50-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha0929/.gradle/caches/transforms-3/0e4a425e61d135d109d64d5f17d999df/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:31:13-33:52
+51                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+51-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha0929/.gradle/caches/transforms-3/0e4a425e61d135d109d64d5f17d999df/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:32:17-78
+52                android:value="androidx.startup" />
+52-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha0929/.gradle/caches/transforms-3/0e4a425e61d135d109d64d5f17d999df/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:33:17-49
+53        </provider>
+54    </application>
+55
+56</manifest>
