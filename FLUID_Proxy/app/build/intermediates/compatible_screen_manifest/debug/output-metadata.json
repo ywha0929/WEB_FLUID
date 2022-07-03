@@ -4,7 +4,7 @@
     "type": "COMPATIBLE_SCREEN_MANIFEST",
     "kind": "Directory"
   },
-  "applicationId": "com.hmsl.fluidlib",
+  "applicationId": "com.example.fluidguest",
   "variantName": "debug",
   "elements": []
 }

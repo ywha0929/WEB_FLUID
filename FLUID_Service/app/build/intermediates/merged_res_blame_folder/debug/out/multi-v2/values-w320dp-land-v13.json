@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/home/ywha0929/FLUID/FLUIDManager/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-w320dp-land-v13/values-w320dp-land-v13.xml",
+            "outputFile": "/home/ywha/WEB_FLUID/FLUID_Service/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-w320dp-land-v13/values-w320dp-land-v13.xml",
             "map": [
                 {
-                    "source": "/home/ywha0929/.gradle/caches/transforms-3/1508bc0f4d67cb1fb46dec23183d0585/transformed/material-1.4.0/res/values-w320dp-land-v13/values-w320dp-land-v13.xml",
+                    "source": "/home/ywha/.gradle/caches/transforms-3/1508bc0f4d67cb1fb46dec23183d0585/transformed/material-1.4.0/res/values-w320dp-land-v13/values-w320dp-land-v13.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
