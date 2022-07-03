@@ -167,7 +167,8 @@ public class RPCIntfInjector extends BodyTransformer{
 		
 		//get view
 		Object[] locals = body.getLocals().toArray();
-		generated.add(Jimple.v().newAssignStmt(viewVar, (Local)locals[5]));
+		//edit here
+		generated.add(Jimple.v().newAssignStmt(viewVar, (Local)locals[0]));
 		
 		//get ui_update method unit
 		Object[] unitArray = body.getUnits().toArray();

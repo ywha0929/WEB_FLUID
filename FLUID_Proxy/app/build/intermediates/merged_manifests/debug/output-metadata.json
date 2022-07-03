@@ -4,7 +4,7 @@
     "type": "MERGED_MANIFESTS",
     "kind": "Directory"
   },
-  "applicationId": "com.hmsl.fluidlib",
+  "applicationId": "com.example.fluidguest",
   "variantName": "debug",
   "elements": [
     {

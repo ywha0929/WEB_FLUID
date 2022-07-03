@@ -1,0 +1,777 @@
+> Task :compileJava UP-TO-DATE
+> Task :processResources NO-SOURCE
+> Task :classes UP-TO-DATE
+
+> Task :run
+==== before ====
+==== before ====
+==== before ====
+    public boolean onLongClick(android.view.View)
+    {
+        android.view.View $r0;
+        com.example.testapp.MainActivity$3 r1;
+
+        r1 := @this: com.example.testapp.MainActivity$3;
+
+        $r0 := @parameter0: android.view.View;
+
+        return 1;
+    }
+
+==== before ====
+==== before ====
+onLongClick : 
+==== before ====
+    public void onClick(android.view.View)
+    {
+        com.example.testapp.MainActivity r3;
+        com.example.testapp.MainActivity$6 r1;
+        android.view.View $r2;
+        android.widget.EditText $r0;
+
+        r1 := @this: com.example.testapp.MainActivity$6;
+
+        $r2 := @parameter0: android.view.View;
+
+        staticinvoke <android.util.Log: int d(java.lang.String,java.lang.String)>("TAG", "btn2 short invoked");
+
+        r3 = r1.<com.example.testapp.MainActivity$6: com.example.testapp.MainActivity this$0>;
+
+        $r0 = staticinvoke <com.example.testapp.MainActivity: android.widget.EditText access$100(com.example.testapp.MainActivity)>(r3);
+
+        virtualinvoke $r0.<android.widget.EditText: void setTextSize(float)>(90.0F);
+
+        return;
+    }
+
+onCLick
+onClick
+Local [0] : $r0
+Local [1] : r1
+Local [2] : $r2
+Local [3] : r3
+Local [4] : $r1
+Local [5] : $r3
+Local [6] : $r4
+Local [7] : $r5
+Local [8] : $r6
+Local [9] : $r7
+Local [10] : $r8
+Local [11] : $r9
+Local [12] : $r10
+Local [13] : $r11
+Local [14] : $r12
+Local [15] : $r13
+Local [16] : $r14
+Local [17] : $r15
+Local [18] : $i0
+Local [19] : $r16
+sig : virtualinvoke $r0.<android.widget.EditText: void setTextSize(float)>(90.0F)
+    public boolean onLongClick(android.view.View)
+    {
+        android.view.View $r0;
+        com.example.testapp.MainActivity$1 r1;
+
+        r1 := @this: com.example.testapp.MainActivity$1;
+
+        $r0 := @parameter0: android.view.View;
+
+        return 1;
+    }
+
+onLongClick : 
+==== after ====
+==== after ====
+    public void onClick(android.view.View)
+    {
+        com.example.testapp.MainActivity r3;
+        android.view.View $r2;
+        com.example.testapp.MainActivity$4 r1;
+        android.widget.EditText $r0;
+
+        r1 := @this: com.example.testapp.MainActivity$4;
+
+        $r2 := @parameter0: android.view.View;
+
+        staticinvoke <android.util.Log: int d(java.lang.String,java.lang.String)>("TAG", "btn1 short invoked");
+
+        r3 = r1.<com.example.testapp.MainActivity$4: com.example.testapp.MainActivity this$0>;
+
+        $r0 = staticinvoke <com.example.testapp.MainActivity: android.widget.EditText access$000(com.example.testapp.MainActivity)>(r3);
+
+        virtualinvoke $r0.<android.widget.EditText: void setTextColor(int)>(-16776961);
+
+        return;
+    }
+
+onCLick
+onClick
+Local [0] : $r0
+Local [1] : r1
+==== after ====
+    public boolean onLongClick(android.view.View)
+    {
+        java.lang.Object[] $r13;
+        java.lang.Class[] $r12;
+        java.lang.Exception $r1;
+        com.example.testapp.MainActivity$3 r1;
+        android.view.View $r0, $r2, $r11;
+        java.lang.Class $r4, $r6, $r8, $r9;
+        java.lang.ClassLoader $r7;
+        java.lang.String $r10;
+        java.lang.reflect.Method $r3;
+        dalvik.system.DexClassLoader $r5;
+
+        r1 := @this: com.example.testapp.MainActivity$3;
+
+        $r0 := @parameter0: android.view.View;
+
+        $r2 = $r0;
+
+        $r5 = <com.example.testapp.MainActivity: dalvik.system.DexClassLoader dex>;
+
+     label1:
+        $r6 = virtualinvoke $r5.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>("com.hmsl.fluidlib.FLUIDMain");
+
+        $r9 = virtualinvoke $r2.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r10 = virtualinvoke $r9.<java.lang.Object: java.lang.String toString()>();
+
+        $r12 = newarray (java.lang.Class)[2];
+
+        $r8 = virtualinvoke $r10.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r12[0] = $r8;
+
+        $r12[1] = class "Landroid/view/View;";
+
+        $r3 = virtualinvoke $r6.<java.lang.Class: java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])>("runtest", $r12);
+
+        $r13 = newarray (java.lang.Object)[2];
+
+        $r13[0] = $r10;
+
+        $r13[1] = $r2;
+
+        virtualinvoke $r3.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(null, $r13);
+
+     label2:
+        return 1;
+
+     label3:
+        $r1 := @caughtexception;
+
+        virtualinvoke $r1.<java.lang.Throwable: void printStackTrace()>();
+
+        return 1;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+    public boolean onLongClick(android.view.View)
+    {
+        android.view.View $r0;
+        com.example.testapp.MainActivity$2 r1;
+
+        r1 := @this: com.example.testapp.MainActivity$2;
+
+        $r0 := @parameter0: android.view.View;
+
+        return 1;
+    }
+
+    public boolean onLongClick(android.view.View)
+    {
+        android.view.View $r0;
+        com.example.testapp.MainActivity$5 r1;
+
+        r1 := @this: com.example.testapp.MainActivity$5;
+
+        $r0 := @parameter0: android.view.View;
+
+        return 1;
+    }
+
+onLongClick : 
+==== after ====
+    public boolean onLongClick(android.view.View)
+    {
+        java.lang.Object[] $r13;
+        java.lang.Class[] $r12;
+        java.lang.Exception $r1;
+        android.view.View $r0, $r2, $r11;
+        java.lang.Class $r4, $r6, $r8, $r9;
+        com.example.testapp.MainActivity$5 r1;
+        java.lang.ClassLoader $r7;
+        java.lang.String $r10;
+        java.lang.reflect.Method $r3;
+        dalvik.system.DexClassLoader $r5;
+
+        r1 := @this: com.example.testapp.MainActivity$5;
+
+        $r0 := @parameter0: android.view.View;
+
+        $r2 = $r0;
+
+        $r5 = <com.example.testapp.MainActivity: dalvik.system.DexClassLoader dex>;
+
+     label1:
+        $r6 = virtualinvoke $r5.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>("com.hmsl.fluidlib.FLUIDMain");
+
+        $r9 = virtualinvoke $r2.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r10 = virtualinvoke $r9.<java.lang.Object: java.lang.String toString()>();
+
+        $r12 = newarray (java.lang.Class)[2];
+
+        $r8 = virtualinvoke $r10.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r12[0] = $r8;
+
+        $r12[1] = class "Landroid/view/View;";
+
+        $r3 = virtualinvoke $r6.<java.lang.Class: java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])>("runtest", $r12);
+
+        $r13 = newarray (java.lang.Object)[2];
+
+        $r13[0] = $r10;
+
+        $r13[1] = $r2;
+
+        virtualinvoke $r3.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(null, $r13);
+
+     label2:
+        return 1;
+
+     label3:
+        $r1 := @caughtexception;
+
+        virtualinvoke $r1.<java.lang.Throwable: void printStackTrace()>();
+
+        return 1;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+Local [2] : $r2
+    public void onClick(android.view.View)
+    {
+        java.lang.Object[] $r15;
+        com.example.testapp.MainActivity r3;
+        java.lang.Integer $r16;
+        int $i0;
+        android.view.View $r2, $r3, $r12;
+        java.lang.String $r11, $r13;
+        java.lang.reflect.Method $r4;
+        dalvik.system.DexClassLoader $r6;
+        java.lang.Class[] $r14;
+        java.lang.Exception $r1;
+        com.example.testapp.MainActivity$6 r1;
+        java.lang.Class $r5, $r7, $r9, $r10;
+        java.lang.ClassLoader $r8;
+        android.widget.EditText $r0;
+
+        r1 := @this: com.example.testapp.MainActivity$6;
+
+        $r2 := @parameter0: android.view.View;
+
+        staticinvoke <android.util.Log: int d(java.lang.String,java.lang.String)>("TAG", "btn2 short invoked");
+
+        r3 = r1.<com.example.testapp.MainActivity$6: com.example.testapp.MainActivity this$0>;
+
+        $r0 = staticinvoke <com.example.testapp.MainActivity: android.widget.EditText access$100(com.example.testapp.MainActivity)>(r3);
+
+        virtualinvoke $r0.<android.widget.EditText: void setTextSize(float)>(90.0F);
+
+        $r3 = $r2;
+
+        $r6 = <com.example.testapp.MainActivity: dalvik.system.DexClassLoader dex>;
+
+     label1:
+        $r7 = virtualinvoke $r6.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>("com.hmsl.fluidlib.FLUIDMain");
+
+        $r14 = newarray (java.lang.Class)[2];
+
+        $r14[0] = class "Ljava/lang/String;";
+
+        $r14[1] = class "Landroid/view/View;";
+
+        $r4 = virtualinvoke $r7.<java.lang.Class: java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])>("runUpdate", $r14);
+
+        $r3 = $r3;
+
+        $r13 = "virtualinvoke $r0.<android.widget.EditText: void setTextSize(float)>(90.0F)";
+
+        $r15 = newarray (java.lang.Object)[2];
+
+        $r15[0] = $r13;
+
+        $r15[1] = $r3;
+
+        virtualinvoke $r4.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(null, $r15);
+
+     label2:
+        return;
+
+     label3:
+        $r1 := @caughtexception;
+
+        virtualinvoke $r1.<java.lang.Throwable: void printStackTrace()>();
+
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+    public boolean onLongClick(android.view.View)
+    {
+        java.lang.Object[] $r13;
+        java.lang.Class[] $r12;
+        java.lang.Exception $r1;
+        com.example.testapp.MainActivity$1 r1;
+        android.view.View $r0, $r2, $r11;
+        java.lang.Class $r4, $r6, $r8, $r9;
+        java.lang.ClassLoader $r7;
+        java.lang.String $r10;
+        java.lang.reflect.Method $r3;
+        dalvik.system.DexClassLoader $r5;
+
+        r1 := @this: com.example.testapp.MainActivity$1;
+
+        $r0 := @parameter0: android.view.View;
+
+        $r2 = $r0;
+
+        $r5 = <com.example.testapp.MainActivity: dalvik.system.DexClassLoader dex>;
+
+     label1:
+        $r6 = virtualinvoke $r5.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>("com.hmsl.fluidlib.FLUIDMain");
+
+        $r9 = virtualinvoke $r2.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r10 = virtualinvoke $r9.<java.lang.Object: java.lang.String toString()>();
+
+        $r12 = newarray (java.lang.Class)[2];
+
+        $r8 = virtualinvoke $r10.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r12[0] = $r8;
+
+        $r12[1] = class "Landroid/view/View;";
+
+        $r3 = virtualinvoke $r6.<java.lang.Class: java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])>("runtest", $r12);
+
+        $r13 = newarray (java.lang.Object)[2];
+
+        $r13[0] = $r10;
+
+        $r13[1] = $r2;
+
+        virtualinvoke $r3.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(null, $r13);
+
+     label2:
+        return 1;
+
+     label3:
+        $r1 := @caughtexception;
+
+        virtualinvoke $r1.<java.lang.Throwable: void printStackTrace()>();
+
+        return 1;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+Local [3] : r3
+Local [4] : $r1
+onLongClick : 
+Local [5] : $r3
+Local [6] : $r4
+Local [7] : $r5
+Local [8] : $r6
+Local [9] : $r7
+Local [10] : $r8
+Local [11] : $r9
+Local [12] : $r10
+Local [13] : $r11
+Local [14] : $r12
+Local [15] : $r13
+Local [16] : $r14
+Local [17] : $r15
+Local [18] : $i0
+Local [19] : $r16
+sig : virtualinvoke $r0.<android.widget.EditText: void setTextColor(int)>(-16776961)
+==== after ====
+    public boolean onLongClick(android.view.View)
+    {
+        java.lang.Object[] $r13;
+        java.lang.Class[] $r12;
+        java.lang.Exception $r1;
+        com.example.testapp.MainActivity$2 r1;
+        android.view.View $r0, $r2, $r11;
+        java.lang.Class $r4, $r6, $r8, $r9;
+        java.lang.ClassLoader $r7;
+        java.lang.String $r10;
+        java.lang.reflect.Method $r3;
+        dalvik.system.DexClassLoader $r5;
+
+        r1 := @this: com.example.testapp.MainActivity$2;
+
+        $r0 := @parameter0: android.view.View;
+
+        $r2 = $r0;
+
+        $r5 = <com.example.testapp.MainActivity: dalvik.system.DexClassLoader dex>;
+
+     label1:
+        $r6 = virtualinvoke $r5.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>("com.hmsl.fluidlib.FLUIDMain");
+
+        $r9 = virtualinvoke $r2.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r10 = virtualinvoke $r9.<java.lang.Object: java.lang.String toString()>();
+
+        $r12 = newarray (java.lang.Class)[2];
+
+        $r8 = virtualinvoke $r10.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r12[0] = $r8;
+
+        $r12[1] = class "Landroid/view/View;";
+
+        $r3 = virtualinvoke $r6.<java.lang.Class: java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])>("runtest", $r12);
+
+        $r13 = newarray (java.lang.Object)[2];
+
+        $r13[0] = $r10;
+
+        $r13[1] = $r2;
+
+        virtualinvoke $r3.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(null, $r13);
+
+     label2:
+        return 1;
+
+     label3:
+        $r1 := @caughtexception;
+
+        virtualinvoke $r1.<java.lang.Throwable: void printStackTrace()>();
+
+        return 1;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+==== after ====
+    public void onClick(android.view.View)
+    {
+        java.lang.Object[] $r15;
+        com.example.testapp.MainActivity r3;
+        java.lang.Integer $r16;
+        int $i0;
+        android.view.View $r2, $r3, $r12;
+        java.lang.String $r11, $r13;
+        java.lang.reflect.Method $r4;
+        dalvik.system.DexClassLoader $r6;
+        java.lang.Class[] $r14;
+        java.lang.Exception $r1;
+        com.example.testapp.MainActivity$4 r1;
+        java.lang.Class $r5, $r7, $r9, $r10;
+        java.lang.ClassLoader $r8;
+        android.widget.EditText $r0;
+
+        r1 := @this: com.example.testapp.MainActivity$4;
+
+        $r2 := @parameter0: android.view.View;
+
+        staticinvoke <android.util.Log: int d(java.lang.String,java.lang.String)>("TAG", "btn1 short invoked");
+
+        r3 = r1.<com.example.testapp.MainActivity$4: com.example.testapp.MainActivity this$0>;
+
+        $r0 = staticinvoke <com.example.testapp.MainActivity: android.widget.EditText access$000(com.example.testapp.MainActivity)>(r3);
+
+        virtualinvoke $r0.<android.widget.EditText: void setTextColor(int)>(-16776961);
+
+        $r3 = $r2;
+
+        $r6 = <com.example.testapp.MainActivity: dalvik.system.DexClassLoader dex>;
+
+     label1:
+        $r7 = virtualinvoke $r6.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>("com.hmsl.fluidlib.FLUIDMain");
+
+        $r14 = newarray (java.lang.Class)[2];
+
+        $r14[0] = class "Ljava/lang/String;";
+
+        $r14[1] = class "Landroid/view/View;";
+
+        $r4 = virtualinvoke $r7.<java.lang.Class: java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])>("runUpdate", $r14);
+
+        $r3 = $r3;
+
+        $r13 = "virtualinvoke $r0.<android.widget.EditText: void setTextColor(int)>(-16776961)";
+
+        $r15 = newarray (java.lang.Object)[2];
+
+        $r15[0] = $r13;
+
+        $r15[1] = $r3;
+
+        virtualinvoke $r4.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(null, $r15);
+
+     label2:
+        return;
+
+     label3:
+        $r1 := @caughtexception;
+
+        virtualinvoke $r1.<java.lang.Throwable: void printStackTrace()>();
+
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+==== before ====
+    protected void onCreate(android.os.Bundle)
+    {
+        android.os.Bundle $r1;
+        com.example.testapp.MainActivity r0;
+        com.example.testapp.MainActivity$2 $r6;
+        com.example.testapp.MainActivity$3 $r7;
+        com.example.testapp.MainActivity$1 $r5;
+        com.example.testapp.MainActivity$6 $r10;
+        android.view.View $r2;
+        android.widget.Button $r4;
+        com.example.testapp.MainActivity$4 $r8;
+        com.example.testapp.MainActivity$5 $r9;
+        android.widget.EditText $r3;
+
+        r0 := @this: com.example.testapp.MainActivity;
+
+        $r1 := @parameter0: android.os.Bundle;
+
+        specialinvoke r0.<androidx.appcompat.app.AppCompatActivity: void onCreate(android.os.Bundle)>($r1);
+
+        virtualinvoke r0.<com.example.testapp.MainActivity: void setContentView(int)>(2131427356);
+
+        $r2 = virtualinvoke r0.<com.example.testapp.MainActivity: android.view.View findViewById(int)>(2131230894);
+
+        $r3 = (android.widget.EditText) $r2;
+
+        r0.<com.example.testapp.MainActivity: android.widget.EditText edit1> = $r3;
+
+        $r2 = virtualinvoke r0.<com.example.testapp.MainActivity: android.view.View findViewById(int)>(2131230895);
+
+        $r3 = (android.widget.EditText) $r2;
+
+        r0.<com.example.testapp.MainActivity: android.widget.EditText edit2> = $r3;
+
+        $r2 = virtualinvoke r0.<com.example.testapp.MainActivity: android.view.View findViewById(int)>(2131230818);
+
+        $r4 = (android.widget.Button) $r2;
+
+        r0.<com.example.testapp.MainActivity: android.widget.Button btn1> = $r4;
+
+        $r2 = virtualinvoke r0.<com.example.testapp.MainActivity: android.view.View findViewById(int)>(2131230819);
+
+        $r4 = (android.widget.Button) $r2;
+
+        r0.<com.example.testapp.MainActivity: android.widget.Button btn2> = $r4;
+
+        $r3 = r0.<com.example.testapp.MainActivity: android.widget.EditText edit1>;
+
+        $r5 = new com.example.testapp.MainActivity$1;
+
+        specialinvoke $r5.<com.example.testapp.MainActivity$1: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r3.<android.widget.EditText: void setOnLongClickListener(android.view.View$OnLongClickListener)>($r5);
+
+        $r3 = r0.<com.example.testapp.MainActivity: android.widget.EditText edit2>;
+
+        $r6 = new com.example.testapp.MainActivity$2;
+
+        specialinvoke $r6.<com.example.testapp.MainActivity$2: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r3.<android.widget.EditText: void setOnLongClickListener(android.view.View$OnLongClickListener)>($r6);
+
+        $r4 = r0.<com.example.testapp.MainActivity: android.widget.Button btn1>;
+
+        $r7 = new com.example.testapp.MainActivity$3;
+
+        specialinvoke $r7.<com.example.testapp.MainActivity$3: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r4.<android.widget.Button: void setOnLongClickListener(android.view.View$OnLongClickListener)>($r7);
+
+        $r4 = r0.<com.example.testapp.MainActivity: android.widget.Button btn1>;
+
+        $r8 = new com.example.testapp.MainActivity$4;
+
+        specialinvoke $r8.<com.example.testapp.MainActivity$4: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r4.<android.widget.Button: void setOnClickListener(android.view.View$OnClickListener)>($r8);
+
+        $r4 = r0.<com.example.testapp.MainActivity: android.widget.Button btn2>;
+
+        $r9 = new com.example.testapp.MainActivity$5;
+
+        specialinvoke $r9.<com.example.testapp.MainActivity$5: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r4.<android.widget.Button: void setOnLongClickListener(android.view.View$OnLongClickListener)>($r9);
+
+        $r4 = r0.<com.example.testapp.MainActivity: android.widget.Button btn2>;
+
+        $r10 = new com.example.testapp.MainActivity$6;
+
+        specialinvoke $r10.<com.example.testapp.MainActivity$6: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r4.<android.widget.Button: void setOnClickListener(android.view.View$OnClickListener)>($r10);
+
+        return;
+    }
+
+==== after ====
+    protected void onCreate(android.os.Bundle)
+    {
+        android.os.Bundle $r1;
+        com.example.testapp.MainActivity r0;
+        android.content.Intent $r16;
+        android.view.View $r2;
+        android.widget.Button $r4;
+        android.content.ServiceConnection $r15;
+        dalvik.system.DexClassLoader $r0;
+        java.lang.reflect.Field $r14;
+        java.lang.Exception $r17;
+        com.example.testapp.MainActivity$2 $r6;
+        com.example.testapp.MainActivity$3 $r7;
+        com.example.testapp.MainActivity$1 $r5;
+        com.example.testapp.MainActivity$6 $r10;
+        com.example.testapp.MainActivity$4 $r8;
+        java.lang.Class $r11;
+        java.lang.Object $r13;
+        com.example.testapp.MainActivity$5 $r9;
+        java.lang.ClassLoader $r12;
+        android.widget.EditText $r3;
+
+        r0 := @this: com.example.testapp.MainActivity;
+
+        $r1 := @parameter0: android.os.Bundle;
+
+        specialinvoke r0.<androidx.appcompat.app.AppCompatActivity: void onCreate(android.os.Bundle)>($r1);
+
+        virtualinvoke r0.<com.example.testapp.MainActivity: void setContentView(int)>(2131427356);
+
+        $r2 = virtualinvoke r0.<com.example.testapp.MainActivity: android.view.View findViewById(int)>(2131230894);
+
+        $r3 = (android.widget.EditText) $r2;
+
+        r0.<com.example.testapp.MainActivity: android.widget.EditText edit1> = $r3;
+
+        $r2 = virtualinvoke r0.<com.example.testapp.MainActivity: android.view.View findViewById(int)>(2131230895);
+
+        $r3 = (android.widget.EditText) $r2;
+
+        r0.<com.example.testapp.MainActivity: android.widget.EditText edit2> = $r3;
+
+        $r2 = virtualinvoke r0.<com.example.testapp.MainActivity: android.view.View findViewById(int)>(2131230818);
+
+        $r4 = (android.widget.Button) $r2;
+
+        r0.<com.example.testapp.MainActivity: android.widget.Button btn1> = $r4;
+
+        $r2 = virtualinvoke r0.<com.example.testapp.MainActivity: android.view.View findViewById(int)>(2131230819);
+
+        $r4 = (android.widget.Button) $r2;
+
+        r0.<com.example.testapp.MainActivity: android.widget.Button btn2> = $r4;
+
+        $r3 = r0.<com.example.testapp.MainActivity: android.widget.EditText edit1>;
+
+        $r5 = new com.example.testapp.MainActivity$1;
+
+        specialinvoke $r5.<com.example.testapp.MainActivity$1: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r3.<android.widget.EditText: void setOnLongClickListener(android.view.View$OnLongClickListener)>($r5);
+
+        $r3 = r0.<com.example.testapp.MainActivity: android.widget.EditText edit2>;
+
+        $r6 = new com.example.testapp.MainActivity$2;
+
+        specialinvoke $r6.<com.example.testapp.MainActivity$2: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r3.<android.widget.EditText: void setOnLongClickListener(android.view.View$OnLongClickListener)>($r6);
+
+        $r4 = r0.<com.example.testapp.MainActivity: android.widget.Button btn1>;
+
+        $r7 = new com.example.testapp.MainActivity$3;
+
+        specialinvoke $r7.<com.example.testapp.MainActivity$3: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r4.<android.widget.Button: void setOnLongClickListener(android.view.View$OnLongClickListener)>($r7);
+
+        $r4 = r0.<com.example.testapp.MainActivity: android.widget.Button btn1>;
+
+        $r8 = new com.example.testapp.MainActivity$4;
+
+        specialinvoke $r8.<com.example.testapp.MainActivity$4: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r4.<android.widget.Button: void setOnClickListener(android.view.View$OnClickListener)>($r8);
+
+        $r4 = r0.<com.example.testapp.MainActivity: android.widget.Button btn2>;
+
+        $r9 = new com.example.testapp.MainActivity$5;
+
+        specialinvoke $r9.<com.example.testapp.MainActivity$5: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r4.<android.widget.Button: void setOnLongClickListener(android.view.View$OnLongClickListener)>($r9);
+
+        $r4 = r0.<com.example.testapp.MainActivity: android.widget.Button btn2>;
+
+        $r10 = new com.example.testapp.MainActivity$6;
+
+        specialinvoke $r10.<com.example.testapp.MainActivity$6: void <init>(com.example.testapp.MainActivity)>(r0);
+
+        virtualinvoke $r4.<android.widget.Button: void setOnClickListener(android.view.View$OnClickListener)>($r10);
+
+        $r11 = virtualinvoke r0.<java.lang.Object: java.lang.Class getClass()>();
+
+        $r12 = virtualinvoke $r11.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+
+        $r0 = new dalvik.system.DexClassLoader;
+
+        specialinvoke $r0.<dalvik.system.DexClassLoader: void <init>(java.lang.String,java.lang.String,java.lang.String,java.lang.ClassLoader)>("/data/local/tmp/fluidlib.apk", "/data/local/tmp/", null, $r12);
+
+        <com.example.testapp.MainActivity: dalvik.system.DexClassLoader dex> = $r0;
+
+     label1:
+        $r11 = virtualinvoke $r0.<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>("com.hmsl.fluidlib.FLUIDMain");
+
+        $r13 = virtualinvoke $r11.<java.lang.Class: java.lang.Object newInstance()>();
+
+        $r14 = virtualinvoke $r11.<java.lang.Class: java.lang.reflect.Field getDeclaredField(java.lang.String)>("mServiceConnection");
+
+        $r15 = virtualinvoke $r14.<java.lang.reflect.Field: java.lang.Object get(java.lang.Object)>($r13);
+
+        $r16 = new android.content.Intent;
+
+        specialinvoke $r16.<android.content.Intent: void <init>()>();
+
+        virtualinvoke $r16.<android.content.Intent: android.content.Intent setClassName(java.lang.String,java.lang.String)>("com.hmsl.fluidmanager", "com.hmsl.fluidmanager.FLUIDManagerService");
+
+        virtualinvoke r0.<android.content.Context: boolean bindService(android.content.Intent,android.content.ServiceConnection,int)>($r16, $r15, 1);
+
+     label2:
+        return;
+
+     label3:
+        $r17 := @caughtexception;
+
+        virtualinvoke $r17.<java.lang.Throwable: void printStackTrace()>();
+
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+
+BUILD SUCCESSFUL in 11s
+2 actionable tasks: 1 executed, 1 up-to-date

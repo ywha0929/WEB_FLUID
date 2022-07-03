@@ -4,7 +4,7 @@
     "type": "PROCESSED_RES",
     "kind": "Directory"
   },
-  "applicationId": "com.hmsl.fluidlib",
+  "applicationId": "com.example.fluidguest",
   "variantName": "debug",
   "elements": [
     {

@@ -1,5 +1,5 @@
 #!/bin/bash
-BUILDTOOLS=/home/ywha0929/Android/Sdk/build-tools/30.0.3
+BUILDTOOLS=/home/ywha/Android/Sdk/build-tools/30.0.2
 zipalign=$BUILDTOOLS/zipalign
 apksigner=$BUILDTOOLS/apksigner
 INSTRUMENTED_APP=$1

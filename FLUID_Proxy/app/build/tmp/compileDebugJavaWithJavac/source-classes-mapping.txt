@@ -1,13 +1,14 @@
-com/hmsl/fluidlib/BuildConfig.java
- com.hmsl.fluidlib.BuildConfig
-com/hmsl/fluidmanager/IFLUIDService.java
- com.hmsl.fluidmanager.IFLUIDService
- com.hmsl.fluidmanager.IFLUIDService$Default
- com.hmsl.fluidmanager.IFLUIDService$Stub
- com.hmsl.fluidmanager.IFLUIDService$Stub$Proxy
-com/hmsl/fluidmanager/PJson.java
- com.hmsl.fluidmanager.PJson
- com.hmsl.fluidmanager.PJson$1
-com/hmsl/fluidlib/FLUIDMain.java
- com.hmsl.fluidlib.FLUIDMain
- com.hmsl.fluidlib.FLUIDMain$1
+com/example/fluidguest/BuildConfig.java
+ com.example.fluidguest.BuildConfig
+com/example/fluidguest/PJson.java
+ com.example.fluidguest.PJson
+ com.example.fluidguest.PJson$1
+com/example/fluidguest/MainActivity.java
+ com.example.fluidguest.MainActivity
+ com.example.fluidguest.MainActivity$ClientThread
+ com.example.fluidguest.MainActivity$WorkerThread
+ com.example.fluidguest.MainActivity$WorkerThread$1
+ com.example.fluidguest.MainActivity$WorkerThread$1$1
+ com.example.fluidguest.MainActivity$WorkerThread$1$2
+ com.example.fluidguest.MainActivity$WorkerThread$1$3
+ com.example.fluidguest.MainActivity$WorkerThread$1$4
