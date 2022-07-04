@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public Socket socket;
     private LinearLayout container;
     private ArrayList<TextView> UI_List = new ArrayList<TextView>();
-
+//hi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
