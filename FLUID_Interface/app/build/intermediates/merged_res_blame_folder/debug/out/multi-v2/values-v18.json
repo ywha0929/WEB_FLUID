@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/home/ywha0929/FLUID/FLUIDLib/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v18/values-v18.xml",
+            "outputFile": "C:\\Users\\ywha\\Desktop\\WEB_FLUID\\FLUID_Interface\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v18\\values-v18.xml",
             "map": [
                 {
-                    "source": "/home/ywha0929/.gradle/caches/transforms-3/46d15f5c58a469270eeba15db4463d05/transformed/appcompat-1.4.0/res/values-v18/values-v18.xml",
+                    "source": "C:\\Users\\ywha\\.gradle\\caches\\transforms-3\\46d15f5c58a469270eeba15db4463d05\\transformed\\appcompat-1.4.0\\res\\values-v18\\values-v18.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
