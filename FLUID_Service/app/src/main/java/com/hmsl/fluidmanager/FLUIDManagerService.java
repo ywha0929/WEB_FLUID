@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.RemoteCallbackList;
+import android.os.RemoteException;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -24,6 +26,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import com.hmsl.fluidmanager.IRemoteServiceCallback;
 
 public class FLUIDManagerService extends Service {
     private static final String TAG = "FLUID(FLUIDManagerService)";
@@ -35,9 +38,33 @@ public class FLUIDManagerService extends Service {
     Socket socket;
 
     private ArrayList<Integer> id_list = new ArrayList<>();
+    public RemoteCallbackList callbacks = new RemoteCallbackList();
 
-    private final IBinder mBinder = new IFLUIDService.Stub() {
+    private final IFLUIDService.Stub mBinder = new IFLUIDService.Stub() {
         // distribute
+        @Override
+        public boolean unregisterCallback(IRemoteServiceCallback callback)
+                throws RemoteException {
+            boolean flag = false;
+
+            if(callback != null){
+                flag = callbacks.register(callback);
+            }
+
+            return flag;
+        }
+
+        @Override
+        public boolean registerCallback(IRemoteServiceCallback callback)
+                throws RemoteException {
+            boolean flag = false;
+
+            if(callback != null){
+                flag = unregisterCallback(callback);
+            }
+
+            return flag;
+        }
         public void test(Bundle bundle) {
             Log.d(TAG,"test received : "+ getTS());
             bundle.setClassLoader(getClass().getClassLoader());
@@ -51,6 +78,7 @@ public class FLUIDManagerService extends Service {
             Message msg = Message.obtain();
             msg.obj = recvBuffer;
             distributeHandler.sendMessage(msg);
+
             //Log.e(TAG, "Message 전송");
         }
 
@@ -103,6 +131,29 @@ public class FLUIDManagerService extends Service {
     public void onDestroy() {
         super.onDestroy();
     }
+
+
+    private Handler callbackHandler = new Handler(new Handler.Callback()
+    {
+
+        @Override
+        public boolean handleMessage(@NonNull Message message) {
+            int N = callbacks.beginBroadcast();
+
+            for(int i = 0; i < N; i++){
+                try {
+                    IRemoteServiceCallback callback = (IRemoteServiceCallback) callbacks.getBroadcastItem(i);
+                    callback.Docheck(109);
+                } catch (RemoteException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            callbacks.finishBroadcast();
+            return false;
+        }
+    });
+
 
     // ServerThread : ServerSocket 열기
     class ServerThread extends Thread {

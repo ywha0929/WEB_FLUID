@@ -5,9 +5,15 @@ com/hmsl/fluidmanager/IFLUIDService.java
  com.hmsl.fluidmanager.IFLUIDService$Default
  com.hmsl.fluidmanager.IFLUIDService$Stub
  com.hmsl.fluidmanager.IFLUIDService$Stub$Proxy
+com/hmsl/fluidmanager/IRemoteServiceCallback.java
+ com.hmsl.fluidmanager.IRemoteServiceCallback
+ com.hmsl.fluidmanager.IRemoteServiceCallback$Default
+ com.hmsl.fluidmanager.IRemoteServiceCallback$Stub
+ com.hmsl.fluidmanager.IRemoteServiceCallback$Stub$Proxy
 com/hmsl/fluidmanager/PJson.java
  com.hmsl.fluidmanager.PJson
  com.hmsl.fluidmanager.PJson$1
 com/hmsl/fluidlib/FLUIDMain.java
  com.hmsl.fluidlib.FLUIDMain
  com.hmsl.fluidlib.FLUIDMain$1
+ com.hmsl.fluidlib.FLUIDMain$2

@@ -1,16 +1,21 @@
 package com.hmsl.fluidlib;
 
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcel;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+import com.hmsl.fluidmanager.IRemoteServiceCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -21,20 +26,44 @@ public class FLUIDMain {
     private static final String TAG = "FLUID(FLUIDLib)";
     public static com.hmsl.fluidmanager.IFLUIDService mRemoteService = null;
     private static final int MAX_BUFFER = 1024;
-
+    public IRemoteServiceCallback mCallback = new IRemoteServiceCallback.Stub()
+    {
+        @Override
+        public void check(int value) throws RemoteException
+        {
+            Log.i(TAG,"call back value : " + value);
+        }
+    };
     public ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mRemoteService = com.hmsl.fluidmanager.IFLUIDService.Stub.asInterface(service);
             Log.d(TAG, "FLUIDManagerService connected = " + mRemoteService);
-
+            try {
+                mRemoteService.registerCallback(mCallback);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.d(TAG, "FLUIDManagerService disconnected = " + mRemoteService);
             mRemoteService = null;
+            try {
+                mRemoteService.unregisterCallback(mCallback);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     };
+    public static void runBind(Context context)
+    {
+        Intent intent = new Intent("com.hmsl.fluidmanager.MY_Service");
+        intent.setPackage("com.hmsl.fluidmanager");
+        Boolean isConnected = context.bindService(intent, (ServiceConnection) mRemoteService,Context.BIND_AUTO_CREATE);
+        Log.d("TAG", "is bind : " + isConnected);
+
+    }
     public static void runtest(String widgetType,  View view)
     {
         Bundle bundle = new Bundle();
