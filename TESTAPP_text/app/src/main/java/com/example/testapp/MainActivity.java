@@ -45,18 +45,21 @@ public class MainActivity extends AppCompatActivity {
         Activity a = this;
         DexClassLoader dex = new DexClassLoader("/data/local/tmp/fluidlib.apk", "/data/local/tmp/", null, getClass().getClassLoader());
         try {
-            Log.d("TAG", "TRY started");
-            clazz = dex.loadClass("com.hmsl.fluidlib.FLUIDMain");
-            Log.d("TAG", "clazz : " + clazz.getClass().toString());
-            Object obj = clazz.newInstance();
-            Log.d("TAG", "obj = " + obj.getClass().toString());
-            obj = clazz.getDeclaredField("mServiceConnection").get(obj);
-            Intent intent = new Intent("com.hmsl.fluidmanager.MY_Service");
-            intent.setPackage("com.hmsl.fluidmanager");
-            //this();
-            intent.setClassName("com.hmsl.fluidmanager", "com.hmsl.fluidmanager.FLUIDManagerService");
-            Boolean bool = bindService(intent, (ServiceConnection) obj, Context.BIND_AUTO_CREATE);
-            Log.d("TAG", "is bind : " + bool);
+            mtd = clazz.getDeclaredMethod("runBind", Context.class);
+            mtd.invoke(null, this.getApplicationContext());
+
+//            Log.d("TAG", "TRY started");
+//            clazz = dex.loadClass("com.hmsl.fluidlib.FLUIDMain");
+//            Log.d("TAG", "clazz : " + clazz.getClass().toString());
+//            Object obj = clazz.newInstance();
+//            Log.d("TAG", "obj = " + obj.getClass().toString());
+//            obj = clazz.getDeclaredField("mServiceConnection").get(obj);
+//            Intent intent = new Intent("com.hmsl.fluidmanager.MY_Service");
+//            intent.setPackage("com.hmsl.fluidmanager");
+//            //this();
+//            intent.setClassName("com.hmsl.fluidmanager", "com.hmsl.fluidmanager.FLUIDManagerService");
+//            Boolean bool = bindService(intent, (ServiceConnection) obj, Context.BIND_AUTO_CREATE);
+//            Log.d("TAG", "is bind : " + bool);
         } catch (Exception e) {
             e.printStackTrace();
             return;

@@ -1,4 +1,0 @@
-#Wed Mar 02 18:31:21 KST 2022
-base.0=/home/ywha0929/FLUID/FLUIDManager/app/build/intermediates/dex/release/mergeDexRelease/classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
