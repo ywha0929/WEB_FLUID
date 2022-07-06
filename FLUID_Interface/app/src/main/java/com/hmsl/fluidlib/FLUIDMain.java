@@ -61,13 +61,6 @@ public class FLUIDMain {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mRemoteService = com.hmsl.fluidmanager.IFLUIDService.Stub.asInterface(service);
                 Log.d(TAG, "FLUIDManagerService connected = " + mRemoteService);
-                Bundle bundle = new Bundle();
-                bundle.putBinder("Binder", mBinder);
-                try {
-                    mRemoteService.reverseConnect(bundle);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
 
             }
 
@@ -103,11 +96,11 @@ public class FLUIDMain {
             Log.d(TAG, "mRemoteService : " + mRemoteService);
 
             while (mRemoteService == null) {
-                //Log.d(TAG, "waiting...");
+                Log.d(TAG, "waiting1...");
             }
             mRemoteService.reverseConnect(bundle);
             while (mRemoteService == null) {
-                //Log.d(TAG, "waiting...");
+                Log.d(TAG, "waiting2...");
             }
         } catch (RemoteException e) {
             e.printStackTrace();
