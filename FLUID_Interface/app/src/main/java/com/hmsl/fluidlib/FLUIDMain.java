@@ -93,11 +93,12 @@ public class FLUIDMain {
         Log.d("TAG", "mContext info : " + mContext);
 
         try {
-            Log.d(TAG, "mRemoteService : " + mRemoteService);
+
 
             while (mRemoteService == null) {
                 Log.d(TAG, "waiting1...");
             }
+            Log.d(TAG, "mRemoteService : " + mRemoteService);
             mRemoteService.reverseConnect(bundle);
             while (mRemoteService == null) {
                 Log.d(TAG, "waiting2...");
