@@ -1,7 +1,10 @@
 package com.hmsl.fluidmanager;
 
 import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -14,9 +17,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
+//import com.hmsl.fluidlib.IFLUIDService;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -26,11 +28,12 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import com.hmsl.fluidmanager.IRemoteServiceCallback;
+import com.hmsl.fluidlib.IReverseConnection;
 
 public class FLUIDManagerService extends Service {
     private static final String TAG = "FLUID(FLUIDManagerService)";
-
+    public static com.hmsl.fluidlib.IReverseConnection mRemoteService = null;
+    public ServiceConnection mServiceConnection;
     private final int port = 5673;
     private Handler distributeHandler;
     private Handler updateHandler;
@@ -38,33 +41,10 @@ public class FLUIDManagerService extends Service {
     Socket socket;
 
     private ArrayList<Integer> id_list = new ArrayList<>();
-    public RemoteCallbackList callbacks = new RemoteCallbackList();
 
-    private final IFLUIDService.Stub mBinder = new IFLUIDService.Stub() {
+    private final IBinder mBinder = new IFLUIDService.Stub() {
         // distribute
-        @Override
-        public boolean unregisterCallback(IRemoteServiceCallback callback)
-                throws RemoteException {
-            boolean flag = false;
 
-            if(callback != null){
-                flag = callbacks.register(callback);
-            }
-
-            return flag;
-        }
-
-        @Override
-        public boolean registerCallback(IRemoteServiceCallback callback)
-                throws RemoteException {
-            boolean flag = false;
-
-            if(callback != null){
-                flag = unregisterCallback(callback);
-            }
-
-            return flag;
-        }
         public void test(Bundle bundle) {
             Log.d(TAG,"test received : "+ getTS());
             bundle.setClassLoader(getClass().getClassLoader());
@@ -99,6 +79,33 @@ public class FLUIDManagerService extends Service {
             //Log.e(TAG, "Message 전송");
         }
 
+
+        public void reverseConnect(Bundle bundle){
+            Log.d(TAG,"this is reverseConnect");
+//            mServiceConnection = new ServiceConnection() {
+//                @Override
+//                public void onServiceConnected(ComponentName name, IBinder service) {
+//                    mRemoteService = com.hmsl.fluidlib.IReverseConnection.Stub.asInterface(service);
+//                    Log.d(TAG, "reverse connection connected = " + mRemoteService);
+//
+//                }
+//                @Override
+//                public void onServiceDisconnected(ComponentName name) {
+//                    Log.d(TAG, "reverse connection disconnected = " + mRemoteService);
+//                    mRemoteService = null;
+//
+//                }
+//            };
+//            IReverseConnection temp = (IReverseConnection) bundle.getBinder("Binder");
+//            mRemoteService = temp;
+//            try {
+//                mRemoteService.doCheck(30);
+//            } catch(Exception e)
+//            {
+//                e.printStackTrace();
+//            }
+        }
+
     };
 
     public FLUIDManagerService() {
@@ -108,6 +115,9 @@ public class FLUIDManagerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind()");
+
+
+
         return mBinder;
     }
 
@@ -131,28 +141,6 @@ public class FLUIDManagerService extends Service {
     public void onDestroy() {
         super.onDestroy();
     }
-
-
-    private Handler callbackHandler = new Handler(new Handler.Callback()
-    {
-
-        @Override
-        public boolean handleMessage(@NonNull Message message) {
-            int N = callbacks.beginBroadcast();
-
-            for(int i = 0; i < N; i++){
-                try {
-                    IRemoteServiceCallback callback = (IRemoteServiceCallback) callbacks.getBroadcastItem(i);
-                    callback.Docheck(109);
-                } catch (RemoteException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-            callbacks.finishBroadcast();
-            return false;
-        }
-    });
 
 
     // ServerThread : ServerSocket 열기

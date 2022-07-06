@@ -1,12 +1,12 @@
-// IRemoteServiceCallback.aidl
-package com.hmsl.fluidmanager;
+// IReverseConnection.aidl
+package com.hmsl.fluidlib;
 
 // Declare any non-default types here with import statements
 
-oneway interface IRemoteServiceCallback {
+interface IReverseConnection {
     /**
      * Demonstrates some basic types that you can use as parameters
      * and return values in AIDL.
      */
-    void Docheck(int value);
+    void doCheck(int a);
 }

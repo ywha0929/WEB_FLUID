@@ -1,11 +1,14 @@
 package com.hmsl.fluidlib;
 
+import static android.os.SystemClock.sleep;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
@@ -13,9 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
-import com.hmsl.fluidmanager.IRemoteServiceCallback;
+import com.hmsl.fluidmanager.IFLUIDService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -24,64 +28,109 @@ import java.util.StringTokenizer;
 
 public class FLUIDMain {
     private static final String TAG = "FLUID(FLUIDLib)";
-    public static com.hmsl.fluidmanager.IFLUIDService mRemoteService = null;
+    static public com.hmsl.fluidmanager.IFLUIDService mRemoteService = null;
+    public ServiceConnection mServiceConnection;
     private static final int MAX_BUFFER = 1024;
-    public IRemoteServiceCallback mCallback = new IRemoteServiceCallback.Stub()
-    {
+    public Context mContext = null;
+    static FLUIDMain instance;
+    private final IBinder mBinder = new IReverseConnection.Stub() {
         @Override
-        public void check(int value) throws RemoteException
-        {
-            Log.i(TAG,"call back value : " + value);
+        public void doCheck(int a) throws RemoteException {
+            Log.d(TAG, "this is doCheck");
+            Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service" + a, Toast.LENGTH_LONG);
+            toast.show();
         }
+        // distribute
+
+
     };
-    public ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mRemoteService = com.hmsl.fluidmanager.IFLUIDService.Stub.asInterface(service);
-            Log.d(TAG, "FLUIDManagerService connected = " + mRemoteService);
-            try {
-                mRemoteService.registerCallback(mCallback);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+
+
+    public static FLUIDMain getInstance(Context context) {
+        if (instance == null) {
+            instance = new FLUIDMain(context);
         }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Log.d(TAG, "FLUIDManagerService disconnected = " + mRemoteService);
-            mRemoteService = null;
-            try {
-                mRemoteService.unregisterCallback(mCallback);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        return instance;
+    }
+
+    public FLUIDMain(Context context) {
+        Log.d(TAG, "FluidMain");
+        mContext = context;
+        mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mRemoteService = com.hmsl.fluidmanager.IFLUIDService.Stub.asInterface(service);
+                Log.d(TAG, "FLUIDManagerService connected = " + mRemoteService);
+                Bundle bundle = new Bundle();
+                bundle.putBinder("Binder", mBinder);
+                try {
+                    mRemoteService.reverseConnect(bundle);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
             }
-        }
-    };
-    public static void runBind(Context context)
-    {
-        Intent intent = new Intent("com.hmsl.fluidmanager.MY_Service");
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                Log.d(TAG, "FLUIDManagerService disconnected = " + mRemoteService);
+                mRemoteService = null;
+
+            }
+        };
+    }
+
+    public void runBind() {
+        Intent intent = new Intent();
         intent.setPackage("com.hmsl.fluidmanager");
-        Boolean isConnected = context.bindService(intent, (ServiceConnection) mRemoteService,Context.BIND_AUTO_CREATE);
+        intent.setClassName("com.hmsl.fluidmanager", "com.hmsl.fluidmanager.FLUIDManagerService");
+        Log.d("TAG", "mContext info : " + mContext);
+
+        Boolean isConnected = mContext.bindService(intent, (ServiceConnection) mServiceConnection, Context.BIND_AUTO_CREATE);
         Log.d("TAG", "is bind : " + isConnected);
 
+
     }
-    public static void runtest(String widgetType,  View view)
-    {
+
+    public void reverseBind() {
+
+        Log.d(TAG, "this is reverseBind");
+        Bundle bundle = new Bundle();
+        bundle.putBinder("Binder", mBinder);
+        Log.d("TAG", "mContext info : " + mContext);
+
+        try {
+            Log.d(TAG, "mRemoteService : " + mRemoteService);
+
+            while (mRemoteService == null) {
+                //Log.d(TAG, "waiting...");
+            }
+            mRemoteService.reverseConnect(bundle);
+            while (mRemoteService == null) {
+                //Log.d(TAG, "waiting...");
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void runtest(String widgetType, View view) {
         Bundle bundle = new Bundle();
 
         try {
+            //Log.d("TAG","run test");
+            byte[] toSend = generate_byteArray(widgetType, view);
             //Log.d("TAG","runtest");
-            byte[] toSend = generate_byteArray(widgetType,view);
-            //Log.d("TAG","runtest");
-            bundle.putByteArray("key",toSend);
-            Log.d(TAG,"runtest send : "+ getTS());
+            bundle.putByteArray("key", toSend);
+            Log.d(TAG, "runtest send : " + getTS());
             mRemoteService.test(bundle);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-    public static void runUpdate(String unit, View view)
-    {
+
+    public void runUpdate(String unit, View view) {
         StringTokenizer st = new StringTokenizer(unit, "<>");
 
         st.nextToken();                     // 앞에 virtualinvoke 부분 -> 필요없으므로 삭제
@@ -92,13 +141,12 @@ public class FLUIDMain {
         StringTokenizer st1 = new StringTokenizer(first, " ");
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        while(st1.hasMoreTokens()){
+        while (st1.hasMoreTokens()) {
             String str = st1.nextToken();
-            if(str.contains("(")){
+            if (str.contains("(")) {
                 sb.append(str);
                 i++;
-            }
-            else if(str.contains(",") || str.contains(")")){
+            } else if (str.contains(",") || str.contains(")")) {
                 sb.append(str);
                 i++;
             }
@@ -110,7 +158,7 @@ public class FLUIDMain {
         String method = st2.nextToken();
         String[] parameterType = new String[i];
 
-        for(int j = 0; j< i; j++){
+        for (int j = 0; j < i; j++) {
             parameterType[j] = st2.nextToken();
         }
 
@@ -121,24 +169,24 @@ public class FLUIDMain {
 
         //params[j].getClass() -> Wrapper class 형식
         //params[j] parameter 그대로 잘 나옴.
-        for(int j = 0; j<i; j++){
+        for (int j = 0; j < i; j++) {
             parameter[j] = st3.nextToken();
             params[j] = setType(parameterType[j], parameter[j]);
         }
 
         Bundle bundle = new Bundle();
         try {
-            bundle.putByteArray("key",generate_ubyteArray(method,view,params));
-            Log.d(TAG,"runUpdate send : "+ getTS());
+            bundle.putByteArray("key", generate_ubyteArray(method, view, params));
+            Log.d(TAG, "runUpdate send : " + getTS());
             mRemoteService.update(bundle);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static Object setType(String parameterType, String parameter){
+    public static Object setType(String parameterType, String parameter) {
         Object params = null;
-        switch(parameterType){
+        switch (parameterType) {
             // 추후에 필요한 파라미터 타입은 추가하면 됌
             case "float":
                 params = Float.parseFloat(parameter);
@@ -153,42 +201,28 @@ public class FLUIDMain {
         return params;
     }
 
-    public static int setTypeFlag(Object param)
-    {
+    public static int setTypeFlag(Object param) {
         String type = param.getClass().toString();
         //Log.d("TAG",param.getClass().toString());
-        if(type.contains("Float"))
-        {
+        if (type.contains("Float")) {
             return 1;
-        }
-        else if(type.contains("Integer"))
-        {
+        } else if (type.contains("Integer")) {
             return 2;
-        }
-        else if(type.contains("String"))
-        {
+        } else if (type.contains("String")) {
             return 3;
-        }
-        else if(type.contains("Boolean"))
-        {
+        } else if (type.contains("Boolean")) {
             return 4;
-        }
-        else if(type.contains("Double"))
-        {
+        } else if (type.contains("Double")) {
             return 5;
-        }
-        else if(type.contains("Long"))
-        {
+        } else if (type.contains("Long")) {
             return 6;
-        }
-        else if(type.contains("Character"))
-        {
+        } else if (type.contains("Character")) {
             return 7;
-        }
-        else
+        } else
             return 0;
     }
-    public static byte[] generate_ubyteArray(String method, View view, Object...params) throws IOException {
+
+    public static byte[] generate_ubyteArray(String method, View view, Object... params) throws IOException {
         byte[] utoByteArray = null;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
@@ -198,32 +232,31 @@ public class FLUIDMain {
         //dataOutputStream.writeInt(view.getId());
         dataOutputStream.writeUTF(method);
 
-        for(int i = 0; i< params.length; i++){
+        for (int i = 0; i < params.length; i++) {
             Object param = params[i];
             int flag = setTypeFlag(param);
             dataOutputStream.writeInt(flag);
-            switch(flag)
-            {
+            switch (flag) {
                 case 1:
-                    dataOutputStream.writeFloat((Float)param);
+                    dataOutputStream.writeFloat((Float) param);
                     break;
                 case 2:
-                    dataOutputStream.writeInt((int)param);
+                    dataOutputStream.writeInt((int) param);
                     break;
                 case 3:
-                    dataOutputStream.writeUTF((String)param);
+                    dataOutputStream.writeUTF((String) param);
                     break;
                 case 4:
                     dataOutputStream.writeBoolean((Boolean) param);
                     break;
                 case 5:
-                    dataOutputStream.writeDouble((Double)param);
+                    dataOutputStream.writeDouble((Double) param);
                     break;
                 case 6:
-                    dataOutputStream.writeLong((Long)param);
+                    dataOutputStream.writeLong((Long) param);
                     break;
                 case 7:
-                    dataOutputStream.writeChar((Character)param);
+                    dataOutputStream.writeChar((Character) param);
                     break;
                 default:
                     //Log.d("TAG","invalid param");
@@ -236,7 +269,7 @@ public class FLUIDMain {
     }
 
     public static byte[] generate_byteArray(String widgetType, View view) throws IOException {
-        byte[] dtoByteArray=null;
+        byte[] dtoByteArray = null;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
         dataOutputStream.writeInt(view.getId());
@@ -244,7 +277,7 @@ public class FLUIDMain {
         dataOutputStream.writeBoolean(false);
 
 
-        if(widgetType.contains("EditText")){
+        if (widgetType.contains("EditText")) {
 
             EditText edit = (EditText) view;
             dataOutputStream.writeUTF(widgetType);
@@ -255,7 +288,7 @@ public class FLUIDMain {
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
-        }else if(widgetType.contains("Button")){
+        } else if (widgetType.contains("Button")) {
             Button btn = (Button) view;
             dataOutputStream.writeUTF(widgetType);
             //dataOutputStream.writeInt(btn.getId());
@@ -265,7 +298,7 @@ public class FLUIDMain {
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
         }
-        if(widgetType.contains("TextView")){
+        if (widgetType.contains("TextView")) {
 
             TextView edit = (TextView) view;
             dataOutputStream.writeUTF(widgetType);
@@ -279,8 +312,8 @@ public class FLUIDMain {
         }
         return dtoByteArray;
     }
-    public static String getTS()
-    {
+
+    public static String getTS() {
         Long tsLong = System.nanoTime();
         String ts = tsLong.toString();
         return ts;

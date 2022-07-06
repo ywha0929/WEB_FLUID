@@ -15,13 +15,8 @@ public interface IFLUIDService extends android.os.IInterface
     @Override public void update(android.os.Bundle bundle) throws android.os.RemoteException
     {
     }
-    @Override public boolean registerCallback(com.hmsl.fluidmanager.IRemoteServiceCallback callback) throws android.os.RemoteException
+    @Override public void reverseConnect(android.os.Bundle bundle) throws android.os.RemoteException
     {
-      return false;
-    }
-    @Override public boolean unregisterCallback(com.hmsl.fluidmanager.IRemoteServiceCallback callback) throws android.os.RemoteException
-    {
-      return false;
     }
     @Override
     public android.os.IBinder asBinder() {
@@ -94,24 +89,18 @@ public interface IFLUIDService extends android.os.IInterface
           reply.writeNoException();
           return true;
         }
-        case TRANSACTION_registerCallback:
+        case TRANSACTION_reverseConnect:
         {
           data.enforceInterface(descriptor);
-          com.hmsl.fluidmanager.IRemoteServiceCallback _arg0;
-          _arg0 = com.hmsl.fluidmanager.IRemoteServiceCallback.Stub.asInterface(data.readStrongBinder());
-          boolean _result = this.registerCallback(_arg0);
+          android.os.Bundle _arg0;
+          if ((0!=data.readInt())) {
+            _arg0 = android.os.Bundle.CREATOR.createFromParcel(data);
+          }
+          else {
+            _arg0 = null;
+          }
+          this.reverseConnect(_arg0);
           reply.writeNoException();
-          reply.writeInt(((_result)?(1):(0)));
-          return true;
-        }
-        case TRANSACTION_unregisterCallback:
-        {
-          data.enforceInterface(descriptor);
-          com.hmsl.fluidmanager.IRemoteServiceCallback _arg0;
-          _arg0 = com.hmsl.fluidmanager.IRemoteServiceCallback.Stub.asInterface(data.readStrongBinder());
-          boolean _result = this.unregisterCallback(_arg0);
-          reply.writeNoException();
-          reply.writeInt(((_result)?(1):(0)));
           return true;
         }
         default:
@@ -185,54 +174,36 @@ public interface IFLUIDService extends android.os.IInterface
           _data.recycle();
         }
       }
-      @Override public boolean registerCallback(com.hmsl.fluidmanager.IRemoteServiceCallback callback) throws android.os.RemoteException
+      @Override public void reverseConnect(android.os.Bundle bundle) throws android.os.RemoteException
       {
         android.os.Parcel _data = android.os.Parcel.obtain();
         android.os.Parcel _reply = android.os.Parcel.obtain();
-        boolean _result;
         try {
           _data.writeInterfaceToken(DESCRIPTOR);
-          _data.writeStrongBinder((((callback!=null))?(callback.asBinder()):(null)));
-          boolean _status = mRemote.transact(Stub.TRANSACTION_registerCallback, _data, _reply, 0);
+          if ((bundle!=null)) {
+            _data.writeInt(1);
+            bundle.writeToParcel(_data, 0);
+          }
+          else {
+            _data.writeInt(0);
+          }
+          boolean _status = mRemote.transact(Stub.TRANSACTION_reverseConnect, _data, _reply, 0);
           if (!_status && getDefaultImpl() != null) {
-            return getDefaultImpl().registerCallback(callback);
+            getDefaultImpl().reverseConnect(bundle);
+            return;
           }
           _reply.readException();
-          _result = (0!=_reply.readInt());
         }
         finally {
           _reply.recycle();
           _data.recycle();
         }
-        return _result;
-      }
-      @Override public boolean unregisterCallback(com.hmsl.fluidmanager.IRemoteServiceCallback callback) throws android.os.RemoteException
-      {
-        android.os.Parcel _data = android.os.Parcel.obtain();
-        android.os.Parcel _reply = android.os.Parcel.obtain();
-        boolean _result;
-        try {
-          _data.writeInterfaceToken(DESCRIPTOR);
-          _data.writeStrongBinder((((callback!=null))?(callback.asBinder()):(null)));
-          boolean _status = mRemote.transact(Stub.TRANSACTION_unregisterCallback, _data, _reply, 0);
-          if (!_status && getDefaultImpl() != null) {
-            return getDefaultImpl().unregisterCallback(callback);
-          }
-          _reply.readException();
-          _result = (0!=_reply.readInt());
-        }
-        finally {
-          _reply.recycle();
-          _data.recycle();
-        }
-        return _result;
       }
       public static com.hmsl.fluidmanager.IFLUIDService sDefaultImpl;
     }
     static final int TRANSACTION_test = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
     static final int TRANSACTION_update = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
-    static final int TRANSACTION_registerCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
-    static final int TRANSACTION_unregisterCallback = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+    static final int TRANSACTION_reverseConnect = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
     public static boolean setDefaultImpl(com.hmsl.fluidmanager.IFLUIDService impl) {
       // Only one user of this interface can use this function
       // at a time. This is a heuristic to detect if two different
@@ -252,6 +223,5 @@ public interface IFLUIDService extends android.os.IInterface
   }
   public void test(android.os.Bundle bundle) throws android.os.RemoteException;
   public void update(android.os.Bundle bundle) throws android.os.RemoteException;
-  public boolean registerCallback(com.hmsl.fluidmanager.IRemoteServiceCallback callback) throws android.os.RemoteException;
-  public boolean unregisterCallback(com.hmsl.fluidmanager.IRemoteServiceCallback callback) throws android.os.RemoteException;
+  public void reverseConnect(android.os.Bundle bundle) throws android.os.RemoteException;
 }

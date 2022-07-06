@@ -1,5 +1,7 @@
 package com.example.testapp;
 
+import static android.os.SystemClock.sleep;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -9,6 +11,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -30,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
 
     Class<?> clazz = null;
     Method mtd;
+    Object objFluidLib;
 
     //
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +48,14 @@ public class MainActivity extends AppCompatActivity {
         Activity a = this;
         DexClassLoader dex = new DexClassLoader("/data/local/tmp/fluidlib.apk", "/data/local/tmp/", null, getClass().getClassLoader());
         try {
-            mtd = clazz.getDeclaredMethod("runBind", Context.class);
-            mtd.invoke(null, this.getApplicationContext());
+            clazz = dex.loadClass("com.hmsl.fluidlib.FLUIDMain");
+
+            Method mtdgetInstance = clazz.getDeclaredMethod("getInstance",Context.class);
+            objFluidLib = mtdgetInstance.invoke(null,this);
+            mtd = clazz.getDeclaredMethod("runBind");
+            mtd.invoke(objFluidLib, null);
+
+
 
 //            Log.d("TAG", "TRY started");
 //            clazz = dex.loadClass("com.hmsl.fluidlib.FLUIDMain");
@@ -60,18 +69,31 @@ public class MainActivity extends AppCompatActivity {
 //            intent.setClassName("com.hmsl.fluidmanager", "com.hmsl.fluidmanager.FLUIDManagerService");
 //            Boolean bool = bindService(intent, (ServiceConnection) obj, Context.BIND_AUTO_CREATE);
 //            Log.d("TAG", "is bind : " + bool);
-        } catch (Exception e) {
+        } catch(InvocationTargetException e)
+        {
+            e.getTargetException().printStackTrace();
+        }catch (Exception e) {
             e.printStackTrace();
             return;
         }
 
+        try {
+            mtd = clazz.getDeclaredMethod("reverseBind");
+            mtd.invoke(objFluidLib, null);
+        }catch(InvocationTargetException e)
+        {
+            e.getTargetException().printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         edit1.setOnLongClickListener(new View.OnLongClickListener() {//distribute trigger
             @Override
             public boolean onLongClick(View v) {
                 try {
                     Log.d("TAG", "edit1 invoked");
                     mtd = clazz.getDeclaredMethod("runtest", String.class,View.class);
-                    mtd.invoke(null, "EditText", v);
+                    mtd.invoke(objFluidLib, "EditText", v);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;
@@ -87,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Log.d("TAG", "edit2 invoked");
                     mtd = clazz.getDeclaredMethod("runtest", String.class,View.class);
-                    mtd.invoke(null, "EditText", v);
+                    mtd.invoke(objFluidLib, "EditText", v);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;
@@ -103,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Log.d("TAG", "btn1 invoked");
                     mtd = clazz.getDeclaredMethod("runtest", String.class,View.class);
-                    mtd.invoke(null, "Button", v);
+                    mtd.invoke(objFluidLib, "Button", v);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -120,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "btn1 short invoked");
                 edit1.setTextColor(Color.BLUE);
                 try {
-                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class,Object.class);
-                    mtd.invoke(null,"setTextColor",edit1,Color.BLUE);
+                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class);
+                    mtd.invoke(objFluidLib,"setTextColor",edit1);
                 } catch(Exception e)
                 {
                     e.printStackTrace();
@@ -135,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Log.d("TAG", "btn2 invoked");
                     mtd = clazz.getDeclaredMethod("runtest", String.class,View.class);
-                    mtd.invoke(null, "Button", v);
+                    mtd.invoke(objFluidLib, "Button", v);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;
@@ -151,9 +173,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "btn2 short invoked");
                 edit2.setTextSize(90);
                 try {
-                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class, Object.class);
+                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class);
                     float a = 200.0f;
-                    mtd.invoke(null,"setTextSize",edit2,a);
+                    mtd.invoke(objFluidLib,"setTextSize",edit2);
                 } catch(Exception e)
                 {
                     e.printStackTrace();

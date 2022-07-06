@@ -18,6 +18,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FLUIDLib" >
+        <service
+            android:name="com.hmsl.fluidlib.FLUIDReverseService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.hmsl.fluidmanager.MY_Service" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.hmsl.fluidlib.androidx-startup"
