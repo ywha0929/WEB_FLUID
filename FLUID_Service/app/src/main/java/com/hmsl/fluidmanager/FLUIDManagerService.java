@@ -10,9 +10,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,13 +24,19 @@ import androidx.annotation.NonNull;
 //import com.hmsl.fluidlib.IFLUIDService;
 
 import java.io.ByteArrayInputStream;
+import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
+
 import com.hmsl.fluidlib.IReverseConnection;
 
 public class FLUIDManagerService extends Service {
@@ -46,7 +55,7 @@ public class FLUIDManagerService extends Service {
         // distribute
 
         public void test(Bundle bundle) {
-            Log.d(TAG,"test received : "+ getTS());
+            Log.d(TAG, "test received : " + getTS());
             bundle.setClassLoader(getClass().getClassLoader());
             byte[] recvBuffer = bundle.getByteArray("key");
             //Log.d("TAG",""+recvBuffer);
@@ -64,7 +73,7 @@ public class FLUIDManagerService extends Service {
 
         // update
         public void update(Bundle bundle) {
-            Log.d(TAG,"update received : "+ getTS());
+            Log.d(TAG, "update received : " + getTS());
 
             bundle.setClassLoader(getClass().getClassLoader());
             byte[] recvBuffer = bundle.getByteArray("key");
@@ -80,30 +89,30 @@ public class FLUIDManagerService extends Service {
         }
 
 
-        public void reverseConnect(Bundle bundle){
-            Log.d(TAG,"this is reverseConnect");
-//            mServiceConnection = new ServiceConnection() {
-//                @Override
-//                public void onServiceConnected(ComponentName name, IBinder service) {
-//                    mRemoteService = com.hmsl.fluidlib.IReverseConnection.Stub.asInterface(service);
-//                    Log.d(TAG, "reverse connection connected = " + mRemoteService);
-//
-//                }
-//                @Override
-//                public void onServiceDisconnected(ComponentName name) {
-//                    Log.d(TAG, "reverse connection disconnected = " + mRemoteService);
-//                    mRemoteService = null;
-//
-//                }
-//            };
-//            IReverseConnection temp = (IReverseConnection) bundle.getBinder("Binder");
-//            mRemoteService = temp;
-//            try {
-//                mRemoteService.doCheck(30);
-//            } catch(Exception e)
-//            {
-//                e.printStackTrace();
-//            }
+        public void reverseConnect(Bundle bundle) {
+            Log.d(TAG, "this is reverseConnect");
+            mServiceConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    mRemoteService = com.hmsl.fluidlib.IReverseConnection.Stub.asInterface(service);
+                    Log.d(TAG, "reverse connection connected = " + mRemoteService);
+
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    Log.d(TAG, "reverse connection disconnected = " + mRemoteService);
+                    mRemoteService = null;
+
+                }
+            };
+            mServiceConnection.onServiceConnected((ComponentName) bundle.getParcelable("ComponentName"), bundle.getBinder("Binder"));
+
+            try {
+                mRemoteService.doCheck(30);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     };
@@ -117,7 +126,6 @@ public class FLUIDManagerService extends Service {
         Log.d(TAG, "onBind()");
 
 
-
         return mBinder;
     }
 
@@ -127,6 +135,8 @@ public class FLUIDManagerService extends Service {
         try {
             ServerThread server = new ServerThread(port);
             server.start();
+            SocketInputThread socketInputThread = new SocketInputThread();
+            socketInputThread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,8 +150,66 @@ public class FLUIDManagerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        try {
+            socket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    public static <T> T bytes2Parcelable(final byte[] bytes,
+                                         final Parcelable.Creator<T> creator) {
+        if (bytes == null) return null;
+        Parcel parcel = Parcel.obtain();
+        parcel.unmarshall(bytes, 0, bytes.length);
+        parcel.setDataPosition(0);
+        T result = creator.createFromParcel(parcel);
+        parcel.recycle();
+        return result;
+    }
+
+    class SocketInputThread extends Thread {
+        InputStream inputStream;
+        ObjectInputStream objectInputStream;
+        private static final int MAX_BUFFER = 1024;
+        int targetID = 0;
+        List<Bundle> bundleList = new ArrayList<Bundle>();
+
+        public SocketInputThread() {
+
+        }
+
+        @Override
+        public void run() {
+
+            while (socket == null) ;
+            try {
+                inputStream = socket.getInputStream();
+                objectInputStream = new ObjectInputStream(inputStream);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG, "input stream set");
+
+            while (true) {
+                try {
+
+                    byte[] buffer;
+
+
+                    buffer = (byte[]) objectInputStream.readObject();
+                    Bundle bundle = bytes2Parcelable(buffer, Bundle.CREATOR);
+                    mRemoteService.reverseMotionEvent(bundle);
+
+                    Log.d(TAG, "read input from guest");
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     // ServerThread : ServerSocket 열기
     class ServerThread extends Thread {
@@ -198,7 +266,8 @@ public class FLUIDManagerService extends Service {
 
                             OutputStream os = socket.getOutputStream();
                             os.write(input);
-                            Log.e(TAG, "UI distribute socket msg 전송 성공 : "+ getTS());
+                            Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
+                            mRemoteService.doCheck(1);
                         } else {
                             //Log.e(TAG, "이미 Distribute된 UI 입니다.");
                         }
@@ -231,9 +300,10 @@ public class FLUIDManagerService extends Service {
                         if (is_distribute) {
                             OutputStream os = socket.getOutputStream();
                             os.write(input);
-                            Log.d(TAG, "update socket message sent : "+ getTS());
+                            Log.d(TAG, "update socket message sent : " + getTS());
+                            mRemoteService.doCheck(2);
                         } else {
-                            //Log.d("TAG", "undistributed UI's update");
+                            Log.d("TAG", "undistributed UI's update");
                         }
 //                        JSONParser jsonParser = new JSONParser();
 //                        JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
@@ -252,8 +322,8 @@ public class FLUIDManagerService extends Service {
             Looper.loop();
         }
     }
-    public static String getTS()
-    {
+
+    public static String getTS() {
         Long tsLong = System.nanoTime();
         String ts = tsLong.toString();
         return ts;

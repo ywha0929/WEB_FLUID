@@ -1,9 +1,5 @@
-com/hmsl/fluidmanager/FLUIDManagerService.java
- com.hmsl.fluidmanager.FLUIDManagerService
- com.hmsl.fluidmanager.FLUIDManagerService$1
- com.hmsl.fluidmanager.FLUIDManagerService$ServerThread
- com.hmsl.fluidmanager.FLUIDManagerService$ServerThread$1
- com.hmsl.fluidmanager.FLUIDManagerService$ServerThread$2
+com/hmsl/fluidmanager/BuildConfig.java
+ com.hmsl.fluidmanager.BuildConfig
 com/hmsl/fluidlib/IReverseConnection.java
  com.hmsl.fluidlib.IReverseConnection
  com.hmsl.fluidlib.IReverseConnection$Default
@@ -14,7 +10,13 @@ com/hmsl/fluidmanager/IFLUIDService.java
  com.hmsl.fluidmanager.IFLUIDService$Default
  com.hmsl.fluidmanager.IFLUIDService$Stub
  com.hmsl.fluidmanager.IFLUIDService$Stub$Proxy
+com/hmsl/fluidmanager/FLUIDManagerService.java
+ com.hmsl.fluidmanager.FLUIDManagerService
+ com.hmsl.fluidmanager.FLUIDManagerService$1
+ com.hmsl.fluidmanager.FLUIDManagerService$1$1
+ com.hmsl.fluidmanager.FLUIDManagerService$ServerThread
+ com.hmsl.fluidmanager.FLUIDManagerService$ServerThread$1
+ com.hmsl.fluidmanager.FLUIDManagerService$ServerThread$2
+ com.hmsl.fluidmanager.FLUIDManagerService$SocketInputThread
 com/hmsl/fluidmanager/MainActivity.java
  com.hmsl.fluidmanager.MainActivity
-com/hmsl/fluidmanager/BuildConfig.java
- com.hmsl.fluidmanager.BuildConfig

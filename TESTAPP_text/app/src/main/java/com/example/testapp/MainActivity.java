@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -77,16 +78,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        try {
-            mtd = clazz.getDeclaredMethod("reverseBind");
-            mtd.invoke(objFluidLib, null);
-        }catch(InvocationTargetException e)
-        {
-            e.getTargetException().printStackTrace();
-        }catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
+
         edit1.setOnLongClickListener(new View.OnLongClickListener() {//distribute trigger
             @Override
             public boolean onLongClick(View v) {
@@ -140,15 +132,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("TAG", "btn1 short invoked");
-                edit1.setTextColor(Color.BLUE);
-                try {
-                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class);
-                    mtd.invoke(objFluidLib,"setTextColor",edit1);
-                } catch(Exception e)
+                if(edit1.getCurrentTextColor() == Color.BLUE)
                 {
-                    e.printStackTrace();
-                    return;
+                    edit1.setTextColor(Color.RED);
+                    try {
+                        mtd = clazz.getDeclaredMethod("runUpdateTest",String.class,View.class,Object.class);
+                        mtd.invoke(objFluidLib,"setTextColor",edit1,Color.RED);
+//                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class);
+//                    mtd.invoke(objFluidLib,"setTextColor",edit1);
+                    } catch(Exception e)
+                    {
+                        e.printStackTrace();
+                        return;
+                    }
                 }
+                else {
+                    edit1.setTextColor(Color.BLUE);
+                    try {
+                        mtd = clazz.getDeclaredMethod("runUpdateTest",String.class,View.class,Object.class);
+                        mtd.invoke(objFluidLib,"setTextColor",edit1,Color.BLUE);
+//                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class);
+//                    mtd.invoke(objFluidLib,"setTextColor",edit1);
+                    } catch(Exception e)
+                    {
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+
             }
         });
         btn2.setOnLongClickListener(new View.OnLongClickListener() { //distribute trigger
@@ -165,7 +176,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
+        btn1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d("TAG","motionEvent :\n"+motionEvent);
+                return false;
+            }
+        });
         btn2.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -173,9 +190,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TAG", "btn2 short invoked");
                 edit2.setTextSize(90);
                 try {
-                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class);
-                    float a = 200.0f;
-                    mtd.invoke(objFluidLib,"setTextSize",edit2);
+                    mtd = clazz.getDeclaredMethod("runUpdateTest",String.class,View.class,Object.class);
+                    mtd.invoke(objFluidLib,"setTextSize",edit2,90.0);
+//                    mtd = clazz.getDeclaredMethod("runUpdate",String.class,View.class);
+//                    mtd.invoke(objFluidLib,"setTextSize",edit2);
                 } catch(Exception e)
                 {
                     e.printStackTrace();

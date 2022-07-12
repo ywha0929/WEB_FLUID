@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Parcel;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,10 +27,13 @@ import org.json.simple.parser.ParseException;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.Socket;
@@ -49,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
     private Handler workerHandler;
     public Socket socket;
     private LinearLayout container;
+    private Handler sendHandler;
     private ArrayList<TextView> UI_List = new ArrayList<TextView>();
-//hi
+
+    //hi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         worker.start();
+        SendThread sendThread = new SendThread();
+        sendThread.start();
     }
 
     class ClientThread extends Thread {
@@ -85,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     InputStream is = socket.getInputStream();
                     byte[] input = new byte[MAX_BUFFER];
                     if (is.read(input) != 0) {
-                        Log.d(TAG,"received message : "+ getTS());
+                        Log.d(TAG, "received message : " + getTS());
                         Message msg = Message.obtain();
                         msg.obj = input;
 
@@ -96,6 +105,50 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    class SendThread extends Thread {
+        ObjectOutputStream objectOutputStream;
+        public SendThread() {
+
+        }
+        public void run() {
+            while(socket == null);
+            try {
+                objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                Log.d(TAG,"output stream set");
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            Looper.prepare();
+            sendHandler = new Handler(Looper.myLooper()) {
+                @Override
+                public void handleMessage(@NonNull Message msg) {
+                    while(objectOutputStream == null);
+                    Log.d(TAG,"looper running");
+                    Bundle bundle = (Bundle)msg.obj;
+                    try {
+                        Log.d(TAG,"About to send Motion to Manager");
+                        //ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        Parcel parcel = Parcel.obtain();
+                        bundle.writeToParcel(parcel,0);
+                        byte[] buffer = parcel.marshall();
+                        parcel.recycle();
+                        //OutputStream outputStream = socket.getOutputStream();
+
+                        //objectOutputStream.writeInt(buffer.length);
+                        objectOutputStream.writeObject(buffer);
+                        Log.d(TAG,"Sent Motion to Manager");
+                    } catch(Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            Looper.loop();
+
         }
     }
 
@@ -156,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                                         createEditText(id, text, textsize);
                                     }
                                 });
-                            }else if (WidgetType.contains("TextView")) {
+                            } else if (WidgetType.contains("TextView")) {
                                 //Log.d("TAG", "this is edittext");
                                 //int id = dataInputStream.readInt();
 
@@ -188,9 +241,8 @@ public class MainActivity extends AppCompatActivity {
                                             //Log.d("TAG", "inside loop id : " + id + "          get id : " + UI_List.get(i).getId());
                                             if (id == (long) UI_List.get(i).getId()) {
                                                 //Log.d("TAG", "before find method");
-                                                Method m=null;
-                                                switch(flag)
-                                                {
+                                                Method m = null;
+                                                switch (flag) {
 
                                                     case 1:
                                                         m = cls.getMethod(method, float.class);
@@ -205,12 +257,9 @@ public class MainActivity extends AppCompatActivity {
                                                     case 3:
                                                         try {
                                                             m = cls.getMethod(method, String.class);
-                                                        }
-                                                        catch(Exception e)
-                                                        {
-                                                            m = cls.getMethod(method,CharSequence.class);
-                                                        }
-                                                        finally {
+                                                        } catch (Exception e) {
+                                                            m = cls.getMethod(method, CharSequence.class);
+                                                        } finally {
                                                             //Log.d("TAG", "found method : " + m.toString());
                                                             m.invoke(UI_List.get(i), param); // parameter
                                                         }
@@ -277,7 +326,21 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         edit.setLayoutParams(lp);
         container.addView(edit);
+        edit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d(TAG,"EditText touch");
+                Bundle bundle = new Bundle();
+                bundle.putInt("ID",edit.getId());
+                bundle.putParcelable("motionevent", motionEvent);
+                Message message = Message.obtain();
+                message.obj = bundle;
+                sendHandler.sendMessage(message);
+                return true;
+            }
+        });
     }
+
     public void createTextView(long id, String text, float textsize) {
 
         TextView textV = new TextView(this);
@@ -289,6 +352,19 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         textV.setLayoutParams(lp);
         container.addView(textV);
+        textV.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d(TAG,"TextView touch");
+                Bundle bundle = new Bundle();
+                bundle.putInt("ID",textV.getId());
+                bundle.putParcelable("motionevent", motionEvent);
+                Message message = Message.obtain();
+                message.obj = bundle;
+                sendHandler.sendMessage(message);
+                return true;
+            }
+        });
     }
 
     public void createButton(long id, String text, long height, long width) {
@@ -303,7 +379,19 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         btn.setLayoutParams(lp);
         container.addView(btn);
-
+        btn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d(TAG,"Button touch");
+                Bundle bundle = new Bundle();
+                bundle.putInt("ID",btn.getId());
+                bundle.putParcelable("motionevent", motionEvent);
+                Message message = Message.obtain();
+                message.obj = bundle;
+                sendHandler.sendMessage(message);
+                return true;
+            }
+        });
 
     }
 
@@ -334,8 +422,8 @@ public class MainActivity extends AppCompatActivity {
                 return null;
         }
     }
-    public static String getTS()
-    {
+
+    public static String getTS() {
         Long tsLong = System.nanoTime();
         String ts = tsLong.toString();
         return ts;

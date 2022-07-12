@@ -2,6 +2,7 @@ package com.hmsl.fluidlib;
 
 import static android.os.SystemClock.sleep;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.os.Message;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,11 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import com.hmsl.fluidmanager.IFLUIDService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class FLUIDMain {
@@ -37,8 +44,48 @@ public class FLUIDMain {
         @Override
         public void doCheck(int a) throws RemoteException {
             Log.d(TAG, "this is doCheck");
-            Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service" + a, Toast.LENGTH_LONG);
-            toast.show();
+            Activity activity = (Activity) mContext;
+            activity.runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service" + a, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
+
+        }
+
+        public void reverseMotionEvent(Bundle bundle) throws RemoteException
+        {
+            Log.d(TAG,"this is reverseMotionEvent");
+            Activity activity = (Activity) mContext;
+            List<MotionEvent> motionEventList = new ArrayList<MotionEvent>();
+            activity.runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    int ID = bundle.getInt("ID");
+                    MotionEvent motionEvent = bundle.getParcelable("motionevent");
+                    View view = (View) activity.findViewById(ID);
+                    long timeInterval = motionEvent.getDownTime() - motionEvent.getEventTime();
+                    long curtime = System.nanoTime()/1000000;
+                    MotionEvent newmotionEvent = MotionEvent.obtain(curtime+timeInterval,curtime,motionEvent.getAction(),
+                            motionEvent.getX(),motionEvent.getY(),motionEvent.getMetaState());
+                    if(newmotionEvent.getAction() !=MotionEvent.ACTION_UP)
+                    {
+                        motionEventList.add(newmotionEvent);
+                    }
+                    else
+                    {
+                        for(MotionEvent m : motionEventList)
+                            view.dispatchTouchEvent(m);
+                    }
+                    view.dispatchTouchEvent(newmotionEvent);
+
+                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getParcelable("motionevent"),
+                            Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
         }
         // distribute
 
@@ -61,7 +108,15 @@ public class FLUIDMain {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mRemoteService = com.hmsl.fluidmanager.IFLUIDService.Stub.asInterface(service);
                 Log.d(TAG, "FLUIDManagerService connected = " + mRemoteService);
-
+                Bundle bundle = new Bundle();
+                ComponentName componentName = new ComponentName(mContext,"com.example.testapp.MainActivity.class");
+                bundle.putParcelable("ComponentName",componentName);
+                bundle.putBinder("Binder", mBinder);
+                try {
+                    mRemoteService.reverseConnect(bundle);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -80,7 +135,7 @@ public class FLUIDMain {
         Log.d("TAG", "mContext info : " + mContext);
 
         Boolean isConnected = mContext.bindService(intent, (ServiceConnection) mServiceConnection, Context.BIND_AUTO_CREATE);
-        Log.d("TAG", "is bind : " + isConnected);
+        Log.d("TAG", "is bind : " + isConnected + mRemoteService);
 
 
     }
@@ -123,7 +178,17 @@ public class FLUIDMain {
         }
 
     }
-
+    public void runUpdateTest(String signature, View view,Object param)
+    {
+        Bundle bundle = new Bundle();
+        try{
+            bundle.putByteArray("key",generate_ubyteArray(signature,view,param));
+            mRemoteService.update(bundle);
+        } catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     public void runUpdate(String unit, View view) {
         StringTokenizer st = new StringTokenizer(unit, "<>");
 

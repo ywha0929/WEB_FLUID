@@ -5,7 +5,12 @@ com/example/fluidguest/PJson.java
  com.example.fluidguest.PJson$1
 com/example/fluidguest/MainActivity.java
  com.example.fluidguest.MainActivity
+ com.example.fluidguest.MainActivity$1
+ com.example.fluidguest.MainActivity$2
+ com.example.fluidguest.MainActivity$3
  com.example.fluidguest.MainActivity$ClientThread
+ com.example.fluidguest.MainActivity$SendThread
+ com.example.fluidguest.MainActivity$SendThread$1
  com.example.fluidguest.MainActivity$WorkerThread
  com.example.fluidguest.MainActivity$WorkerThread$1
  com.example.fluidguest.MainActivity$WorkerThread$1$1

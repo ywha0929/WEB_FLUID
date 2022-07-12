@@ -13,4 +13,6 @@ com/hmsl/fluidmanager/IFLUIDService.java
 com/hmsl/fluidlib/FLUIDMain.java
  com.hmsl.fluidlib.FLUIDMain
  com.hmsl.fluidlib.FLUIDMain$1
+ com.hmsl.fluidlib.FLUIDMain$1$1
+ com.hmsl.fluidlib.FLUIDMain$1$2
  com.hmsl.fluidlib.FLUIDMain$2

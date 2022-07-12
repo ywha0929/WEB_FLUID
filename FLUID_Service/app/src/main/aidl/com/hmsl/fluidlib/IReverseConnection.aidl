@@ -9,4 +9,5 @@ interface IReverseConnection {
      * and return values in AIDL.
      */
     void doCheck(int a);
+    void reverseMotionEvent(in Bundle bundle);
 }
