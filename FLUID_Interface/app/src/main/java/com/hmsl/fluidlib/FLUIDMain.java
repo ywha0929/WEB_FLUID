@@ -40,6 +40,7 @@ public class FLUIDMain {
     private static final int MAX_BUFFER = 1024;
     public Context mContext = null;
     static FLUIDMain instance;
+    long latestEventTime;
     private final IBinder mBinder = new IReverseConnection.Stub() {
         @Override
         public void doCheck(int a) throws RemoteException {
@@ -60,30 +61,30 @@ public class FLUIDMain {
             Log.d(TAG,"this is reverseMotionEvent");
             Activity activity = (Activity) mContext;
             List<MotionEvent> motionEventList = new ArrayList<MotionEvent>();
+
             activity.runOnUiThread(new Runnable(){
+
                 @Override
                 public void run() {
+
                     int ID = bundle.getInt("ID");
                     MotionEvent motionEvent = bundle.getParcelable("motionevent");
                     View view = (View) activity.findViewById(ID);
-                    long timeInterval = motionEvent.getDownTime() - motionEvent.getEventTime();
-                    long curtime = System.nanoTime()/1000000;
-                    MotionEvent newmotionEvent = MotionEvent.obtain(curtime+timeInterval,curtime,motionEvent.getAction(),
-                            motionEvent.getX(),motionEvent.getY(),motionEvent.getMetaState());
-                    if(newmotionEvent.getAction() !=MotionEvent.ACTION_UP)
-                    {
-                        motionEventList.add(newmotionEvent);
-                    }
-                    else
-                    {
-                        for(MotionEvent m : motionEventList)
-                            view.dispatchTouchEvent(m);
-                    }
-                    view.dispatchTouchEvent(newmotionEvent);
+                    float newX = motionEvent.getX() * (float)view.getWidth();
+                    float newY = motionEvent.getY() * (float)view.getHeight();
+                    motionEvent.setLocation(newX,newY);
 
-                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getParcelable("motionevent"),
-                            Toast.LENGTH_SHORT);
-                    toast.show();
+//                    MotionEvent newmotionEvent = MotionEvent.obtain(curtime+timeInterval,curtime,motionEvent.getAction(),
+//                            255.0f,90.0f,motionEvent.getMetaState());
+                    if(motionEvent.getEventTime() != latestEventTime) {
+                        latestEventTime = motionEvent.getEventTime();
+
+                        view.dispatchTouchEvent(motionEvent);
+                    }
+
+//                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getParcelable("motionevent"),
+//                            Toast.LENGTH_SHORT);
+//                    toast.show();
                 }
             });
         }
