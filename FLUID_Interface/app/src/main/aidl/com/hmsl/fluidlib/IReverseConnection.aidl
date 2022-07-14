@@ -10,4 +10,5 @@ interface IReverseConnection {
      */
     void doCheck(int a);
     void reverseMotionEvent(in Bundle bundle);
+    void reverseKeyboardEvent(in Bundle bundle);
 }

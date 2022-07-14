@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Parcel;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,22 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout container;
     private Handler sendHandler;
     private ArrayList<TextView> UI_List = new ArrayList<TextView>();
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        Log.d(TAG,"EditText key touch");
+        Bundle bundle = new Bundle();
+        bundle.putInt("ID",this.getCurrentFocus().getId());
+    //bundle.putInt("ID",view.getId());
+        bundle.putParcelable("keyevent",event);
+        Message message = Message.obtain();
+        bundle.putInt("key",keyCode);
+        message.obj = bundle;
+        message.arg1 = 2;
+        //message.arg2 = keyCode;
+        sendHandler.sendMessage(message);
+        return true;
+    }
     //hi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
                         //OutputStream outputStream = socket.getOutputStream();
 
                         //objectOutputStream.writeInt(buffer.length);
+                        objectOutputStream.writeInt(msg.arg1);
+//                        if(msg.arg1 == 2)
+//                            objectOutputStream.writeInt(msg.arg2);
                         objectOutputStream.writeObject(buffer);
                         Log.d(TAG,"Sent Motion to Manager");
                     } catch(Exception e)
@@ -330,11 +349,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG,"EditText touch");
+                //motionEvent.setLocation(motionEvent.getX()/view.getWidth(),motionEvent.getY()/view.getHeight());
                 Bundle bundle = new Bundle();
-                bundle.putInt("ID",edit.getId());
+                bundle.putInt("ID",view.getId());
+
                 bundle.putParcelable("motionevent", motionEvent);
+                bundle.putFloat("x",motionEvent.getX());
+                bundle.putFloat("y",motionEvent.getY());
+                bundle.putFloat("width",view.getWidth());
+                bundle.putFloat("height",view.getHeight());
                 Message message = Message.obtain();
                 message.obj = bundle;
+                message.arg1 = 1;
+                sendHandler.sendMessage(message);
+                return false;
+            }
+        });
+
+        edit.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                Log.d(TAG,"EditText key touch");
+                Bundle bundle = new Bundle();
+                bundle.putInt("ID",view.getId());
+                bundle.putParcelable("keyevent",keyEvent);
+                Message message = Message.obtain();
+
+                message.obj = bundle;
+                message.arg1 = 2;
                 sendHandler.sendMessage(message);
                 return true;
             }
@@ -356,11 +399,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG,"TextView touch");
+                //motionEvent.setLocation(motionEvent.getX()/view.getWidth(),motionEvent.getY()/view.getHeight());
                 Bundle bundle = new Bundle();
-                bundle.putInt("ID",textV.getId());
+                bundle.putInt("ID",view.getId());
                 bundle.putParcelable("motionevent", motionEvent);
                 Message message = Message.obtain();
+                bundle.putFloat("x",motionEvent.getX());
+                bundle.putFloat("y",motionEvent.getY());
+                bundle.putFloat("width",view.getWidth());
+                bundle.putFloat("height",view.getHeight());
                 message.obj = bundle;
+                message.arg1 = 1;
                 sendHandler.sendMessage(message);
                 return true;
             }
@@ -375,19 +424,37 @@ public class MainActivity extends AppCompatActivity {
         btn.setId((int) id);
         btn.setHeight((int) height);
         btn.setWidth((int) width);
+
+
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         btn.setLayoutParams(lp);
         container.addView(btn);
+
         btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(TAG,"Button touch");
+                Log.d(TAG,"button width : "+view.getWidth());
+                Log.d(TAG,"button height : "+view.getHeight());
+                Log.d(TAG,"button getX : "+view.getX());
+                Log.d(TAG,"button getY : "+view.getY());
+                Log.d(TAG,"event getX : "+motionEvent.getX());
+                Log.d(TAG,"event getY : "+motionEvent.getY());
+                //motionEvent.setLocation(motionEvent.getX()/view.getWidth(),motionEvent.getY()/view.getHeight());
+                Log.d(TAG,"after event getX : "+motionEvent.getX());
+                Log.d(TAG,"after event getY : "+motionEvent.getY());
                 Bundle bundle = new Bundle();
-                bundle.putInt("ID",btn.getId());
+                bundle.putInt("ID",view.getId());
                 bundle.putParcelable("motionevent", motionEvent);
                 Message message = Message.obtain();
+                bundle.putFloat("x",motionEvent.getX());
+                bundle.putFloat("y",motionEvent.getY());
+                bundle.putFloat("width",view.getWidth());
+                bundle.putFloat("height",view.getHeight());
                 message.obj = bundle;
+                message.arg1 = 1;
+
                 sendHandler.sendMessage(message);
                 return true;
             }

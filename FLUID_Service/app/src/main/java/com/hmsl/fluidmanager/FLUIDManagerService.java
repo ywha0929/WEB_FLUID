@@ -196,10 +196,19 @@ public class FLUIDManagerService extends Service {
 
                     byte[] buffer;
 
-
+                    int typeEvent = objectInputStream.readInt();
                     buffer = (byte[]) objectInputStream.readObject();
                     Bundle bundle = bytes2Parcelable(buffer, Bundle.CREATOR);
-                    mRemoteService.reverseMotionEvent(bundle);
+                    MotionEvent motionEvent = bundle.getParcelable("motionevent");
+                    Log.d(TAG,"motion getX : "+motionEvent.getX());
+                    Log.d(TAG,"motion getY : "+motionEvent.getY());
+                    if (typeEvent == 1)
+                        mRemoteService.reverseMotionEvent(bundle);
+                    else if(typeEvent == 2)
+                        mRemoteService.reverseKeyboardEvent(bundle);
+                    else
+                        Log.e(TAG,"invalid typeEvent num");
+
 
                     Log.d(TAG, "read input from guest");
 

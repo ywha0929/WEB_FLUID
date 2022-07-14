@@ -8,6 +8,7 @@ com/example/fluidguest/MainActivity.java
  com.example.fluidguest.MainActivity$1
  com.example.fluidguest.MainActivity$2
  com.example.fluidguest.MainActivity$3
+ com.example.fluidguest.MainActivity$4
  com.example.fluidguest.MainActivity$ClientThread
  com.example.fluidguest.MainActivity$SendThread
  com.example.fluidguest.MainActivity$SendThread$1

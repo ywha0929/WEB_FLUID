@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
             Method mtdgetInstance = clazz.getDeclaredMethod("getInstance",Context.class);
             objFluidLib = mtdgetInstance.invoke(null,this);
-            mtd = clazz.getDeclaredMethod("runBind");
+            mtd = clazz.getDeclaredMethod("runBind",null);
+
             mtd.invoke(objFluidLib, null);
 
 
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TAG", "edit1 invoked");
                     mtd = clazz.getDeclaredMethod("runtest", String.class,View.class);
                     mtd.invoke(objFluidLib, "EditText", v);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;

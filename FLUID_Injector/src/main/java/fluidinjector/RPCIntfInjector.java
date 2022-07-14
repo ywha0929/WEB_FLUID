@@ -12,9 +12,9 @@ import java.util.Map;
 
 public class RPCIntfInjector extends BodyTransformer{
 	boolean isInsert = true;
-	boolean isAnalize = false;
-	final static int MAINACTIVITY_INDEX2 = 1918;
-	final static int MAINACTIVITY_INDEX = 1391;
+	boolean isAnalize = true;
+	//final static int MAINACTIVITY_INDEX2 = 1918;
+	static int MAINACTIVITY_INDEX = 1391;
 	final static String TMP_DIR_PATH = "/data/local/tmp/";
 	final static String FLUID_LIB_PATH = "/data/local/tmp/fluidlib.apk";
 	final static String FLUID_MAIN_CLASS = "com.hmsl.fluidlib.FLUIDMain";
@@ -42,14 +42,21 @@ public class RPCIntfInjector extends BodyTransformer{
 		{
 			isInsert = false;
 			Object[] arr = Scene.v().getApplicationClasses().toArray();
+			for(int i = 0; i<arr.length ; i++)
+			{
+				if(arr[i].toString().equals("com.example.testapp.MainActivity"))
+				{
+					MAINACTIVITY_INDEX = i;
+				}
+			}
 			SootClass a = (SootClass) arr[MAINACTIVITY_INDEX];//MainActivity
 		
 //			SootClass aa = Scene.v().getSootClass("dalvik.system.DexClassLoader");
 //			SootField testfld = new SootField("dex", aa.getType());
 //			a.addField(testfld);
 			
-			SootField testField = InstrumentUtil.addField(a, "dex", RefType.v("dalvik.system.DexClassLoader"), Modifier.PUBLIC|Modifier.STATIC);
-			
+			InstrumentUtil.addField(a, "dex", RefType.v("dalvik.system.DexClassLoader"), Modifier.PUBLIC|Modifier.STATIC);
+			InstrumentUtil.addField(a, "objFluidInterface", RefType.v("java.lang.Object"), Modifier.PUBLIC|Modifier.STATIC);
 			
 			
 		}
@@ -130,6 +137,7 @@ public class RPCIntfInjector extends BodyTransformer{
 		Local objectArrayVar = InstrumentUtil.generateNewLocal(body, ArrayType.v(RefType.v("java.lang.Object"),1));
 		Local paramIntVar = InstrumentUtil.generateNewLocal(body, IntType.v());
 		Local paramIntegerVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Integer"));
+		Local objectFluidInterfaceVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Object"));
 
 		//get parameter
 		generated.add(Jimple.v().newAssignStmt(viewVar,body.getParameterLocal(0)));
@@ -137,11 +145,12 @@ public class RPCIntfInjector extends BodyTransformer{
 		printLocals(body);
 		
 		//get dexclassloader from field
-		Object[] arr = Scene.v().getApplicationClasses().toArray();
-		SootClass a = (SootClass) arr[MAINACTIVITY_INDEX];
-		SootField ar = a.getFieldByName("dex");
-		Jimple.v().newStaticFieldRef(ar.makeRef());
-		generated.add(Jimple.v().newAssignStmt(dexLoaderVar, Jimple.v().newStaticFieldRef(ar.makeRef())));
+		Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
+		SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
+		SootField fieldDex = classMainActivity.getFieldByName("dex");
+		generated.add(Jimple.v().newAssignStmt(dexLoaderVar,Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
+		SootField fieldFluidInterface = classMainActivity.getFieldByName("objFluidInterface");
+		generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
 		
 		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.ClassLoader", 
 			"java.lang.Class loadClass(java.lang.String)", 
@@ -184,7 +193,7 @@ public class RPCIntfInjector extends BodyTransformer{
 		//invoke runupdate
 		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method", 
 				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", 
-				methodVar, null, NullConstant.v(),objectArrayVar));
+				methodVar, null, objectFluidInterfaceVar,objectArrayVar));
 		
 		units.insertBefore(generated, units.getLast());
 		Unit tryEnd = units.getLast(); //return
@@ -316,6 +325,7 @@ public class RPCIntfInjector extends BodyTransformer{
 		Local eviewVar = InstrumentUtil.generateNewLocal(body, RefType.v("android.view.View"));
 		Local classArrayVar = InstrumentUtil.generateNewLocal(body, ArrayType.v(RefType.v("java.lang.Class"),1));
 		Local objectArrayVar = InstrumentUtil.generateNewLocal(body, ArrayType.v(RefType.v("java.lang.Object"),1));
+		Local objectFluidInterfaceVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Object"));
 		System.out.println("onLongClick : ");
 		//printLocals(body);
 
@@ -324,11 +334,12 @@ public class RPCIntfInjector extends BodyTransformer{
 
 		
 		//get dexloader from field
-		Object[] arr = Scene.v().getApplicationClasses().toArray();
-		SootClass a = (SootClass) arr[MAINACTIVITY_INDEX];
-		SootField ar = a.getFieldByName("dex");
-		Jimple.v().newStaticFieldRef(ar.makeRef());
-		generated.add(Jimple.v().newAssignStmt(dexLoaderVar, Jimple.v().newStaticFieldRef(ar.makeRef())));
+		Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
+		SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
+		SootField fieldDex = classMainActivity.getFieldByName("dex");
+		generated.add(Jimple.v().newAssignStmt(dexLoaderVar,Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
+		SootField fieldFluidInterface = classMainActivity.getFieldByName("objFluidInterface");
+		generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
 		
 		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.ClassLoader", 
 			"java.lang.Class loadClass(java.lang.String)", 
@@ -347,8 +358,8 @@ public class RPCIntfInjector extends BodyTransformer{
 		
 		
 		//put class to class array
-		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Object", "java.lang.Class getClass()", widgetnameVar, classStringVar));
-		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(0)), classStringVar));
+		//generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Object", "java.lang.Class getClass()", widgetnameVar, classStringVar));
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(0)), ClassConstant.v("Ljava/lang/String;")));
 		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(1)), ClassConstant.v("Landroid/view/View;")));
 
 		//get runtest
@@ -364,7 +375,7 @@ public class RPCIntfInjector extends BodyTransformer{
 		//invoke runtest
 		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method", 
 				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", 
-				methodVar, null, NullConstant.v(),objectArrayVar));
+				methodVar, null, objectFluidInterfaceVar,objectArrayVar));
 		
 		units.insertBefore(generated, units.getLast());
 		Unit tryEnd = units.getLast(); //return
@@ -475,9 +486,123 @@ public class RPCIntfInjector extends BodyTransformer{
 		body.validate();
 		
 	}
-	
-	
+
 	void injectCode(JimpleBody body) {
+        UnitPatchingChain units = body.getUnits();
+        List<Unit> generated = new ArrayList<>();
+        InvokeStmt invkStmt = null;
+        InvokeStmt stmt = null;
+        // local variables
+        Local thisVar = body.getThisLocal();
+        Local dexLoaderVar = InstrumentUtil.generateNewLocal(body, RefType.v("dalvik.system.DexClassLoader"));
+        Local classVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Class"));
+        Local classLoaderVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.ClassLoader"));
+        Local objVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Object"));
+        Local fieldVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.reflect.Field"));
+        Local serviceConnVar = InstrumentUtil.generateNewLocal(body, RefType.v("android.content.ServiceConnection"));
+        Local intentVar = InstrumentUtil.generateNewLocal(body, RefType.v("android.content.Intent"));
+        Local exceptionVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Exception"));
+        Local classArrayVar = InstrumentUtil.generateNewLocal(body, ArrayType.v(RefType.v("java.lang.Class"),1));
+		Local objectArrayVar = InstrumentUtil.generateNewLocal(body, ArrayType.v(RefType.v("java.lang.Object"),1));
+		Local objectFluidInterfaceVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Object"));
+		Local methodVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.reflect.Method"));
+
+
+        // create DexClassLoader instance
+        generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Object", "java.lang.Class getClass()", thisVar, classVar));
+        generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Class", "java.lang.ClassLoader getClassLoader()", classVar, classLoaderVar));
+        generated.addAll(InstrumentUtil.generateNewInstance(body, "dalvik.system.DexClassLoader",
+            "void <init>(java.lang.String,java.lang.String,java.lang.String,java.lang.ClassLoader)",
+            dexLoaderVar, StringConstant.v(FLUID_LIB_PATH), StringConstant.v(TMP_DIR_PATH), NullConstant.v(), classLoaderVar));
+        //copy dexLoaderVar to this.dex field
+        Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
+		SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
+		SootField fieldDex = classMainActivity.getFieldByName("dex");
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef(fieldDex.makeRef()),dexLoaderVar));
+		SootField fieldFluidInterface = classMainActivity.getFieldByName("objFluidInterface");
+		//generated.add(Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef()),objectFluidInterfaceVar));
+        
+		// create FLUID instance
+        generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.ClassLoader",
+            "java.lang.Class loadClass(java.lang.String)",
+            dexLoaderVar, classVar, StringConstant.v(FLUID_MAIN_CLASS)));
+        Unit tryBegin = generated.get(generated.size() -1);
+		
+      //create Class array for getDeclaredMethod
+		SootClass cls = Scene.v().getSootClass("java.lang.Class");
+		generated.add(Jimple.v().newAssignStmt(classArrayVar, Jimple.v().newNewArrayExpr(cls.getType(), IntConstant.v(1))));
+		
+		
+		//put class to class array
+		//generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Object", "java.lang.Class getClass()", widgetnameVar, classStringVar));
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(0)), ClassConstant.v("Landroid/content/Context;")));
+		//generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(1)), ClassConstant.v("Landroid/view/View;")));
+	
+		//get getInstance
+		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Class", 
+				"java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])", 
+				classVar, methodVar, StringConstant.v("getInstance"),classArrayVar));
+		
+		//create object array for invoke
+		SootClass cls2 = Scene.v().getSootClass("java.lang.Object");
+		generated.add(Jimple.v().newAssignStmt(objectArrayVar, Jimple.v().newNewArrayExpr(cls2.getType(), IntConstant.v(1))));
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(0)), thisVar));
+		//invoke getInstance
+		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method", 
+				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", 
+				methodVar, objectFluidInterfaceVar, NullConstant.v(),objectArrayVar));
+
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef()),objectFluidInterfaceVar));
+		
+		//create Class array for getDeclaredMethod
+		//SootClass cls = Scene.v().getSootClass("java.lang.Class");
+		generated.add(Jimple.v().newAssignStmt(classArrayVar, Jimple.v().newNewArrayExpr(cls.getType(), IntConstant.v(1))));
+		
+		
+		//put class to class array
+		//generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Object", "java.lang.Class getClass()", widgetnameVar, classStringVar));
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(0)), NullConstant.v()));
+		//generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(1)), ClassConstant.v("Landroid/view/View;")));
+	
+		//get getInstance
+		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Class", 
+				"java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])", 
+				classVar, methodVar, StringConstant.v("runBind"),NullConstant.v()));
+		
+		//create object array for invoke
+		//SootClass cls2 = Scene.v().getSootClass("java.lang.Object");
+		generated.add(Jimple.v().newAssignStmt(objectArrayVar, Jimple.v().newNewArrayExpr(cls2.getType(), IntConstant.v(1))));
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(0)), NullConstant.v()));
+		//invoke getInstance
+		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method", 
+				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", 
+				methodVar, null, objectFluidInterfaceVar,NullConstant.v()));
+
+		//generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
+        
+        
+        
+        
+        
+        
+        // insert new code
+        units.insertBefore(generated, units.getLast());
+        Unit tryEnd = units.getLast();
+        // insert try-catch statement
+        CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
+        Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
+        units.add(catchBegin);
+        units.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable",
+            "void printStackTrace()", exceptionVar, null));
+        units.add(Jimple.v().newReturnVoidStmt());
+        SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
+        Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
+        body.getTraps().add(trap);
+        // validate the instrumented code
+        body.validate();
+    }
+	
+	void injectCode_t(JimpleBody body) {
         UnitPatchingChain units = body.getUnits();
         List<Unit> generated = new ArrayList<>();
         InvokeStmt invkStmt = null;

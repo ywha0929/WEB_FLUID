@@ -14,6 +14,7 @@ import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -55,12 +56,29 @@ public class FLUIDMain {
             });
 
         }
+        public void reverseKeyboardEvent(Bundle bundle) throws RemoteException
+        {
+            Log.d(TAG,"this is reverseMotionEvent");
+            Activity activity = (Activity) mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    int ID = bundle.getInt("ID");
+                    KeyEvent keyEvent= (KeyEvent) bundle.getParcelable("keyevent");
+                    View view = (View) activity.findViewById(ID);
 
+                    view.dispatchKeyEvent(keyEvent);
+                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getParcelable("keyevent"),
+                            Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
+        }
         public void reverseMotionEvent(Bundle bundle) throws RemoteException
         {
             Log.d(TAG,"this is reverseMotionEvent");
             Activity activity = (Activity) mContext;
-            List<MotionEvent> motionEventList = new ArrayList<MotionEvent>();
+
 
             activity.runOnUiThread(new Runnable(){
 
@@ -70,10 +88,21 @@ public class FLUIDMain {
                     int ID = bundle.getInt("ID");
                     MotionEvent motionEvent = bundle.getParcelable("motionevent");
                     View view = (View) activity.findViewById(ID);
-                    float newX = motionEvent.getX() * (float)view.getWidth();
-                    float newY = motionEvent.getY() * (float)view.getHeight();
+                    float motionX = bundle.getFloat("x");
+                    float motionY = bundle.getFloat("y");
+                    float guestWidth = bundle.getFloat("width");
+                    float guestHeight = bundle.getFloat("height");
+                    float newX = (float)((motionX/guestWidth) * (float)view.getWidth());
+                    float newY = (float)((motionY/guestHeight) * (float)view.getHeight());
+                    Log.d(TAG,"motionX : "+motionX);
+                    Log.d(TAG,"motionY : "+motionY);
+                    Log.d(TAG,"guestWidth : "+guestWidth);
+                    Log.d(TAG,"guestHeight : "+guestHeight);
+                    //Log.d(TAG,"event getX : "+motionEvent.getX());
+                    //Log.d(TAG,"event getY : "+motionEvent.getY());
                     motionEvent.setLocation(newX,newY);
-
+                    Log.d(TAG,"after event getX : "+motionEvent.getX());
+                    Log.d(TAG,"after event getY : "+motionEvent.getY());
 //                    MotionEvent newmotionEvent = MotionEvent.obtain(curtime+timeInterval,curtime,motionEvent.getAction(),
 //                            255.0f,90.0f,motionEvent.getMetaState());
                     if(motionEvent.getEventTime() != latestEventTime) {
