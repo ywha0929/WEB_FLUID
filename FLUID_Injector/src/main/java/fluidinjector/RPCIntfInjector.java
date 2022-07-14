@@ -4,7 +4,7 @@ import soot.*;
 import soot.jimple.*;
 import soot.util.Chain;
 import soot.util.EmptyChain;
-
+import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -115,10 +115,11 @@ public class RPCIntfInjector extends BodyTransformer{
 			System.out.println("unit : ["+i+"] : " + test[i].toString());
 		}
 	}
+
 	void injectUpdateCode(JimpleBody body)
 	{
 		UnitPatchingChain units = body.getUnits();
-		List<Unit> generated = new ArrayList<>();
+		//List<Unit> generated = new ArrayList<>();
 		Local thisVar = body.getThisLocal();
 		
 		Local exceptionVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Exception"));
@@ -140,76 +141,140 @@ public class RPCIntfInjector extends BodyTransformer{
 		Local objectFluidInterfaceVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Object"));
 
 		//get parameter
-		generated.add(Jimple.v().newAssignStmt(viewVar,body.getParameterLocal(0)));
+		//generated.add(Jimple.v().newAssignStmt(viewVar,body.getParameterLocal(0)));
 		System.out.println("onClick");
 		printLocals(body);
 		
+		
+		Object[] unitarray = units.toArray();
+		for(int i = 0; i<unitarray.length;i++)
+		{
+			if(unitarray[i].toString().contains("setTextColor")|| unitarray[i].toString().contains("setTextSize"))
+			{
+				List<Unit> generated = new ArrayList<>();
+				generated.add(Jimple.v().newAssignStmt(viewVar,body.getParameterLocal(0)));
+				Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
+				SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
+				SootField fieldDex = classMainActivity.getFieldByName("dex");
+				generated.add(Jimple.v().newAssignStmt(dexLoaderVar,Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
+				SootField fieldFluidInterface = classMainActivity.getFieldByName("objFluidInterface");
+				generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
+				
+				generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.ClassLoader", 
+					"java.lang.Class loadClass(java.lang.String)", 
+					dexLoaderVar, classVar, StringConstant.v(FLUID_MAIN_CLASS)));
+				Unit tryBegin = generated.get(generated.size() -1);
+				
+				
+				//create class array for getDeclaredMethod
+				SootClass cls = Scene.v().getSootClass("java.lang.Class");
+				generated.add(Jimple.v().newAssignStmt(classArrayVar, Jimple.v().newNewArrayExpr(cls.getType(), IntConstant.v(2))));
+				
+				//insert class to class array
+				generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(0)), ClassConstant.v("Ljava/lang/String;")));
+				generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(1)), ClassConstant.v("Landroid/view/View;")));
+				
+				//get runupdate
+				generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Class", 
+						"java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])", 
+						classVar, methodVar, StringConstant.v("runUpdate"),classArrayVar));
+				
+				//make object
+				SootClass cls2 = Scene.v().getSootClass("java.lang.Object");
+				
+				//get view
+				Object[] locals = body.getLocals().toArray();
+				//edit here
+				
+				
+				//get ui_update method unit
+				String sig = unitarray[i].toString();
+				System.out.println("sig : " + sig);
+				
+				//get base for ui_update method unit
+				String sigfortok = new String(sig);
+				String[] toks = sigfortok.split(" ");
+//				for(int k = 0; k<toks.length;k++)
+//				{
+//					System.out.println(toks[k]);
+//				}
+				char[] chararr = toks[1].toCharArray();
+				String local = "";
+				for(int k = 0; k<chararr.length;k++)
+				{
+					if(chararr[k] != '.')
+					{
+						local = local +chararr[k];
+					}
+					else
+						break;
+				}
+				System.out.println("local : "+local);
+				for(int j = 0; j<locals.length; j++)
+				{
+					if(locals[j].toString().equals(local));
+						generated.add(Jimple.v().newAssignStmt(viewVar, (Local)locals[j]));
+					
+				}
+				//generated.add(Jimple.v().newAssignStmt(viewVar, (Local)locals[0]));
+				generated.add(Jimple.v().newAssignStmt(signatureVar,StringConstant.v(sig)));
+				
+				
+				generated.add(Jimple.v().newAssignStmt(objectArrayVar, Jimple.v().newNewArrayExpr(cls2.getType(), IntConstant.v(2))));
+				generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(0)), signatureVar));
+				generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(1)), viewVar));
+				
+				//invoke runupdate
+				generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method", 
+						"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", 
+						methodVar, null, objectFluidInterfaceVar,objectArrayVar));
+				
+				Unit tryEnd = generated.get(generated.size()-1);
+				CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
+				Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
+				generated.add(catchBegin);
+				generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable", 
+						"void printStackTrace()", exceptionVar, null));
+				SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
+				Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
+				body.getTraps().add(trap);
+				units.insertBefore(generated, units.getLast());
+			}
+		}
 		//get dexclassloader from field
-		Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
-		SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
-		SootField fieldDex = classMainActivity.getFieldByName("dex");
-		generated.add(Jimple.v().newAssignStmt(dexLoaderVar,Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
-		SootField fieldFluidInterface = classMainActivity.getFieldByName("objFluidInterface");
-		generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
-		
-		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.ClassLoader", 
-			"java.lang.Class loadClass(java.lang.String)", 
-			dexLoaderVar, classVar, StringConstant.v(FLUID_MAIN_CLASS)));
-		Unit tryBegin = generated.get(generated.size() -1);
 		
 		
-		//create class array for getDeclaredMethod
-		SootClass cls = Scene.v().getSootClass("java.lang.Class");
-		generated.add(Jimple.v().newAssignStmt(classArrayVar, Jimple.v().newNewArrayExpr(cls.getType(), IntConstant.v(2))));
 		
-		//insert class to class array
-		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(0)), ClassConstant.v("Ljava/lang/String;")));
-		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(1)), ClassConstant.v("Landroid/view/View;")));
-		
-		//get runupdate
-		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Class", 
-				"java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])", 
-				classVar, methodVar, StringConstant.v("runUpdate"),classArrayVar));
-		
-		//make object
-		SootClass cls2 = Scene.v().getSootClass("java.lang.Object");
-		
-		//get view
-		Object[] locals = body.getLocals().toArray();
-		//edit here
-		generated.add(Jimple.v().newAssignStmt(viewVar, (Local)locals[0]));
-		
-		//get ui_update method unit
-		Object[] unitArray = body.getUnits().toArray();
-		String sig = unitArray[unitArray.length -2].toString();
-		System.out.println("sig : " + sig);
-		generated.add(Jimple.v().newAssignStmt(signatureVar,StringConstant.v(sig)));
-		
-		
-		generated.add(Jimple.v().newAssignStmt(objectArrayVar, Jimple.v().newNewArrayExpr(cls2.getType(), IntConstant.v(2))));
-		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(0)), signatureVar));
-		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(1)), viewVar));
-		
-		//invoke runupdate
-		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method", 
-				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", 
-				methodVar, null, objectFluidInterfaceVar,objectArrayVar));
-		
-		units.insertBefore(generated, units.getLast());
-		Unit tryEnd = units.getLast(); //return
-
-		// insert try-catch statement
-		CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
-		Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
-		units.add(catchBegin);
-		units.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable", 
-			"void printStackTrace()", exceptionVar, null));
-		
-		units.add(Jimple.v().newReturnVoidStmt());
-		SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
-		Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
-		body.getTraps().add(trap);
+//		Object[] unitarray = units.toArray();
+//		for(int i = 0; i<unitarray.length;i++)
+//		{
+//			if(unitArray[i].toString().contains("setText"))
+//			{
+//				List<Unit> tobeInserted = new ArrayList<Unit>();
+//				for(Unit u :generated)
+//				{
+//					tobeInserted.add((Unit) u.clone());
+//				}
+//				units.insertBefore(tobeInserted,units.getSuccOf((Unit)unitArray[i]));
+//			}
+//		}
+//		units.insertBefore(generated, units.getLast());
 		body.validate();
+		
+//		Unit tryEnd = units.getLast(); //return
+//
+//		// insert try-catch statement
+//		CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
+//		Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
+//		units.add(catchBegin);
+//		units.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable", 
+//			"void printStackTrace()", exceptionVar, null));
+//		
+//		units.add(Jimple.v().newReturnVoidStmt());
+//		SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
+//		Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
+//		body.getTraps().add(trap);
+//		body.validate();
 	}
 	
 	void injectUpdateCode_U(JimpleBody body)
