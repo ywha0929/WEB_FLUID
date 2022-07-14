@@ -69,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("TAG", "btn1 short invoked");
-                edit1.setTextColor(Color.BLUE);
+                if(edit1.getCurrentTextColor() == Color.BLUE)
+                    edit1.setTextColor(Color.RED);
+                else
+                    edit1.setTextColor(Color.BLUE);
 
             }
         });
