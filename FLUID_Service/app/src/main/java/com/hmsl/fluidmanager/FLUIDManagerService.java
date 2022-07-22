@@ -199,9 +199,9 @@ public class FLUIDManagerService extends Service {
                     int typeEvent = objectInputStream.readInt();
                     buffer = (byte[]) objectInputStream.readObject();
                     Bundle bundle = bytes2Parcelable(buffer, Bundle.CREATOR);
-                    MotionEvent motionEvent = bundle.getParcelable("motionevent");
-                    Log.d(TAG,"motion getX : "+motionEvent.getX());
-                    Log.d(TAG,"motion getY : "+motionEvent.getY());
+                    //MotionEvent motionEvent = bundle.getParcelable("motionevent");
+                    //Log.d(TAG,"motion getX : "+motionEvent.getX());
+                    //Log.d(TAG,"motion getY : "+motionEvent.getY());
                     if (typeEvent == 1)
                         mRemoteService.reverseMotionEvent(bundle);
                     else if(typeEvent == 2)

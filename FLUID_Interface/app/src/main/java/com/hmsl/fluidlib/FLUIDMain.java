@@ -12,6 +12,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.RemoteException;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -31,7 +33,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class FLUIDMain {
@@ -42,6 +46,7 @@ public class FLUIDMain {
     public Context mContext = null;
     static FLUIDMain instance;
     long latestEventTime;
+    private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
     private final IBinder mBinder = new IReverseConnection.Stub() {
         @Override
         public void doCheck(int a) throws RemoteException {
@@ -64,11 +69,17 @@ public class FLUIDMain {
                 @Override
                 public void run() {
                     int ID = bundle.getInt("ID");
-                    KeyEvent keyEvent= (KeyEvent) bundle.getParcelable("keyevent");
-                    View view = (View) activity.findViewById(ID);
-
-                    view.dispatchKeyEvent(keyEvent);
-                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getParcelable("keyevent"),
+                    CharSequence text= (CharSequence) bundle.getCharSequence("text");
+                    TextView textView = (TextView) activity.findViewById(ID);
+                    if(!textView.getText().toString().equals(text.toString())) {
+                        textView.removeTextChangedListener((TextWatcher) listTextListener.get(ID));
+                        textView.setText(text);
+                        //textwatcher watcher = new textwatcher(textView);
+                        textView.addTextChangedListener((TextWatcher) listTextListener.get(ID));
+                        //listTextListener.put(ID,watcher);
+                    }
+                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getCharSequence
+                                    ("text"),
                             Toast.LENGTH_SHORT);
                     toast.show();
                 }
@@ -199,10 +210,45 @@ public class FLUIDMain {
         try {
             //Log.d("TAG","run test");
             byte[] toSend = generate_byteArray(widgetType, view);
-            //Log.d("TAG","runtest");
+            Log.d(TAG,"runtest : "+widgetType);
             bundle.putByteArray("key", toSend);
             Log.d(TAG, "runtest send : " + getTS());
+            if(widgetType.contains("TextView") || widgetType.contains("EditText"))
+            {
+                Log.d(TAG, "runtest add Listener : " + getTS());
+                TextView textView = (TextView) view;
+                textwatcher watcher = new textwatcher(textView);
+                textView.addTextChangedListener(watcher);
+                listTextListener.put(textView.getId(),watcher);
+//                textView.addTextChangedListener(new TextWatcher() {
+//                    String beforeText;
+//                    @Override
+//                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                        beforeText = textView.getText().toString();
+//                    }
+//
+//                    @Override
+//                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                        Bundle bundle = new Bundle();
+//                        if(!textView.getText().toString().equals(beforeText))
+//                        {
+//                            try {
+//                                bundle.putByteArray("key",generate_ubyteArray("setText",textView,charSequence.toString()));
+//                                mRemoteService.update(bundle);
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void afterTextChanged(Editable editable) {
+//
+//                    }
+//                });
+            }
             mRemoteService.test(bundle);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -305,7 +351,7 @@ public class FLUIDMain {
             return 5;
         } else if (type.contains("Long")) {
             return 6;
-        } else if (type.contains("Character")) {
+        } else if (type.contains("Char")) {
             return 7;
         } else
             return 0;
@@ -406,5 +452,39 @@ public class FLUIDMain {
         Long tsLong = System.nanoTime();
         String ts = tsLong.toString();
         return ts;
+    }
+    class textwatcher implements TextWatcher
+    {
+        String beforeText;
+        TextView textV;
+        public textwatcher(TextView textV)
+        {
+            this.textV = textV;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "before carSequence : " + charSequence);
+            Log.d(TAG, "before getText : " + textV.getText().toString());
+            beforeText = textV.getText().toString();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Bundle bundle = new Bundle();
+            if(!textV.getText().toString().equals(beforeText))
+            {
+                try {
+                    bundle.putByteArray("key",generate_ubyteArray("setText",textV,charSequence.toString()));
+                    mRemoteService.update(bundle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
     }
 }

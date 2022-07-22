@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcel;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -39,6 +41,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import dalvik.system.DexClassLoader;
 
@@ -47,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "FLUID(FLUIDGuest)";
 
     private int port = 5673;
-    private String ip = "192.168.0.11";
+    private String ip = "192.168.0.18";
     private int maxBufferSize = 1024;
 
     private Handler mHandler = new Handler();
@@ -57,22 +61,13 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout container;
     private Handler sendHandler;
     private ArrayList<TextView> UI_List = new ArrayList<TextView>();
+    private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        Log.d(TAG,"EditText key touch");
-        Bundle bundle = new Bundle();
-        bundle.putInt("ID",this.getCurrentFocus().getId());
-    //bundle.putInt("ID",view.getId());
-        bundle.putParcelable("keyevent",event);
-        Message message = Message.obtain();
-        bundle.putInt("key",keyCode);
-        message.obj = bundle;
-        message.arg1 = 2;
-        //message.arg2 = keyCode;
-        sendHandler.sendMessage(message);
-        return true;
+    protected void onDestroy() {
+        super.onDestroy();
     }
+
     //hi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,30 +121,31 @@ public class MainActivity extends AppCompatActivity {
 
     class SendThread extends Thread {
         ObjectOutputStream objectOutputStream;
+
         public SendThread() {
 
         }
+
         public void run() {
-            while(socket == null);
+            while (socket == null) ;
             try {
                 objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-                Log.d(TAG,"output stream set");
-            } catch (Exception e)
-            {
+                Log.d(TAG, "output stream set");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             Looper.prepare();
             sendHandler = new Handler(Looper.myLooper()) {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
-                    while(objectOutputStream == null);
-                    Log.d(TAG,"looper running");
-                    Bundle bundle = (Bundle)msg.obj;
+                    while (objectOutputStream == null) ;
+                    Log.d(TAG, "looper running");
+                    Bundle bundle = (Bundle) msg.obj;
                     try {
-                        Log.d(TAG,"About to send Motion to Manager");
+                        Log.d(TAG, "About to send Motion to Manager");
                         //ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                         Parcel parcel = Parcel.obtain();
-                        bundle.writeToParcel(parcel,0);
+                        bundle.writeToParcel(parcel, 0);
                         byte[] buffer = parcel.marshall();
                         parcel.recycle();
                         //OutputStream outputStream = socket.getOutputStream();
@@ -159,9 +155,8 @@ public class MainActivity extends AppCompatActivity {
 //                        if(msg.arg1 == 2)
 //                            objectOutputStream.writeInt(msg.arg2);
                         objectOutputStream.writeObject(buffer);
-                        Log.d(TAG,"Sent Motion to Manager");
-                    } catch(Exception e)
-                    {
+                        Log.d(TAG, "Sent Motion to Manager");
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -175,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
         private Socket socket;
         private Method methods[];
         private Class cls;
+
+
 
         public WorkerThread() throws ClassNotFoundException {
             cls = Class.forName("android.widget.TextView");
@@ -259,6 +256,20 @@ public class MainActivity extends AppCompatActivity {
 
                                             //Log.d("TAG", "inside loop id : " + id + "          get id : " + UI_List.get(i).getId());
                                             if (id == (long) UI_List.get(i).getId()) {
+                                                if (method.equals("setText")) {
+                                                    if (!UI_List.get(i).getText().toString().equals((String) param)) {
+                                                        //UI_List.get(i).removeTextChangedListener((TextWatcher) listTextListener.get(id));
+                                                        //listTextListener.remove(id);
+                                                        UI_List.get(i).setText((String) param);
+                                                        //textwatcher watcher = new textwatcher(UI_List.get(i));
+                                                        //UI_List.get(i).addTextChangedListener((TextWatcher) listTextListener.get(id));
+                                                        //listTextListener.put(id,watcher);
+
+
+                                                    } else {
+                                                        break;
+                                                    }
+                                                }
                                                 //Log.d("TAG", "before find method");
                                                 Method m = null;
                                                 switch (flag) {
@@ -348,16 +359,16 @@ public class MainActivity extends AppCompatActivity {
         edit.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d(TAG,"EditText touch");
+                Log.d(TAG, "EditText touch");
                 //motionEvent.setLocation(motionEvent.getX()/view.getWidth(),motionEvent.getY()/view.getHeight());
                 Bundle bundle = new Bundle();
-                bundle.putInt("ID",view.getId());
+                bundle.putInt("ID", view.getId());
 
                 bundle.putParcelable("motionevent", motionEvent);
-                bundle.putFloat("x",motionEvent.getX());
-                bundle.putFloat("y",motionEvent.getY());
-                bundle.putFloat("width",view.getWidth());
-                bundle.putFloat("height",view.getHeight());
+                bundle.putFloat("x", motionEvent.getX());
+                bundle.putFloat("y", motionEvent.getY());
+                bundle.putFloat("width", view.getWidth());
+                bundle.putFloat("height", view.getHeight());
                 Message message = Message.obtain();
                 message.obj = bundle;
                 message.arg1 = 1;
@@ -365,23 +376,45 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        edit.setOnKeyListener(new View.OnKeyListener() {
-
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                Log.d(TAG,"EditText key touch");
-                Bundle bundle = new Bundle();
-                bundle.putInt("ID",view.getId());
-                bundle.putParcelable("keyevent",keyEvent);
-                Message message = Message.obtain();
-
-                message.obj = bundle;
-                message.arg1 = 2;
-                sendHandler.sendMessage(message);
-                return true;
-            }
-        });
+        textwatcher watcher = new textwatcher(edit);
+        edit.addTextChangedListener(watcher);
+        listTextListener.put(edit.getId(),watcher);
+//        edit.addTextChangedListener(new TextWatcher() {
+//            String beforeText;
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                Log.d(TAG, "before carSequence : " + charSequence);
+//                Log.d(TAG, "before getText : " + edit.getText().toString());
+//                beforeText = edit.getText().toString();
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//                Log.d(TAG, "on carSequence : " + charSequence);
+//                Log.d(TAG, "on getText : " + edit.getText().toString());
+//                Log.d(TAG, "equal? : " + edit.getText().toString().equals(charSequence.toString()));
+//                if (!edit.getText().toString().equals(beforeText)) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putInt("ID", edit.getId());
+//                    bundle.putCharSequence("text", charSequence);
+//                    Message message = Message.obtain();
+//                    message.obj = bundle;
+//                    message.arg1 = 2;
+//                    sendHandler.sendMessage(message);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                if (beforeText.equals(edit.getText().toString())) {
+//                    edit.setSelection(beforeText.length());
+//                }
+//            }
+//        });
     }
 
     public void createTextView(long id, String text, float textsize) {
@@ -398,22 +431,57 @@ public class MainActivity extends AppCompatActivity {
         textV.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d(TAG,"TextView touch");
+                Log.d(TAG, "TextView touch");
                 //motionEvent.setLocation(motionEvent.getX()/view.getWidth(),motionEvent.getY()/view.getHeight());
                 Bundle bundle = new Bundle();
-                bundle.putInt("ID",view.getId());
+                bundle.putInt("ID", view.getId());
                 bundle.putParcelable("motionevent", motionEvent);
                 Message message = Message.obtain();
-                bundle.putFloat("x",motionEvent.getX());
-                bundle.putFloat("y",motionEvent.getY());
-                bundle.putFloat("width",view.getWidth());
-                bundle.putFloat("height",view.getHeight());
+                bundle.putFloat("x", motionEvent.getX());
+                bundle.putFloat("y", motionEvent.getY());
+                bundle.putFloat("width", view.getWidth());
+                bundle.putFloat("height", view.getHeight());
                 message.obj = bundle;
                 message.arg1 = 1;
                 sendHandler.sendMessage(message);
                 return true;
             }
         });
+        textwatcher watcher = new textwatcher(textV);
+        textV.addTextChangedListener(watcher);
+        listTextListener.put(textV.getId(),watcher);
+//        textV.addTextChangedListener(new TextWatcher() {
+//            String beforeText;
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                Log.d(TAG, "before carSequence : " + charSequence);
+//                Log.d(TAG, "before getText : " + textV.getText().toString());
+//                beforeText = textV.getText().toString();
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                Log.d(TAG, "on carSequence : " + charSequence);
+//                Log.d(TAG, "on getText : " + textV.getText().toString());
+//                Log.d(TAG, "equal? : " + textV.getText().toString().equals(charSequence.toString()));
+//                if (!textV.getText().toString().equals(beforeText)) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putInt("ID", textV.getId());
+//                    bundle.putCharSequence("text", charSequence);
+//                    Message message = Message.obtain();
+//                    message.obj = bundle;
+//                    message.arg1 = 2;
+//                    sendHandler.sendMessage(message);
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
+
     }
 
     public void createButton(long id, String text, long height, long width) {
@@ -434,24 +502,24 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d(TAG,"Button touch");
-                Log.d(TAG,"button width : "+view.getWidth());
-                Log.d(TAG,"button height : "+view.getHeight());
-                Log.d(TAG,"button getX : "+view.getX());
-                Log.d(TAG,"button getY : "+view.getY());
-                Log.d(TAG,"event getX : "+motionEvent.getX());
-                Log.d(TAG,"event getY : "+motionEvent.getY());
+                Log.d(TAG, "Button touch");
+                Log.d(TAG, "button width : " + view.getWidth());
+                Log.d(TAG, "button height : " + view.getHeight());
+                Log.d(TAG, "button getX : " + view.getX());
+                Log.d(TAG, "button getY : " + view.getY());
+                Log.d(TAG, "event getX : " + motionEvent.getX());
+                Log.d(TAG, "event getY : " + motionEvent.getY());
                 //motionEvent.setLocation(motionEvent.getX()/view.getWidth(),motionEvent.getY()/view.getHeight());
-                Log.d(TAG,"after event getX : "+motionEvent.getX());
-                Log.d(TAG,"after event getY : "+motionEvent.getY());
+                Log.d(TAG, "after event getX : " + motionEvent.getX());
+                Log.d(TAG, "after event getY : " + motionEvent.getY());
                 Bundle bundle = new Bundle();
-                bundle.putInt("ID",view.getId());
+                bundle.putInt("ID", view.getId());
                 bundle.putParcelable("motionevent", motionEvent);
                 Message message = Message.obtain();
-                bundle.putFloat("x",motionEvent.getX());
-                bundle.putFloat("y",motionEvent.getY());
-                bundle.putFloat("width",view.getWidth());
-                bundle.putFloat("height",view.getHeight());
+                bundle.putFloat("x", motionEvent.getX());
+                bundle.putFloat("y", motionEvent.getY());
+                bundle.putFloat("width", view.getWidth());
+                bundle.putFloat("height", view.getHeight());
                 message.obj = bundle;
                 message.arg1 = 1;
 
@@ -494,5 +562,42 @@ public class MainActivity extends AppCompatActivity {
         Long tsLong = System.nanoTime();
         String ts = tsLong.toString();
         return ts;
+    }
+    class textwatcher implements TextWatcher
+    {
+        String beforeText;
+        TextView textV;
+        public textwatcher(TextView textV)
+        {
+            this.textV = textV;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "before carSequence : " + charSequence);
+            Log.d(TAG, "before getText : " + textV.getText().toString());
+            beforeText = textV.getText().toString();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            Log.d(TAG, "on carSequence : " + charSequence);
+            Log.d(TAG, "on getText : " + textV.getText().toString());
+            Log.d(TAG, "equal? : " + textV.getText().toString().equals(charSequence.toString()));
+            Log.wtf(TAG,"call stack",new Throwable("get stacks"));
+            if (!textV.getText().toString().equals(beforeText)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("ID", textV.getId());
+                bundle.putCharSequence("text", charSequence);
+                Message message = Message.obtain();
+                message.obj = bundle;
+                message.arg1 = 2;
+                sendHandler.sendMessage(message);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
     }
 }
