@@ -32,6 +32,7 @@ import com.hmsl.fluidmanager.IFLUIDService;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -405,6 +406,7 @@ public class FLUIDMain {
 
     public static byte[] generate_byteArray(String widgetType, View view) throws IOException {
         byte[] dtoByteArray = null;
+        int size;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
         dataOutputStream.writeInt(view.getId());
@@ -415,18 +417,26 @@ public class FLUIDMain {
         if (widgetType.contains("EditText")) {
 
             EditText edit = (EditText) view;
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(widgetType);
             //dataOutputStream.writeInt(edit.getId());
-            dataOutputStream.writeUTF(edit.getText().toString());
 
+            size = edit.getText().toString().getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
+            dataOutputStream.writeUTF(edit.getText().toString());
             dataOutputStream.writeFloat(edit.getTextSize());
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
         } else if (widgetType.contains("Button")) {
             Button btn = (Button) view;
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(widgetType);
             //dataOutputStream.writeInt(btn.getId());
+            size = btn.getText().toString().getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(btn.getText().toString());
             dataOutputStream.writeInt(btn.getHeight());
             dataOutputStream.writeInt(btn.getWidth());
@@ -436,8 +446,12 @@ public class FLUIDMain {
         if (widgetType.contains("TextView")) {
 
             TextView edit = (TextView) view;
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(widgetType);
             //dataOutputStream.writeInt(edit.getId());
+            size = edit.getText().toString().getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(edit.getText().toString());
 
             dataOutputStream.writeFloat(edit.getTextSize());

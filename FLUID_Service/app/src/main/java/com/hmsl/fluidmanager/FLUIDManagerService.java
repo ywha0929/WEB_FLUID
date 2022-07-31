@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 
 
@@ -248,7 +249,7 @@ public class FLUIDManagerService extends Service {
                         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(input);
                         DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
                         int id = dataInputStream.readInt();
-
+                        Log.d(TAG,"distribute ID : "+id);
                         //Log.e(TAG, "UI_ID = " + id);
                         //Log.d(TAG,""+dataInputStream.readBoolean());
 //                        JSONParser jsonParser = new JSONParser();

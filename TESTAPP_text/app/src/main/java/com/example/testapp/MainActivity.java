@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         edit2 = (EditText) findViewById(R.id.edit2);
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
+
         Activity a = this;
         DexClassLoader dex = new DexClassLoader("/data/local/tmp/fluidlib.apk", "/data/local/tmp/", null, getClass().getClassLoader());
         try {
