@@ -1,5 +1,5 @@
 import React, {useState, Component} from 'react';
-import {StyleSheet, View, Text,TextInput, Button} from 'react-native';
+import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView} from 'react-native';
 import TcpSocket from "react-native-tcp-socket";
 import UIs from './components/UI';
 import utf8 from 'utf8';
@@ -84,7 +84,8 @@ class App extends Component {
                 stringSize = data.readUInt32BE(offset)+2;
                 offset += 4;
                 console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
-                var Text = data.toString('utf8',offset,offset+stringSize);
+                var temp_text = data.toString('utf8',offset,offset+stringSize);
+                var text = (''+temp_text).slice(1);
                 offset += stringSize;
                 console.log('TextSize : ',data.readFloatBE(offset));
                 var TextSize = data.readFloatBE(offset);
@@ -92,7 +93,7 @@ class App extends Component {
                 let UIdata = {
                     "WidgetType": widgetType,
                     "ID": id,
-                    "Text": Text,
+                    "Text": text,
                     "TextSize": TextSize,
                     "isUpdate":isUpdate,
                 };
@@ -110,7 +111,8 @@ class App extends Component {
                 stringSize = data.readUInt32BE(offset)+2;
                 offset += 4;
                 console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
-                var Text = data.toString('utf8',offset,offset+stringSize);
+                var temp_text = data.toString('utf8',offset,offset+stringSize);
+                var text = (''+temp_text).slice(1);
                 offset += stringSize;
                 var height = data.readUInt32BE(offset);
                 console.log("Height : ",height);
@@ -121,7 +123,7 @@ class App extends Component {
                 let UIdata = {
                     "WidgetType": widgetType,
                     "ID": id,
-                    "Text": Text,
+                    "Text": text,
                     "Height": height,
                     "isUpdate":isUpdate,
                     "Width": width,
@@ -146,8 +148,8 @@ class App extends Component {
             if(item.WidgetType.includes("EditText")){
                 console.log(item.Text.length);
                 return (
-                    <View key={item.ID} style={{flex:1}}>
-                        <TextInput  style={{fontSize: item.TextSize, value: item.Text}}>
+                    <View key={item.ID} style={{alignItems:'center'}}>
+                        <TextInput style={{fontSize: item.TextSize,  textAlign: 'center', padding: 2}} value={item.Text} >
                             
                         </TextInput>
                     </View>
@@ -156,9 +158,9 @@ class App extends Component {
             if(item.WidgetType.includes("TextView")){
                 console.log(item.Text);
                 return (
-                    <View key={item.ID} style={{flex: 1}}>
-                        <Text  style={{fontSize: item.TextSize}}>
-                            {`hi ${item.Text}`}
+                    <View key={item.ID} style={{alignItems:'center'}}>
+                        <Text  style={{fontSize: item.TextSize, fontWeight: '500', width: 350}}>
+                            {item.Text}
                         </Text>
                     </View>
                 );
@@ -166,10 +168,10 @@ class App extends Component {
             if(item.WidgetType.includes("Button")){
                 console.log("type: ",typeof (item.Text));
                 return(
-                    <View key={item.ID} style={{height:item.Height, width: item.Width,flexDirection: 'column'}}>
-                        <Button  style={{flex: 1}} title={(item.Text)}>
+                    <ScrollView key={item.ID} contentContainerStyle={{height: 50, width: 400, alignItems: "center"}}>
+                        <Button  style={{height: 50, width: 400}} title={item.Text}>
                         </Button>
-                    </View>
+                    </ScrollView>
                 )
             }
             
@@ -180,9 +182,9 @@ class App extends Component {
             
         });
         return (
-            <View style={styles.container}>
+            <SafeAreaView Style={styles.container}>
                 {Arr}
-            </View>
+            </SafeAreaView>
         );
     };
 }
@@ -190,7 +192,7 @@ class App extends Component {
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
-        flexDirection: 'column',
+        flexDirection: 'column'
     },
 });
 export default App;
