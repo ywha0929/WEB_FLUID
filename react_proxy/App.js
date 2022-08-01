@@ -1,5 +1,5 @@
 import React, {useState, Component} from 'react';
-import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView} from 'react-native';
+import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView, Pressable} from 'react-native';
 import TcpSocket from "react-native-tcp-socket";
 import UIs from './components/UI';
 import utf8 from 'utf8';
@@ -114,10 +114,10 @@ class App extends Component {
                 var temp_text = data.toString('utf8',offset,offset+stringSize);
                 var text = (''+temp_text).slice(1);
                 offset += stringSize;
-                var height = data.readUInt32BE(offset);
+                var height = data.readUInt32BE(offset)* 0.75;
                 console.log("Height : ",height);
                 offset +=4;
-                var width = data.readUInt32BE(offset);
+                var width = data.readUInt32BE(offset)* 0.75;
                 console.log("Width : ",width);
                 offset += 4;
                 let UIdata = {
@@ -146,32 +146,33 @@ class App extends Component {
         let Arr = this.state.UIList.map((item,index)=>{
             console.log(item.WidgetType.includes("EditText"));
             if(item.WidgetType.includes("EditText")){
-                console.log(item.Text.length);
+                console.log("EditText");
                 return (
-                    <View key={item.ID} style={{alignItems:'center'}}>
-                        <TextInput style={{fontSize: item.TextSize,  textAlign: 'center', padding: 2}} value={item.Text} >
+                    <View key={item.ID} style={{alignItems:'flex-start'}}>
+                        <TextInput style={{fontSize: item.TextSize,  textAlign: 'left', padding: 2}} value={item.Text} >
                             
                         </TextInput>
                     </View>
                 );
             }
             if(item.WidgetType.includes("TextView")){
-                console.log(item.Text);
+                console.log("TextView");
                 return (
-                    <View key={item.ID} style={{alignItems:'center'}}>
-                        <Text  style={{fontSize: item.TextSize, fontWeight: '500', width: 350}}>
+                    <View key={item.ID} style={{alignItems:'flex-start'}}>
+                        <Text  style={{fontSize: item.TextSize, textAlign: 'left', fontWeight: '500', width: 350}}>
                             {item.Text}
                         </Text>
                     </View>
                 );
             }
             if(item.WidgetType.includes("Button")){
-                console.log("type: ",typeof (item.Text));
+                console.log("Button");
                 return(
-                    <ScrollView key={item.ID} contentContainerStyle={{height: 50, width: 400, alignItems: "center"}}>
-                        <Button  style={{height: 50, width: 400}} title={item.Text}>
-                        </Button>
-                    </ScrollView>
+                    <View key={item.ID} style={{height: item.Height, width: item.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black'}}>
+                        <Pressable style={{height: item.Height, width: item.Width, alignContent: 'center',  borderBottomWidth: StyleSheet.hairlineWidth, justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}>
+                            <Text style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}> {item.Text} </Text>
+                        </Pressable>
+                    </View>
                 )
             }
             
@@ -192,7 +193,6 @@ class App extends Component {
 const styles = StyleSheet.create({
     container: {
         alignItems: "center",
-        flexDirection: 'column'
     },
 });
 export default App;

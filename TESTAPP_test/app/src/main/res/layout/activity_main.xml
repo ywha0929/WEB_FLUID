@@ -14,8 +14,8 @@
         android:text="hello1"
         android:textSize="32dp"/>
 
-    <EditText
-        android:id="@+id/edit2"
+    <TextView
+        android:id="@+id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="hello2"

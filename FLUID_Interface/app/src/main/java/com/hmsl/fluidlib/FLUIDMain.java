@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -14,6 +15,7 @@ import android.os.Parcel;
 import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -425,7 +427,7 @@ public class FLUIDMain {
             size = edit.getText().toString().getBytes(StandardCharsets.UTF_8).length;
             dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(edit.getText().toString());
-            dataOutputStream.writeFloat(edit.getTextSize());
+            dataOutputStream.writeFloat(convertPixelsToDpFloat(edit.getTextSize(), instance.mContext));
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
@@ -438,8 +440,10 @@ public class FLUIDMain {
             size = btn.getText().toString().getBytes(StandardCharsets.UTF_8).length;
             dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(btn.getText().toString());
-            dataOutputStream.writeInt(btn.getHeight());
-            dataOutputStream.writeInt(btn.getWidth());
+
+            
+//            dataOutputStream.writeInt( btn.getHeight());
+//            dataOutputStream.writeInt( btn.getWidth());
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
         }
@@ -454,7 +458,7 @@ public class FLUIDMain {
             dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(edit.getText().toString());
 
-            dataOutputStream.writeFloat(edit.getTextSize());
+            dataOutputStream.writeFloat( convertPixelsToDpFloat(edit.getTextSize(), instance.mContext));
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
@@ -467,6 +471,27 @@ public class FLUIDMain {
         String ts = tsLong.toString();
         return ts;
     }
+
+    public static int convertDpToPixel(int dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        int px = dp * ((int)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
+    }
+
+    public static int convertPixelsToDpInt(int px, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        int dp = px / ((int)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
+    }
+    public static float convertPixelsToDpFloat(float px, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
+    }
+
     class textwatcher implements TextWatcher
     {
         String beforeText;
