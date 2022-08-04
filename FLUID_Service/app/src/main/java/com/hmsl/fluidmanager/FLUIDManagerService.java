@@ -35,7 +35,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.hmsl.fluidlib.IReverseConnection;
@@ -164,6 +166,7 @@ public class FLUIDManagerService extends Service {
         Parcel parcel = Parcel.obtain();
         parcel.unmarshall(bytes, 0, bytes.length);
         parcel.setDataPosition(0);
+        parcel.readInt();
         T result = creator.createFromParcel(parcel);
         parcel.recycle();
         return result;
@@ -171,7 +174,8 @@ public class FLUIDManagerService extends Service {
 
     class SocketInputThread extends Thread {
         InputStream inputStream;
-        ObjectInputStream objectInputStream;
+        ByteArrayInputStream byteArrayInputStream;
+        DataInputStream dataInputStream;
         private static final int MAX_BUFFER = 1024;
         int targetID = 0;
         List<Bundle> bundleList = new ArrayList<Bundle>();
@@ -186,7 +190,7 @@ public class FLUIDManagerService extends Service {
             while (socket == null) ;
             try {
                 inputStream = socket.getInputStream();
-                objectInputStream = new ObjectInputStream(inputStream);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -195,18 +199,60 @@ public class FLUIDManagerService extends Service {
             while (true) {
                 try {
 
-                    byte[] buffer;
+                    byte[] buffer = new byte[1000];
+                    inputStream.read(buffer);
+                    byteArrayInputStream = new ByteArrayInputStream(buffer);
+                    dataInputStream = new DataInputStream(byteArrayInputStream);
+                    int ID = dataInputStream.readInt();
+                    int typeEvent = dataInputStream.readInt();
+                    Log.d(TAG,"type Event : "+typeEvent+" ID : "+ID);
+//                    long ID = Integer.toUnsignedLong(dataInputStream.readInt());
+//                    long typeEvent = Integer.toUnsignedLong(dataInputStream.readInt());
 
-                    int typeEvent = objectInputStream.readInt();
-                    buffer = (byte[]) objectInputStream.readObject();
-                    Bundle bundle = bytes2Parcelable(buffer, Bundle.CREATOR);
-                    //MotionEvent motionEvent = bundle.getParcelable("motionevent");
+                    //buffer = (byte[]) objectInputStream.readObject();
+//                    Bundle bundle = bytes2Parcelable(buffer, Bundle.CREATOR);
+                    //aMotionEvent motionEvent = bundle.getParcelable("motionevent");
                     //Log.d(TAG,"motion getX : "+motionEvent.getX());
                     //Log.d(TAG,"motion getY : "+motionEvent.getY());
-                    if (typeEvent == 1)
-                        mRemoteService.reverseMotionEvent(bundle);
-                    else if(typeEvent == 2)
+                    //if (typeEvent == 1)
+                        //mRemoteService.reverseMotionEvent(bundle);
+                    long down_time=0;
+                    if(typeEvent == 1)
+                    {
+                        int up_down = dataInputStream.readInt();
+                        if(up_down == 0){
+//                            down_time = System.
+                            Log.i(TAG,"down Time : "+down_time);
+                            MotionEvent motiondown = MotionEvent.obtain(0,0,MotionEvent.ACTION_DOWN,0,0,0);
+                            Bundle bundledown = new Bundle();
+                            bundledown.putParcelable("motionevent",motiondown);
+                            bundledown.putInt("ID",ID);
+                            mRemoteService.reverseMotionEvent(bundledown);
+
+                        }
+                        else{
+                            MotionEvent motionup = MotionEvent.obtain(0,0,MotionEvent.ACTION_UP,0,0,0);
+                            Bundle bundleup = new Bundle();
+                            bundleup.putInt("ID",ID);
+                            bundleup.putParcelable("motionevent",motionup);
+                            bundleup.putInt("ID",ID);
+                            mRemoteService.reverseMotionEvent(bundleup);
+                        }
+                    }
+
+                    else if(typeEvent == 2) {
+                        int textlength = dataInputStream.readInt();
+                        inputStream.read(buffer);
+                        byte[] newBuffer = Arrays.copyOfRange(buffer,0,textlength);
+                        String text = new String(buffer, StandardCharsets.UTF_8);
+                        Log.d(TAG,"input ID : "+ID);
+                        Log.d(TAG, "input typeEvent : "+typeEvent);
+                        Log.d(TAG, "input text : "+text);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("ID", ID);
+                        bundle.putCharSequence("text",text);
                         mRemoteService.reverseKeyboardEvent(bundle);
+                    }
                     else
                         Log.e(TAG,"invalid typeEvent num");
 

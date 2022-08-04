@@ -102,28 +102,8 @@ public class FLUIDMain {
                     int ID = bundle.getInt("ID");
                     MotionEvent motionEvent = bundle.getParcelable("motionevent");
                     View view = (View) activity.findViewById(ID);
-                    float motionX = bundle.getFloat("x");
-                    float motionY = bundle.getFloat("y");
-                    float guestWidth = bundle.getFloat("width");
-                    float guestHeight = bundle.getFloat("height");
-                    float newX = (float)((motionX/guestWidth) * (float)view.getWidth());
-                    float newY = (float)((motionY/guestHeight) * (float)view.getHeight());
-                    Log.d(TAG,"motionX : "+motionX);
-                    Log.d(TAG,"motionY : "+motionY);
-                    Log.d(TAG,"guestWidth : "+guestWidth);
-                    Log.d(TAG,"guestHeight : "+guestHeight);
-                    //Log.d(TAG,"event getX : "+motionEvent.getX());
-                    //Log.d(TAG,"event getY : "+motionEvent.getY());
-                    motionEvent.setLocation(newX,newY);
-                    Log.d(TAG,"after event getX : "+motionEvent.getX());
-                    Log.d(TAG,"after event getY : "+motionEvent.getY());
-//                    MotionEvent newmotionEvent = MotionEvent.obtain(curtime+timeInterval,curtime,motionEvent.getAction(),
-//                            255.0f,90.0f,motionEvent.getMetaState());
-                    if(motionEvent.getEventTime() != latestEventTime) {
-                        latestEventTime = motionEvent.getEventTime();
 
-                        view.dispatchTouchEvent(motionEvent);
-                    }
+                    view.dispatchTouchEvent(motionEvent);
 
 //                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getParcelable("motionevent"),
 //                            Toast.LENGTH_SHORT);
@@ -368,6 +348,8 @@ public class FLUIDMain {
         dataOutputStream.writeInt(view.getId());
         dataOutputStream.writeBoolean(true);
         //dataOutputStream.writeInt(view.getId());
+        int size = method.getBytes(StandardCharsets.UTF_8).length;
+        dataOutputStream.writeInt(size);
         dataOutputStream.writeUTF(method);
 
         for (int i = 0; i < params.length; i++) {
@@ -382,6 +364,8 @@ public class FLUIDMain {
                     dataOutputStream.writeInt((int) param);
                     break;
                 case 3:
+                    int length = ((String) param).getBytes(StandardCharsets.UTF_8).length;
+                    dataOutputStream.writeInt(length);
                     dataOutputStream.writeUTF((String) param);
                     break;
                 case 4:
@@ -440,8 +424,9 @@ public class FLUIDMain {
             size = btn.getText().toString().getBytes(StandardCharsets.UTF_8).length;
             dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(btn.getText().toString());
+            dataOutputStream.writeInt( convertPixelsToDpInt(btn.getHeight(), instance.mContext));
+            dataOutputStream.writeInt( convertPixelsToDpInt(btn.getWidth(), instance.mContext));
 
-            
 //            dataOutputStream.writeInt( btn.getHeight());
 //            dataOutputStream.writeInt( btn.getWidth());
             dataOutputStream.flush();
