@@ -244,7 +244,7 @@ public class FLUIDManagerService extends Service {
                         int textlength = dataInputStream.readInt();
                         inputStream.read(buffer);
                         byte[] newBuffer = Arrays.copyOfRange(buffer,0,textlength);
-                        String text = new String(buffer, StandardCharsets.UTF_8);
+                        String text = new String(newBuffer, StandardCharsets.UTF_8);
                         Log.d(TAG,"input ID : "+ID);
                         Log.d(TAG, "input typeEvent : "+typeEvent);
                         Log.d(TAG, "input text : "+text);
