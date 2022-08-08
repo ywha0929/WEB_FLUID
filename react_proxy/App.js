@@ -1,7 +1,6 @@
 import React, {useState, Component} from 'react';
 import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView, Pressable} from 'react-native';
 import TcpSocket from "react-native-tcp-socket";
-import UIs from './components/UI';
 import utf8 from 'utf8';
 import {Buffer} from 'buffer';
 
