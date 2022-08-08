@@ -139,7 +139,7 @@ public class RPCIntfInjector extends BodyTransformer {
 
 		Object[] unitarray = units.toArray();
 		for (int i = 0; i < unitarray.length; i++) {
-			if (unitarray[i].toString().contains("setText")) {
+			if (unitarray[i].toString().contains("setText") || unitarray[i].toString().contains("setImage")) {
 				List<Unit> generated = new ArrayList<>();
 				generated.add(Jimple.v().newAssignStmt(viewVar, body.getParameterLocal(0)));
 				Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
