@@ -94,17 +94,17 @@ public class FLUIDManagerService extends Service {
 
         public void reverseConnect(Bundle bundle) {
             Log.d(TAG, "this is reverseConnect");
-            mServiceConnection = new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    mRemoteService = com.hmsl.fluidlib.IReverseConnection.Stub.asInterface(service);
-                    Log.d(TAG, "reverse connection connected = " + mRemoteService);
+                    mServiceConnection = new ServiceConnection() {
+                        @Override
+                        public void onServiceConnected(ComponentName name, IBinder service) {
+                            mRemoteService = com.hmsl.fluidlib.IReverseConnection.Stub.asInterface(service);
+                            Log.d(TAG, "reverse connection connected = " + mRemoteService);
 
-                }
+                        }
 
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-                    Log.d(TAG, "reverse connection disconnected = " + mRemoteService);
+                        @Override
+                        public void onServiceDisconnected(ComponentName name) {
+                            Log.d(TAG, "reverse connection disconnected = " + mRemoteService);
                     mRemoteService = null;
 
                 }

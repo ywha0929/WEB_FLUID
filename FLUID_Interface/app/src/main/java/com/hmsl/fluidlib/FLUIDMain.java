@@ -294,6 +294,10 @@ public class FLUIDMain {
 
         Bundle bundle = new Bundle();
         try {
+            Log.d(TAG,"method : "+method);
+            if (method.contains("setTextSize")){
+                convertPixelsToDpFloat((float)params[0], instance.mContext);
+            }
             bundle.putByteArray("key", generate_ubyteArray(method, view, params));
             Log.d(TAG, "runUpdate send : " + getTS());
             mRemoteService.update(bundle);
