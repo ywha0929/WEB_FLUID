@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button next_btn;
     Button back_btn;
+    Button next_btn;
     ImageView imageView;
     int state = 0;
 
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         back_btn = findViewById(R.id.button1);
         next_btn = findViewById(R.id.button2);
         imageView = findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.stepone);
+        imageView.setImageResource(R.drawable.pocketmonball);
 
         back_btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -51,53 +51,44 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 state++;
                 if (state == 0) {
-                    imageView.setImageResource(R.drawable.stepone);
-//                    state++;
+                    imageView.setImageResource(R.drawable.pocketmonball);
                 }
                 else if (state == 1) {
-                    imageView.setImageResource(R.drawable.steptwo);
-//                    state++;
+                    imageView.setImageResource(R.drawable.stepone);
                 }
-                else if (state ==2) {
+                else if (state == 2) {
+                    imageView.setImageResource(R.drawable.steptwo);
+                }
+                else if (state == 3) {
                     imageView.setImageResource(R.drawable.stepthree);
-//                    state++;
                 }
                 else {
-                    state=2;
+                    state=3;
                     Toast.makeText(getApplicationContext(), "This is the last image.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
 
-
-        back_btn = findViewById(R.id.button1);
-//        imageView = findViewById(R.id.imageView);
-
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 state--;
                 if (state == 0) {
-//                    state=0;
-                    imageView.setImageResource(R.drawable.stepone);
-//                    Toast.makeText(getApplicationContext(), "This is the first image.", Toast.LENGTH_SHORT).show();
+                    imageView.setImageResource(R.drawable.pocketmonball);
                 }
                 else if (state == 1) {
-                    imageView.setImageResource(R.drawable.steptwo);
-//                    imageView.setImageResource(R.drawable.stepone);
-//                    state--;
+                    imageView.setImageResource(R.drawable.stepone);
                 }
                 else if (state == 2) {
+                    imageView.setImageResource(R.drawable.steptwo);
+                }
+                else if (state == 3) {
                     imageView.setImageResource(R.drawable.stepthree);
-//                    imageView.setImageResource(R.drawable.steptwo);
-//                    state--;
                 }
                 else {//if state < 0
                     state=0;
                     Toast.makeText(getApplicationContext(), "This is the first image.", Toast.LENGTH_SHORT).show();
-//                    imageView.setImageResource(R.drawable.stepthree);
-//                    state--;
                 }
             }
         });

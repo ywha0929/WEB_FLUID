@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -436,7 +437,7 @@ public class FLUIDMain {
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
         }
-        if (widgetType.contains("TextView")) {
+        else if (widgetType.contains("TextView")) {
 
             TextView edit = (TextView) view;
             size = widgetType.getBytes(StandardCharsets.UTF_8).length;
@@ -451,6 +452,10 @@ public class FLUIDMain {
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
+        }
+        else if (widgetType.contains("ImageView")) {
+            ImageView image = (ImageView) view;
+            //////////////////////////////////////////////image.
         }
         return dtoByteArray;
     }

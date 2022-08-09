@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: ca.mcgill.sable:jasmin:3.0.3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ca.mcgill.sable/jasmin/3.0.3/bc29f7032c7ee8314d339e54ca809e351f88883a/jasmin-3.0.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ca.mcgill.sable/jasmin/3.0.3/fe5e856972c5e5d93ace5cb0fcc3209f067e2019/jasmin-3.0.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

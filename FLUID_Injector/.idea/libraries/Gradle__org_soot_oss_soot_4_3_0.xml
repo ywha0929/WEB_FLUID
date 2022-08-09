@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.soot-oss:soot:4.3.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.soot-oss/soot/4.3.0/1c1d2a6728e12e0f54c0d056c0778d0b1ed04941/soot-4.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.soot-oss/soot/4.3.0/6e444a2bf7b2af4084ccf3909e2c495876622bd1/soot-4.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
