@@ -3,6 +3,7 @@ import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView, Pres
 import TcpSocket from "react-native-tcp-socket";
 import utf8 from 'utf8';
 import {Buffer} from 'buffer';
+import LinearLayout from "./components/LinearLayout"
 
 var client;
 
@@ -14,6 +15,7 @@ class App extends Component {
     };
     state = {
         UIList: new Array(),
+        LayoutList : new Array()
     };
     _Connect_to_Server = (bufer) => {
         client = TcpSocket.createConnection({host: "192.168.0.23", port: 5673}, ()=>{
@@ -22,7 +24,7 @@ class App extends Component {
         client.on('data', (data) => this.handleData(data));
         
     };
-    
+
     handleData(data) {
         var data = data;
         var offset = 0;
@@ -30,13 +32,14 @@ class App extends Component {
         console.log('id : ',offset, data.readUInt32BE(offset));
         var id = data.readUInt32BE(offset);
         offset += 4;
-        console.log('isUpdate : ',offset,data.readIntBE(offset,1));
-        var isUpdate = data.readIntBE(offset,1);
-        offset +=1;
+        var isUpdate = data.readUInt32BE(offset);
+        console.log('isUpdate : ',isUpdate);
+        offset +=4;
         if(isUpdate == 0) //distribute mode
         {
             //read WidgetType
-            
+            var layoutId = data.readUInt32BE(offset);
+            offset+=4;
             console.log('String Length',offset,data.readUInt32BE(offset));
             var stringSize = data.readUInt32BE(offset)+2;
             offset += 4;
@@ -61,8 +64,8 @@ class App extends Component {
                     "ID": id,
                     "Text": text,
                     "TextSize": TextSize,
-                    "isUpdate":isUpdate,
                     "Color": 'black',
+                    "Parent_ID": layoutId,
                 };
                 console.log("UIList ",this.state.UIList[0]);
                 let tempArr = this.state.UIList;
@@ -91,7 +94,7 @@ class App extends Component {
                     "ID": id,
                     "Text": text,
                     "TextSize": TextSize,
-                    "isUpdate":isUpdate,
+                    "Parent_ID": layoutId,
                 };
                 console.log("UIList ",this.state.UIList[0]);
                 let tempArr = this.state.UIList;
@@ -110,10 +113,10 @@ class App extends Component {
                 var temp_text = data.toString('utf8',offset,offset+stringSize);
                 var text = (''+temp_text).slice(1);
                 offset += stringSize;
-                var height = data.readUInt32BE(offset)* 0.75;
+                var height = data.readUInt32BE(offset)* 0.7;
                 console.log("Height : ",height);
                 offset +=4;
-                var width = data.readUInt32BE(offset)* 0.75;
+                var width = data.readUInt32BE(offset)* 0.7;
                 console.log("Width : ",width);
                 offset += 4;
                 let UIdata = {
@@ -121,7 +124,7 @@ class App extends Component {
                     "ID": id,
                     "Text": text,
                     "Height": height,
-                    "isUpdate":isUpdate,
+                    "Parent_ID": layoutId,
                     "Width": width,
                 };
                 console.log("UIList ",this.state.UIList[0]);
@@ -148,6 +151,10 @@ class App extends Component {
                     let typeFlag = data.readUInt32BE(offset);
                     offset += 4;
                     //get parameters
+                    if(typeFlag == 1){
+                        var param = data.readFloatBE(offset);
+                        offset+=4;
+                    }
                     if(typeFlag == 2){
                         var param = data.readUInt32BE(offset);
                         offset +=4;
@@ -181,6 +188,9 @@ class App extends Component {
                             targetUI.Color = newColor>>>0; //shift operator to make it unsigned
                         }
                     }
+                    else if(method.includes("setTextSize")){
+                        targetUI.TextSize = param;
+                    }
                     else if(method.includes("setText")){
                         targetUI.Text = param;
                     }
@@ -191,6 +201,31 @@ class App extends Component {
                 UIList: tempArr
             });
             console.log("UIList", this.state.UIList[0]);
+        }
+        else if(isUpdate ==2) {//distribute layout
+            var layout_type = data.readUInt32BE(offset);
+            offset+=4;
+            if(layout_type == 0){
+                //Linear layout
+                var orientation = data.readUInt32BE(offset);
+                offset+=4;
+                var width = data.readUInt32BE(offset)* 0.75;
+                offset +=4;
+                var height = data.readUInt32BE(offset)* 0.75;
+                var layout_Data = {
+                    "ID": id,
+                    "Layout_Type": layout_type,
+                    "Orientation": orientation,
+                    "height": height,
+                    "width": width,
+                }
+
+            }
+            tempArr = this.state.LayoutList;
+            tempArr.push(layout_Data);
+            this.setState({
+                LayoutList: tempArr
+            });
         }
         
     };
@@ -259,12 +294,29 @@ class App extends Component {
     };
     render() {
         const utf8 = require('utf8');
+        let Layout = this.state.LayoutList.map((item,index)=> {
+            if(item.Layout_Type == 0) {
+                //LinearLayout
+                return (
+                    <View key={item.ID}>
+                        <LinearLayout 
+                            UIList={this.state.UIList} 
+                            setLinearLayout={item}
+                            TextChangeListener={this.TextChangeListener}
+                            onPressInListener={this.onPressInListener}
+                            onPressOutListener={this.onPressOutListener}/>
+                    </View>
+                )
+
+            }
+        });
+
         let Arr = this.state.UIList.map((item,index)=>{
             console.log(item.WidgetType.includes("EditText"));
             if(item.WidgetType.includes("EditText")){
                 console.log("EditText");
                 return (
-                    <View key={item.ID} style={{alignItems:'flex-start'}}>
+                    <View key={item.ID} style={{alignItems:'flex-start', backgroundColor: 'blue', borderBottonWidth : StyleSheet.hairlineWidth}}>
                         <TextInput style={{fontSize: item.TextSize,  textAlign: 'left', padding: 2, color: item.Color}} 
                             value={item.Text}
                             id={item.ID}
@@ -286,8 +338,8 @@ class App extends Component {
             if(item.WidgetType.includes("Button")){
                 console.log("Button");
                 return(
-                    <View key={item.ID} style={{height: item.Height, width: item.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black'}}>
-                        <Pressable style={{height: item.Height, width: item.Width, alignContent: 'center',  borderBottomWidth: StyleSheet.hairlineWidth, justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
+                    <View key={item.ID} style={{height: item.Height, width: item.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
+                        <Pressable style={{height: item.Height, width: item.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
                             id={item.ID}
                             onPressIn={this.onPressInListener}
                             onPressOut={this.onPressOutListener}>
@@ -310,7 +362,7 @@ class App extends Component {
         });
         return (
             <SafeAreaView Style={styles.container}>
-                {Arr}
+                {Layout}
             </SafeAreaView>
         );
     };

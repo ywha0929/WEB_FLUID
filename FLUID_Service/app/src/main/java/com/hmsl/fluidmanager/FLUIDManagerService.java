@@ -57,10 +57,10 @@ public class FLUIDManagerService extends Service {
     private final IBinder mBinder = new IFLUIDService.Stub() {
         // distribute
 
-        public void test(Bundle bundle) {
+        public void distribute(Bundle bundle) {
             Log.d(TAG, "test received : " + getTS());
             bundle.setClassLoader(getClass().getClassLoader());
-            byte[] recvBuffer = bundle.getByteArray("key");
+
             //Log.d("TAG",""+recvBuffer);
 //            Object clazz = bundle.getParcelable("key");
 //            PJson pJson = (PJson)clazz;
@@ -68,7 +68,7 @@ public class FLUIDManagerService extends Service {
 
             // Distribution Trigger 발생 시 Message에 Json String 데이터를 보냄
             Message msg = Message.obtain();
-            msg.obj = recvBuffer;
+            msg.obj = bundle;
             distributeHandler.sendMessage(msg);
 
             //Log.e(TAG, "Message 전송");
@@ -195,7 +195,11 @@ public class FLUIDManagerService extends Service {
                 e.printStackTrace();
             }
             Log.d(TAG, "input stream set");
-
+            try {
+                mRemoteService.doCheck(40);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             while (true) {
                 try {
 
@@ -289,10 +293,47 @@ public class FLUIDManagerService extends Service {
             distributeHandler = new Handler(Looper.myLooper()) {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
-                    byte[] input = (byte[]) msg.obj;
+                    Bundle bundle = (Bundle) msg.obj;
                     //Log.e(TAG, "Message 받음 " + input);
                     try {
-                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(input);
+                        byte[] layout = bundle.getByteArray("layout");
+                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(layout);
+                        DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
+                        int id = dataInputStream.readInt();
+                        Log.d(TAG,"layout ID : "+id);
+                        boolean is_distribute = false;
+                        if (id_list.size() == 0) id_list.add(id);
+                        else {
+                            //ID 중복 검사
+                            for (int i = 0; i < id_list.size(); i++) {
+                                if (id_list.get(i) == id) {
+                                    is_distribute = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        //ID 중복 x => Distribute 해야 하므로 socket 통신으로 Json 객체를 보낸다.
+                        if (!is_distribute) {
+                            id_list.add(id);
+                            //Log.e(TAG, "전송하려는 Json Object" + input);
+
+                            OutputStream os = socket.getOutputStream();
+                            os.write(layout);
+                            Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
+                            mRemoteService.doCheck(1);
+                        } else {
+                            //Log.e(TAG, "이미 Distribute된 UI 입니다.");
+                        }
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+
+                    try {
+                        byte[] widget = bundle.getByteArray("widget");
+                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(widget);
                         DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
                         int id = dataInputStream.readInt();
                         Log.d(TAG,"distribute ID : "+id);
@@ -321,7 +362,7 @@ public class FLUIDManagerService extends Service {
                             //Log.e(TAG, "전송하려는 Json Object" + input);
 
                             OutputStream os = socket.getOutputStream();
-                            os.write(input);
+                            os.write(widget);
                             Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
                             mRemoteService.doCheck(1);
                         } else {

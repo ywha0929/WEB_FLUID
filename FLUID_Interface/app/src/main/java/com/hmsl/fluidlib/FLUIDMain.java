@@ -2,6 +2,7 @@ package com.hmsl.fluidlib;
 
 import static android.os.SystemClock.sleep;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.os.Message;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,8 +23,11 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -187,50 +192,27 @@ public class FLUIDMain {
         }
     }
 
-    public void runtest(String widgetType, View view) {
+    public void runDistribute(String widgetType, View view) {
         Bundle bundle = new Bundle();
 
         try {
             //Log.d("TAG","run test");
-            byte[] toSend = generate_byteArray(widgetType, view);
-            Log.d(TAG,"runtest : "+widgetType);
-            bundle.putByteArray("key", toSend);
-            Log.d(TAG, "runtest send : " + getTS());
+            byte[] layout = generate_lbyteArray(view);
+            byte[] widget = generate_dbyteArray(widgetType, view);
+
+            Log.d(TAG,"runDistribute : "+widgetType);
+            bundle.putByteArray("layout", layout);
+            bundle.putByteArray("widget", widget);
+            Log.d(TAG, "runDistribute send : " + getTS());
             if(widgetType.contains("TextView") || widgetType.contains("EditText"))
             {
-                Log.d(TAG, "runtest add Listener : " + getTS());
+                Log.d(TAG, "runDistribute add Listener : " + getTS());
                 TextView textView = (TextView) view;
                 textwatcher watcher = new textwatcher(textView);
                 textView.addTextChangedListener(watcher);
                 listTextListener.put(textView.getId(),watcher);
-//                textView.addTextChangedListener(new TextWatcher() {
-//                    String beforeText;
-//                    @Override
-//                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                        beforeText = textView.getText().toString();
-//                    }
-//
-//                    @Override
-//                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                        Bundle bundle = new Bundle();
-//                        if(!textView.getText().toString().equals(beforeText))
-//                        {
-//                            try {
-//                                bundle.putByteArray("key",generate_ubyteArray("setText",textView,charSequence.toString()));
-//                                mRemoteService.update(bundle);
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void afterTextChanged(Editable editable) {
-//
-//                    }
-//                });
             }
-            mRemoteService.test(bundle);
+            mRemoteService.distribute(bundle);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -240,6 +222,10 @@ public class FLUIDMain {
     public void runUpdateTest(String signature, View view,Object param)
     {
         Bundle bundle = new Bundle();
+        if(signature.contains("setTextSize"))
+        {
+            param = convertPixelsToDpFloat((float)param, instance.mContext);
+        }
         try{
             bundle.putByteArray("key",generate_ubyteArray(signature,view,param));
             mRemoteService.update(bundle);
@@ -350,7 +336,7 @@ public class FLUIDMain {
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
 
         dataOutputStream.writeInt(view.getId());
-        dataOutputStream.writeBoolean(true);
+        dataOutputStream.writeInt(1); //1 for update
         //dataOutputStream.writeInt(view.getId());
         int size = method.getBytes(StandardCharsets.UTF_8).length;
         dataOutputStream.writeInt(size);
@@ -393,17 +379,44 @@ public class FLUIDMain {
         utoByteArray = byteArrayOutputStream.toByteArray();
         return utoByteArray;
     }
+    public static byte[] generate_lbyteArray(View view) throws IOException {
+        byte[] dtoByteArray = null;
+        int size;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        ViewGroup layout = (ViewGroup) view.getParent();
+        if(layout.getClass().toString().contains("LinearLayout"))
+        {
+            LinearLayout linearLayout = (LinearLayout) layout;
+            int layout_type = 0; //0 stands for linear layout
+            int orientation = linearLayout.getOrientation();
+            Log.d(TAG,"orientation : "+orientation);
+            int width = convertPixelsToDpInt(linearLayout.getWidth(), instance.mContext);
+            int height = convertPixelsToDpInt(linearLayout.getHeight(),instance.mContext);
+            dataOutputStream.writeInt(layout.getId());
+            dataOutputStream.writeInt(2); //2 for layout
+            dataOutputStream.writeInt(layout_type);
+            dataOutputStream.writeInt(orientation);
+            dataOutputStream.writeInt(width);
+            dataOutputStream.writeInt(height);
+        }
 
-    public static byte[] generate_byteArray(String widgetType, View view) throws IOException {
+        dataOutputStream.flush();
+        dtoByteArray = byteArrayOutputStream.toByteArray();
+        return dtoByteArray;
+    }
+    public static byte[] generate_dbyteArray(String widgetType, View view) throws IOException {
         byte[] dtoByteArray = null;
         int size;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
         dataOutputStream.writeInt(view.getId());
         //Log.d("TAG",""+view.getId());
-        dataOutputStream.writeBoolean(false);
+        dataOutputStream.writeInt(0); //0 for distribute
+        dataOutputStream.writeInt(((ViewGroup)view.getParent()).getId());
 
 
+//        Log.d(TAG,"layout.get"+layout.getClass());
         if (widgetType.contains("EditText")) {
 
             EditText edit = (EditText) view;

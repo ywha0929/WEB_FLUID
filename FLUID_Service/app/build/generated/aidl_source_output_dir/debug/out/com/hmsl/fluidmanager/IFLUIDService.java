@@ -9,7 +9,7 @@ public interface IFLUIDService extends android.os.IInterface
   /** Default implementation for IFLUIDService. */
   public static class Default implements com.hmsl.fluidmanager.IFLUIDService
   {
-    @Override public void test(android.os.Bundle bundle) throws android.os.RemoteException
+    @Override public void distribute(android.os.Bundle bundle) throws android.os.RemoteException
     {
     }
     @Override public void update(android.os.Bundle bundle) throws android.os.RemoteException
@@ -61,7 +61,7 @@ public interface IFLUIDService extends android.os.IInterface
           reply.writeString(descriptor);
           return true;
         }
-        case TRANSACTION_test:
+        case TRANSACTION_distribute:
         {
           data.enforceInterface(descriptor);
           android.os.Bundle _arg0;
@@ -71,7 +71,7 @@ public interface IFLUIDService extends android.os.IInterface
           else {
             _arg0 = null;
           }
-          this.test(_arg0);
+          this.distribute(_arg0);
           reply.writeNoException();
           return true;
         }
@@ -124,7 +124,7 @@ public interface IFLUIDService extends android.os.IInterface
       {
         return DESCRIPTOR;
       }
-      @Override public void test(android.os.Bundle bundle) throws android.os.RemoteException
+      @Override public void distribute(android.os.Bundle bundle) throws android.os.RemoteException
       {
         android.os.Parcel _data = android.os.Parcel.obtain();
         android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -137,9 +137,9 @@ public interface IFLUIDService extends android.os.IInterface
           else {
             _data.writeInt(0);
           }
-          boolean _status = mRemote.transact(Stub.TRANSACTION_test, _data, _reply, 0);
+          boolean _status = mRemote.transact(Stub.TRANSACTION_distribute, _data, _reply, 0);
           if (!_status && getDefaultImpl() != null) {
-            getDefaultImpl().test(bundle);
+            getDefaultImpl().distribute(bundle);
             return;
           }
           _reply.readException();
@@ -201,7 +201,7 @@ public interface IFLUIDService extends android.os.IInterface
       }
       public static com.hmsl.fluidmanager.IFLUIDService sDefaultImpl;
     }
-    static final int TRANSACTION_test = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+    static final int TRANSACTION_distribute = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
     static final int TRANSACTION_update = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
     static final int TRANSACTION_reverseConnect = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
     public static boolean setDefaultImpl(com.hmsl.fluidmanager.IFLUIDService impl) {
@@ -221,7 +221,7 @@ public interface IFLUIDService extends android.os.IInterface
       return Stub.Proxy.sDefaultImpl;
     }
   }
-  public void test(android.os.Bundle bundle) throws android.os.RemoteException;
+  public void distribute(android.os.Bundle bundle) throws android.os.RemoteException;
   public void update(android.os.Bundle bundle) throws android.os.RemoteException;
   public void reverseConnect(android.os.Bundle bundle) throws android.os.RemoteException;
 }
