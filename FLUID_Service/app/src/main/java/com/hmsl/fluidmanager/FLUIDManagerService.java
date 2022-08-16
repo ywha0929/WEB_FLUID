@@ -312,7 +312,6 @@ public class FLUIDManagerService extends Service {
                                 }
                             }
                         }
-
                         //ID 중복 x => Distribute 해야 하므로 socket 통신으로 Json 객체를 보낸다.
                         if (!is_distribute) {
                             id_list.add(id);

@@ -35,7 +35,7 @@ class LinearLayout extends Component{
                     return (
                         <EditText 
                             setEditText={item}
-                            TextChangeListener={this.TextChangeListener}/>
+                            TextChangeListener={this.props.TextChangeListener}/>
                     );
                 }
                 if(item.WidgetType.includes("TextView")){
@@ -43,7 +43,7 @@ class LinearLayout extends Component{
                     return (
                         <TextView 
                             setTextView={item}
-                            TextChangeListener={this.TextChangeListener}/>
+                            TextChangeListener={this.props.TextChangeListener}/>
                         
                     );
                 }
@@ -52,8 +52,8 @@ class LinearLayout extends Component{
                     return(
                         <Button 
                             setButton={item} 
-                            onPressInListener={this.onPressInListener}
-                            onPressOutListener={this.onPressOutListener}/>
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
                     )
                 }
             }
@@ -69,7 +69,7 @@ class LinearLayout extends Component{
             return(
                 <View 
                     key={this.state.thisData.ID}
-                    style={{flexDirection: 'row'}}>
+                    style={{flexDirection: 'row', height: this.state.thisData.Height, width: this.state.thisData.Width, backgroundColor: 'black'}}>
                     {UIs}
                 </View>
             )

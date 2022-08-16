@@ -411,6 +411,8 @@ public class FLUIDMain {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
         dataOutputStream.writeInt(view.getId());
+        Log.d(TAG,"view.getX : "+view.getX());
+        Log.d(TAG,"view.getY : "+view.getY());
         //Log.d("TAG",""+view.getId());
         dataOutputStream.writeInt(0); //0 for distribute
         dataOutputStream.writeInt(((ViewGroup)view.getParent()).getId());
