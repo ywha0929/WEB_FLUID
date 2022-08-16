@@ -41,7 +41,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			isInsert = false;
 			Object[] arr = Scene.v().getApplicationClasses().toArray();
 			for (int i = 0; i < arr.length; i++) {
-				if (arr[i].toString().equals("com.example.testapp_test.MainActivity")) {
+				if (arr[i].toString().equals("com.example.imagemanager.MainActivity")) {
 					MAINACTIVITY_INDEX = i;
 				}
 			}

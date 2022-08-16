@@ -13,24 +13,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b4e670b1-017f-46da-a24f-5955282597c1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../ImageManager/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/output/text_test.apk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/local.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Service/.idea/deploymentTargetDropDown.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Service/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ImageManager/.idea/deploymentTargetDropDown.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ImageManager/.idea/deploymentTargetDropDown.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ImageManager/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ImageManager/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ImageManager/app/src/main/java/com/example/imagemanager/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ImageManager/app/src/main/java/com/example/imagemanager/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/output/ImageManger.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/output/ImageManger.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ImageManager/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ImageManager/app/src/main/res/layout/activity_main.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
