@@ -15,12 +15,12 @@ public class FLUIDInjector {
     final static String outputPath = System.getProperty("user.dir") + File.separator + "/output";
 
     public static void main(String[] args){
-		if (args.length != 1) {
-			System.out.println("./gradlew run --args=\"APK_FILE_PATH\"");
+		if (args.length != 2) {
+			System.out.println("./gradlew run --args=\"APK_FILE_PATH\" PACKAGENAME");
 			System.exit(-1);
 		}
 		String apkPath = args[0];
-
+		String namePackage = args[1];
         // Clean the outputPath
         final File[] files = (new File(outputPath)).listFiles();
         if (files != null && files.length > 0)
@@ -30,7 +30,7 @@ public class FLUIDInjector {
         InstrumentUtil.setupSoot(androidJar, apkPath, outputPath);
 
         PackManager.v().getPack("jtp").add(
-                new Transform("jtp.RPCIntfInjector", new RPCIntfInjector()));
+                new Transform("jtp.RPCIntfInjector", new RPCIntfInjector(namePackage)));
 
         PackManager.v().runPacks();
         PackManager.v().writeOutput();

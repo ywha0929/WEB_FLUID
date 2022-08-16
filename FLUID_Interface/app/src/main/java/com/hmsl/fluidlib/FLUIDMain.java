@@ -28,6 +28,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import com.hmsl.fluidmanager.IFLUIDService;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +55,7 @@ public class FLUIDMain {
     private static final int MAX_BUFFER = 1024;
     public Context mContext = null;
     static FLUIDMain instance;
-    long latestEventTime;
+    private ArrayList<Layout_Tree> layout_trees = new ArrayList<>();
     private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
     private final IBinder mBinder = new IReverseConnection.Stub() {
         @Override
@@ -400,6 +402,35 @@ public class FLUIDMain {
             dataOutputStream.writeInt(width);
             dataOutputStream.writeInt(height);
         }
+        else
+        {
+            int numWidget = layout.getChildCount();
+            int layout_type = 1;
+            int width = convertPixelsToDpInt(layout.getWidth(), instance.mContext);
+            int height = convertPixelsToDpInt(layout.getHeight(), instance.mContext);
+            boolean isExist = false;
+            for(int i = 0; i < instance.layout_trees.size(); i++)
+            {
+                if(instance.layout_trees.get(i).Layout_ID == layout.getId())
+                {
+                    isExist = true;
+                }
+            }
+            if(isExist == false) {
+                Layout_Tree layout_tree = new Layout_Tree();
+                layout_tree.Layout_ID = layout.getId();
+                for (int i = 0; i < numWidget; i++) {
+                    View child = layout.getChildAt(i);
+                    layout_tree.Widget_List.add(new Widget_Location(child.getId(), child.getX(), child.getY()));
+                }
+                instance.layout_trees.add(layout_tree);
+                dataOutputStream.writeInt(layout.getId());
+                dataOutputStream.writeInt(2);
+                dataOutputStream.writeInt(layout_type);
+                dataOutputStream.writeInt(width);
+                dataOutputStream.writeInt(height);
+            }
+        }
 
         dataOutputStream.flush();
         dtoByteArray = byteArrayOutputStream.toByteArray();
@@ -416,7 +447,27 @@ public class FLUIDMain {
         //Log.d("TAG",""+view.getId());
         dataOutputStream.writeInt(0); //0 for distribute
         dataOutputStream.writeInt(((ViewGroup)view.getParent()).getId());
-
+        //added
+        float X=0;
+        float Y=0;
+        for (int i = 0; i< instance.layout_trees.size(); i++)
+        {
+            Layout_Tree layout_tree= instance.layout_trees.get(i);
+            if(layout_tree.Layout_ID == ((ViewGroup) view.getParent()).getId())
+            {
+                for (int j = 0; j<layout_tree.Widget_List.size(); j++)
+                {
+                    Widget_Location location = layout_tree.Widget_List.get(j);
+                    if(location.Widget_ID == view.getId())
+                    {
+                        X=location.Widget_X;
+                        Y=location.Widget_Y;
+                    }
+                }
+            }
+        }
+        dataOutputStream.writeFloat(convertPixelsToDpFloat(X, instance.mContext));
+        dataOutputStream.writeFloat(convertPixelsToDpFloat(Y, instance.mContext));
 
 //        Log.d(TAG,"layout.get"+layout.getClass());
         if (widgetType.contains("EditText")) {
@@ -529,5 +580,21 @@ public class FLUIDMain {
         public void afterTextChanged(Editable editable) {
 
         }
+    }
+
+}
+class Layout_Tree {
+    int Layout_ID;
+    ArrayList<Widget_Location> Widget_List = new ArrayList<Widget_Location>();
+
+}
+class Widget_Location {
+    int Widget_ID;
+    float Widget_X;
+    float Widget_Y;
+    public Widget_Location(int ID, float X, float Y) {
+        this.Widget_ID = ID;
+        this.Widget_X = X;
+        this.Widget_Y = Y;
     }
 }

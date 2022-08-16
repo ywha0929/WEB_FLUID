@@ -34,7 +34,9 @@ class LinearLayout extends Component{
                     console.log("EditText");
                     return (
                         <EditText 
+                            key={item.ID}
                             setEditText={item}
+                            position={"relative"}
                             TextChangeListener={this.props.TextChangeListener}/>
                     );
                 }
@@ -42,7 +44,9 @@ class LinearLayout extends Component{
                     console.log("TextView");
                     return (
                         <TextView 
+                            key={item.ID}
                             setTextView={item}
+                            position={"relative"}
                             TextChangeListener={this.props.TextChangeListener}/>
                         
                     );
@@ -51,7 +55,9 @@ class LinearLayout extends Component{
                     console.log("Button");
                     return(
                         <Button 
-                            setButton={item} 
+                            key={item.ID}
+                            setButton={item}
+                            position={"relative"}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
                     )

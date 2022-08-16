@@ -5,19 +5,22 @@ class Button extends Component{
     constructor(props){
         super(props);
         this.state = {
-            thisData : this.props.setButton
+            thisData : this.props.setButton,
+            position : this.props.position
         };
     };
     onPressInListener = (e) => {
+        console.log("onPressInListener of Button");
         this.props.onPressInListener(e);
     }
     onPressOutListener = (e) => {
+        console.log("onPressOutListener of Button");
         this.props.onPressOutListener(e);
     }
     render() {
         
         return (
-            <View key={this.state.thisData.ID} style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
+            <View key={this.state.thisData.ID} style={{position: this.state.position, left: this.state.thisData.X, top: this.state.thisData.Y, height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
                 <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
                     id={this.state.thisData.ID}
                     onPressIn={this.onPressInListener}

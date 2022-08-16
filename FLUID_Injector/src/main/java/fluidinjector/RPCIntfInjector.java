@@ -20,9 +20,12 @@ public class RPCIntfInjector extends BodyTransformer {
 	final static String FLUID_MAIN_CLASS = "com.hmsl.fluidlib.FLUIDMain";
 	final static String FLUID_PACKAGE_NAME = "com.hmsl.fluidmanager";
 	final static String FLUID_SERVICE_NAME = "com.hmsl.fluidmanager.FLUIDManagerService";
-
-	public RPCIntfInjector() {
+	static String MAINACTIVITY_CLASS_NAME;
+	public RPCIntfInjector(String namePackage) {
+		
 		super();
+		namePackage = namePackage+".MainActivity";
+		MAINACTIVITY_CLASS_NAME = namePackage;
 	}
 
 	@Override
@@ -41,7 +44,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			isInsert = false;
 			Object[] arr = Scene.v().getApplicationClasses().toArray();
 			for (int i = 0; i < arr.length; i++) {
-				if (arr[i].toString().equals("com.example.testapp_test.MainActivity")) {
+				if (arr[i].toString().equals(MAINACTIVITY_CLASS_NAME)) {
 					MAINACTIVITY_INDEX = i;
 				}
 			}

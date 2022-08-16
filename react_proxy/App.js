@@ -4,6 +4,7 @@ import TcpSocket from "react-native-tcp-socket";
 import utf8 from 'utf8';
 import {Buffer} from 'buffer';
 import LinearLayout from "./components/LinearLayout"
+import OtherLayout from "./components/OtherLayout"
 
 var client;
 
@@ -40,6 +41,12 @@ class App extends Component {
             //read WidgetType
             var layoutId = data.readUInt32BE(offset);
             offset+=4;
+
+            var X = data.readFloatBE(offset);
+            offset+=4;
+            var Y = data.readFloatBE(offset);
+            offset+=4;
+
             console.log('String Length',offset,data.readUInt32BE(offset));
             var stringSize = data.readUInt32BE(offset)+2;
             offset += 4;
@@ -66,15 +73,15 @@ class App extends Component {
                     "TextSize": TextSize,
                     "Color": 'black',
                     "Parent_ID": layoutId,
+                    "X": X,
+                    "Y": Y,
                 };
-                console.log("UIList ",this.state.UIList[0]);
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
-                console.log("UIList ",this.state.UIList[0]);
+                console.log("UIdata ",UIdata);
                 this.setState({
                     UIList: tempArr
                 });
-                console.log("UIList ",this.state.UIList[0]);
             }
             else if (widgetType.includes("TextView"))
             {
@@ -95,11 +102,12 @@ class App extends Component {
                     "Text": text,
                     "TextSize": TextSize,
                     "Parent_ID": layoutId,
+                    "X": X,
+                    "Y": Y,
                 };
-                console.log("UIList ",this.state.UIList[0]);
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
-                console.log("UIList ",this.state.UIList[0]);
+                console.log("UIdata ",UIdata);
                 this.setState({
                     UIList: tempArr
                 });
@@ -126,11 +134,13 @@ class App extends Component {
                     "Height": height,
                     "Parent_ID": layoutId,
                     "Width": width,
+                    "X": X,
+                    "Y": Y,
                 };
-                console.log("UIList ",this.state.UIList[0]);
+
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
-                console.log("UIList ",this.state.UIList[0]);
+                console.log("UIdata ",UIdata);
                 this.setState({
                     UIList: tempArr
                 });
@@ -221,11 +231,23 @@ class App extends Component {
                 }
 
             }
+            else if(layout_type == 1) {
+                var width = data.readUInt32BE(offset)* 0.75;
+                offset +=4;
+                var height = data.readUInt32BE(offset)* 0.75;
+                var layout_Data = {
+                    "ID": id,
+                    "Layout_Type": layout_type,
+                    "height": height,
+                    "width": width,
+                }
+            }
             tempArr = this.state.LayoutList;
             tempArr.push(layout_Data);
             this.setState({
                 LayoutList: tempArr
             });
+            console.log(layout_Data);
         }
         
     };
@@ -308,6 +330,18 @@ class App extends Component {
                     </View>
                 )
 
+            }
+            else if(item.Layout_Type == 1) {
+                return (
+                    <View key={item.ID}>
+                        <OtherLayout
+                            UIList={this.state.UIList}
+                            setOtherLayout={item}
+                            TextChangListener={this.TextChangeListener}
+                            onPressInListener={this.onPressInListener}
+                            onPressOutListener={this.onPressOutListener}/>
+                    </View>
+                )
             }
         });
 
