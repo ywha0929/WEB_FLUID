@@ -36,7 +36,7 @@ class LinearLayout extends Component{
                         <EditText 
                             key={item.ID}
                             setEditText={item}
-                            position={"relative"}
+                            position={"automatic"}
                             TextChangeListener={this.props.TextChangeListener}/>
                     );
                 }
@@ -46,7 +46,7 @@ class LinearLayout extends Component{
                         <TextView 
                             key={item.ID}
                             setTextView={item}
-                            position={"relative"}
+                            position={"automatic"}
                             TextChangeListener={this.props.TextChangeListener}/>
                         
                     );
@@ -57,7 +57,7 @@ class LinearLayout extends Component{
                         <Button 
                             key={item.ID}
                             setButton={item}
-                            position={"relative"}
+                            position={"automatic"}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
                     )
@@ -75,7 +75,7 @@ class LinearLayout extends Component{
             return(
                 <View 
                     key={this.state.thisData.ID}
-                    style={{flexDirection: 'row', height: this.state.thisData.Height, width: this.state.thisData.Width, backgroundColor: 'black'}}>
+                    style={{flexDirection: 'row'}}>
                     {UIs}
                 </View>
             )

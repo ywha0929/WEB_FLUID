@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
         text1 = (TextView) findViewById(R.id.text1);
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
+        View view = findViewById(R.id.rootlayout);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d("TAG", "onTouch: onTouch on whole layout");
+                return false;
+            }
+        });
 
 
         edit1.setOnLongClickListener(new View.OnLongClickListener() {//distribute trigger

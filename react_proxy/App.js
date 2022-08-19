@@ -121,10 +121,10 @@ class App extends Component {
                 var temp_text = data.toString('utf8',offset,offset+stringSize);
                 var text = (''+temp_text).slice(1);
                 offset += stringSize;
-                var height = data.readUInt32BE(offset)* 0.7;
+                var height = data.readUInt32BE(offset)* 0.728;
                 console.log("Height : ",height);
                 offset +=4;
-                var width = data.readUInt32BE(offset)* 0.7;
+                var width = data.readUInt32BE(offset)* 0.728;
                 console.log("Width : ",width);
                 offset += 4;
                 let UIdata = {
@@ -219,27 +219,27 @@ class App extends Component {
                 //Linear layout
                 var orientation = data.readUInt32BE(offset);
                 offset+=4;
-                var width = data.readUInt32BE(offset)* 0.75;
+                var width = data.readUInt32BE(offset)* 0.728;
                 offset +=4;
-                var height = data.readUInt32BE(offset)* 0.75;
+                var height = data.readUInt32BE(offset)* 0.728;
                 var layout_Data = {
                     "ID": id,
                     "Layout_Type": layout_type,
                     "Orientation": orientation,
-                    "height": height,
-                    "width": width,
+                    "Height": height,
+                    "Width": width,
                 }
 
             }
             else if(layout_type == 1) {
-                var width = data.readUInt32BE(offset)* 0.75;
+                var width = data.readUInt32BE(offset)* 0.728;
                 offset +=4;
-                var height = data.readUInt32BE(offset)* 0.75;
+                var height = data.readUInt32BE(offset)* 0.728;
                 var layout_Data = {
                     "ID": id,
                     "Layout_Type": layout_type,
-                    "height": height,
-                    "width": width,
+                    "Height": height,
+                    "Width": width,
                 }
             }
             tempArr = this.state.LayoutList;

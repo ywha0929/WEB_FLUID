@@ -18,22 +18,42 @@ class Button extends Component{
         this.props.onPressOutListener(e);
     }
     render() {
+        console.log("Button",this.state.thisData);
+        if(this.state.position==="cordinate") {
+            return (
+                <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y,height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
+                    <Pressable style={{ height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
+                        id={this.state.thisData.ID}
+                        onPressIn={this.onPressInListener}
+                        onPressOut={this.onPressOutListener}>
+                        <Text 
+                            style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
+                            id={this.state.thisData.ID}> 
+                                {this.state.thisData.Text} 
+                        </Text>
+                        
+                    </Pressable>
+                </View>
+            )
+        }
+        else if(this.state.position==="automatic") {
+            return (
+                <View key={this.state.thisData.ID} style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
+                    <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
+                        id={this.state.thisData.ID}
+                        onPressIn={this.onPressInListener}
+                        onPressOut={this.onPressOutListener}>
+                        <Text 
+                            style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
+                            id={this.state.thisData.ID}> 
+                                {this.state.thisData.Text} 
+                        </Text>
+                        
+                    </Pressable>
+                </View>
+            )
+        }
         
-        return (
-            <View key={this.state.thisData.ID} style={{position: this.state.position, left: this.state.thisData.X, top: this.state.thisData.Y, height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
-                <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
-                    id={this.state.thisData.ID}
-                    onPressIn={this.onPressInListener}
-                    onPressOut={this.onPressOutListener}>
-                    <Text 
-                        style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
-                        id={this.state.thisData.ID}> 
-                            {this.state.thisData.Text} 
-                    </Text>
-                    
-                </Pressable>
-            </View>
-        )
     };
 }
 

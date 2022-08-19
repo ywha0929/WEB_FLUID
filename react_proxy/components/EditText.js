@@ -14,16 +14,31 @@ class EditText extends Component{
         console.log("this is dummy TextChangeListener of EditText");
     }
     render() {
-        
-        return (
-            <View key={this.state.thisData.ID} style={{position: this.state.position, left: this.state.thisData.X, top: this.state.thisData.Y, alignItems:'flex-start', borderBottonWidth : StyleSheet.hairlineWidth}}>
-                <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
-                    value={this.state.thisData.Text}
-                    id={this.state.thisData.ID}
-                    onChange={this.TextChangeListener}>
-                </TextInput>
-            </View>
-        )
+        console.log("EditText",this.state.thisData);
+        if(this.state.position==="cordinate")
+        {
+            return (
+                <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y, alignItems:'flex-start', borderBottonWidth : StyleSheet.hairlineWidth}}>
+                    <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
+                        value={this.state.thisData.Text}
+                        id={this.state.thisData.ID}
+                        onChange={this.TextChangeListener}>
+                    </TextInput>
+                </View>
+            )
+        }
+        else if(this.state.position==="automatic")
+        {
+            return (
+                <View key={this.state.thisData.ID} style={{alignItems:'flex-start', borderBottonWidth : StyleSheet.hairlineWidth}}>
+                    <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
+                        value={this.state.thisData.Text}
+                        id={this.state.thisData.ID}
+                        onChange={this.TextChangeListener}>
+                    </TextInput>
+                </View>
+            )
+        }
     };
 }
 

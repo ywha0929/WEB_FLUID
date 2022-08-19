@@ -7,7 +7,6 @@ import TextView from './TextView';
 class OtherLayout extends Component{
     constructor(props) {
         super(props);
-        console.log(this.props.setOtherLayout);
         this.state = {
             thisData: this.props.setOtherLayout,
             UIList: this.props.UIList
@@ -36,7 +35,7 @@ class OtherLayout extends Component{
                         <EditText 
                             key={item.ID}
                             setEditText={item}
-                            position={"absolute"}
+                            position={"cordinate"}
                             TextChangeListener={this.props.TextChangeListener}
                             />
                     );
@@ -47,7 +46,7 @@ class OtherLayout extends Component{
                         <TextView 
                             key={item.ID}
                             setTextView={item}
-                            position={"absolute"}
+                            position={"cordinate"}
                             TextChangeListener={this.props.TextChangeListener}/>
                         
                     );
@@ -58,7 +57,7 @@ class OtherLayout extends Component{
                         <Button 
                             key={item.ID}
                             setButton={item} 
-                            position={"absolute"}
+                            position={"cordinate"}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
                     )
@@ -71,11 +70,11 @@ class OtherLayout extends Component{
         });
 
 
-        console.log("OtherLayout");
+        console.log("OtherLayout : ", this.state.thisData);
         return(
             <View 
                 key={this.state.thisData.ID}
-                style={{height: this.state.thisData.Height, width: this.state.thisData.Width, backgroundColor: 'black'}}>
+                style={{height: this.state.thisData.Height, width: this.state.thisData.Width, borderBottomWidth: StyleSheet.hairlineWidth}}>
                 {UIs}
             </View>
         )

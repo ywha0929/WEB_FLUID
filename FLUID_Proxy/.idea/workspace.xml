@@ -13,38 +13,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b4e670b1-017f-46da-a24f-5955282597c1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/FLUIDInjector.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/FLUIDInjector.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/FLUIDInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/FLUIDInjector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/apks/TESTAPP_relative.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/apks/TESTAPP_relative.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Service/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ImageManager/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ImageManager/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TESTAPP_test/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TESTAPP_test/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TESTAPP_relative/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TESTAPP_relative/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TESTAPP_relative/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TESTAPP_relative/app/src/main/res/layout/activity_main.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../TESTAPP_test/app/src/main/java/com/example/testapp_test/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../TESTAPP_test/app/src/main/java/com/example/testapp_test/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react_proxy/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react_proxy/components/Button.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/Button.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react_proxy/components/EditText.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/EditText.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react_proxy/components/LinearLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/LinearLayout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/OtherLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/OtherLayout.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react_proxy/components/TextView.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/TextView.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
