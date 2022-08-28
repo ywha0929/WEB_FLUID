@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -26,19 +28,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import com.hmsl.fluidmanager.IFLUIDService;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -448,15 +443,42 @@ public class FLUIDMain {
             dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(edit.getText().toString());
 
-            dataOutputStream.writeFloat( convertPixelsToDpFloat(edit.getTextSize(), instance.mContext));
+            dataOutputStream.writeFloat(convertPixelsToDpFloat(edit.getTextSize(), instance.mContext));
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
         }
         else if (widgetType.contains("ImageView")) {
+            Log.d(TAG, "generate_byteArray: this is image view///////");
+            ////////////////////////////////////////////////////////////image///////////////////////////////////////////////////////
             ImageView image = (ImageView) view;
-            //////////////////////////////////////////////image.
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
+            dataOutputStream.writeUTF(widgetType);
+
+            //convert ImageView to bitmap
+            BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+
+            //bitmap to byte
+            ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bitmapOutputStream);
+            byte[] byteArray = bitmapOutputStream.toByteArray();
+
+            //length of byte array
+            int byteLength = byteArray.length;
+
+            dataOutputStream.write(byteArray);
+            dataOutputStream.write(byteLength);
+
+            dataOutputStream.writeInt( convertPixelsToDpInt(image.getHeight(), instance.mContext));
+            dataOutputStream.writeInt( convertPixelsToDpInt(image.getWidth(), instance.mContext));
+
+            dataOutputStream.flush();
+            dtoByteArray = byteArrayOutputStream.toByteArray();
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
+
         return dtoByteArray;
     }
 

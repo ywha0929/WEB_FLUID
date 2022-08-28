@@ -172,7 +172,7 @@ public class FLUIDManagerService extends Service {
         return result;
     }
 
-    class SocketInputThread extends Thread {
+       class SocketInputThread extends Thread {
         InputStream inputStream;
         ByteArrayInputStream byteArrayInputStream;
         DataInputStream dataInputStream;
@@ -279,7 +279,8 @@ public class FLUIDManagerService extends Service {
             try {
                 socket = server.accept();
                 Log.e(TAG, "Socket connected");
-            } catch (IOException e) {
+                mRemoteService.doCheck(40);
+            } catch (IOException | RemoteException e) {
                 e.printStackTrace();
             }
 
@@ -345,7 +346,7 @@ public class FLUIDManagerService extends Service {
                         DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
                         int id = dataInputStream.readInt();
                         //Log.d("TAG","UI_ID : " + id);
-                        //Log.d(TAG,""+dataInputStream.readBoolean());
+                        //Log.d(TAG,""+dataInputStream.readBoolean());r
                         boolean is_distribute = false;
                         for (int i = 0; i < id_list.size(); i++) {
                             if (id_list.get(i) == id) {
