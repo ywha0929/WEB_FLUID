@@ -1,16 +1,19 @@
 import React, {useState, Component} from 'react';
-import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView, Pressable} from 'react-native';
+import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView, Pressable, Image} from 'react-native';
 import TcpSocket from "react-native-tcp-socket";
 import utf8 from 'utf8';
 import {Buffer} from 'buffer';
 
 var client;
-
+var length_bitmap;
+var buffer_cur;
+var Acc_or_Han;
+var cur_id;
 class App extends Component {
     constructor(props){
         super(props);
         this._Connect_to_Server();
-        
+        Acc_or_Han = 0;
     };
     state = {
         UIList: new Array(),
@@ -22,176 +25,257 @@ class App extends Component {
         client.on('data', (data) => this.handleData(data));
         
     };
-    
-    handleData(data) {
-        var data = data;
-        var offset = 0;
-        console.log('message received',data);
-        console.log('id : ',offset, data.readUInt32BE(offset));
-        var id = data.readUInt32BE(offset);
-        offset += 4;
-        console.log('isUpdate : ',offset,data.readIntBE(offset,1));
-        var isUpdate = data.readIntBE(offset,1);
-        offset +=1;
-        if(isUpdate == 0) //distribute mode
-        {
-            //read WidgetType
-            
-            console.log('String Length',offset,data.readUInt32BE(offset));
-            var stringSize = data.readUInt32BE(offset)+2;
-            offset += 4;
-            console.log('widgetType : ',offset,data.toString('utf8',offset,offset+stringSize));
-            var widgetType = data.toString('utf8',offset,offset+stringSize);
-            offset += stringSize;
-            console.log("check : ",widgetType,widgetType.includes("EditText"));
-            if(widgetType.includes("EditText")==1)
-            {
-                console.log('String Length',offset,data.readUInt32BE(offset));
-                stringSize = data.readUInt32BE(offset)+2;
-                offset += 4;
-                console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
-                var temp_text = data.toString('utf8',offset,offset+stringSize);
-                var text = (''+temp_text).slice(1);
-                offset += stringSize;
-                console.log('TextSize : ',data.readFloatBE(offset));
-                var TextSize = data.readFloatBE(offset);
-                offset += 4;
-                let UIdata = {
-                    "WidgetType": widgetType,
-                    "ID": id,
-                    "Text": text,
-                    "TextSize": TextSize,
-                    "isUpdate":isUpdate,
-                    "Color": 'black',
-                };
-                console.log("UIList ",this.state.UIList[0]);
-                let tempArr = this.state.UIList;
-                tempArr.push(UIdata);
-                console.log("UIList ",this.state.UIList[0]);
-                this.setState({
-                    UIList: tempArr
-                });
-                console.log("UIList ",this.state.UIList[0]);
+    accumulatedata(data) {
+        console.log("this is accumulatedata");
+        let tempArr = this.state.UIList;
+        tempArr.forEach(function (targetUI){
+            if(cur_id == targetUI.ID){
+                let cur_bitmap = data.toString('utf8',0,data.length);
+                console.log(targetUI.Bitmap.length);
+                console.log("cur bitmap = ",cur_bitmap);
+                var temp = targetUI.Bitmap.concat(cur_bitmap);
+                targetUI.Bitmap = temp;
+                //targetUI.Bitmap += cur_bitmap;
+                console.log(targetUI.Bitmap.length);
+                buffer_cur += data.length;
             }
-            else if (widgetType.includes("TextView"))
+        });
+        // console.log("UIList ",this.state.UIList[0]);
+        this.setState({
+            UIList: tempArr
+        });
+        // console.log("UIList", this.state.UIList[0]);
+        if(buffer_cur == length_bitmap)
+        {
+            Acc_or_Han = 0;
+        }
+    }
+    handleData(data) {
+        if(Acc_or_Han == 1)
+        {
+            this.accumulatedata(data);
+        }
+        else
+        {
+            var data = data;
+            var offset = 0;
+            console.log('message received',data);
+            console.log('id : ',offset, data.readUInt32BE(offset));
+            var id = data.readUInt32BE(offset);
+            offset += 4;
+            console.log('isUpdate : ',offset,data.readIntBE(offset,1));
+            var isUpdate = data.readIntBE(offset,1);
+            offset +=1;
+            if(isUpdate == 0) //distribute mode
             {
+                //read WidgetType
                 
                 console.log('String Length',offset,data.readUInt32BE(offset));
-                stringSize = data.readUInt32BE(offset)+2;
+                var stringSize = data.readUInt32BE(offset)+2;
                 offset += 4;
-                console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
-                var temp_text = data.toString('utf8',offset,offset+stringSize);
-                var text = (''+temp_text).slice(1);
+                console.log('widgetType : ',offset,data.toString('utf8',offset,offset+stringSize));
+                var widgetType = data.toString('utf8',offset,offset+stringSize);
                 offset += stringSize;
-                console.log('TextSize : ',data.readFloatBE(offset));
-                var TextSize = data.readFloatBE(offset);
-                offset += 4
-                let UIdata = {
-                    "WidgetType": widgetType,
-                    "ID": id,
-                    "Text": text,
-                    "TextSize": TextSize,
-                    "isUpdate":isUpdate,
-                };
-                console.log("UIList ",this.state.UIList[0]);
-                let tempArr = this.state.UIList;
-                tempArr.push(UIdata);
-                console.log("UIList ",this.state.UIList[0]);
-                this.setState({
-                    UIList: tempArr
-                });
-            }
-            else if(widgetType.includes("Button"))
-            {
-                console.log('String Length',offset,data.readUInt32BE(offset));
-                stringSize = data.readUInt32BE(offset)+2;
-                offset += 4;
-                console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
-                var temp_text = data.toString('utf8',offset,offset+stringSize);
-                var text = (''+temp_text).slice(1);
-                offset += stringSize;
-                var height = data.readUInt32BE(offset)* 0.75;
-                console.log("Height : ",height);
-                offset +=4;
-                var width = data.readUInt32BE(offset)* 0.75;
-                console.log("Width : ",width);
-                offset += 4;
-                let UIdata = {
-                    "WidgetType": widgetType,
-                    "ID": id,
-                    "Text": text,
-                    "Height": height,
-                    "isUpdate":isUpdate,
-                    "Width": width,
-                };
-                console.log("UIList ",this.state.UIList[0]);
-                let tempArr = this.state.UIList;
-                tempArr.push(UIdata);
-                console.log("UIList ",this.state.UIList[0]);
-                this.setState({
-                    UIList: tempArr
-                });
-            }
-            
-            
-        }
-
-        else if(isUpdate == 1){//update mode
-            let tempArr = this.state.UIList;
-            tempArr.forEach(function (targetUI){
-                if(id == targetUI.ID){
-                    let stringSize = data.readUInt32BE(offset)+2;
-                    console.log("stringSize: ",offset, stringSize);
+                console.log("check : ",widgetType,widgetType.includes("EditText"));
+                if(widgetType.includes("EditText")==1)
+                {
+                    console.log('String Length',offset,data.readUInt32BE(offset));
+                    stringSize = data.readUInt32BE(offset)+2;
                     offset += 4;
-                    let method = data.toString('utf8',offset,offset+stringSize);
-                    offset +=stringSize;
-                    let typeFlag = data.readUInt32BE(offset);
+                    console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
+                    var temp_text = data.toString('utf8',offset,offset+stringSize);
+                    var text = (''+temp_text).slice(1);
+                    offset += stringSize;
+                    console.log('TextSize : ',data.readFloatBE(offset));
+                    var TextSize = data.readFloatBE(offset);
                     offset += 4;
-                    //get parameters
-                    if(typeFlag == 2){
-                        var param = data.readUInt32BE(offset);
-                        offset +=4;
-                    }
-                    if(typeFlag == 3){
-                        stringSize = data.readUInt32BE(offset)+2;
-                        offset +=4;
-                        let param_temp = data.toString('utf8',offset,offset+stringSize);
-                        var param = (''+param_temp).slice(1);
-                        offset +=stringSize;
-                    }
-
-                    //UI update
-                    if(method.includes("setTextColor")){
-                        console.log("color : ",param);
-                        let bb = param & 0x000000FF;
-                        let gg = param & 0x0000FF00;
-                        let rr = param & 0x00FF0000;
-                        let aa = param & 0xFF000000;
-                        rr = rr<<8;
-                        bb = bb<<8;
-                        gg = gg<<8;
-                        aa = aa>>>24;
-                        console.log(rr,bb,gg,aa)
-                        var newColor = rr|bb|gg|aa; //android native in aarrggbb react-native in rrggbbaa
-                        if(param == 4278190335)
-                        {
-                            targetUI.Color= newColor>>>0;
-                        }
-                        else if(param == 4294901760){
-                            targetUI.Color = newColor>>>0; //shift operator to make it unsigned
-                        }
-                    }
-                    else if(method.includes("setText")){
-                        targetUI.Text = param;
-                    }
+                    let UIdata = {
+                        "WidgetType": widgetType,
+                        "ID": id,
+                        "Text": text,
+                        "TextSize": TextSize,
+                        "isUpdate":isUpdate,
+                        "Color": 'black',
+                    };
+                    console.log("UIList ",this.state.UIList[0]);
+                    let tempArr = this.state.UIList;
+                    tempArr.push(UIdata);
+                    console.log("UIList ",this.state.UIList[0]);
+                    this.setState({
+                        UIList: tempArr
+                    });
+                    console.log("UIList ",this.state.UIList[0]);
                 }
-            });
-            console.log("UIList ",this.state.UIList[0]);
-            this.setState({
-                UIList: tempArr
-            });
-            console.log("UIList", this.state.UIList[0]);
+                else if (widgetType.includes("TextView"))
+                {
+                    
+                    console.log('String Length',offset,data.readUInt32BE(offset));
+                    stringSize = data.readUInt32BE(offset)+2;
+                    offset += 4;
+                    console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
+                    var temp_text = data.toString('utf8',offset,offset+stringSize);
+                    var text = (''+temp_text).slice(1);
+                    offset += stringSize;
+                    console.log('TextSize : ',data.readFloatBE(offset));
+                    var TextSize = data.readFloatBE(offset);
+                    offset += 4
+                    let UIdata = {
+                        "WidgetType": widgetType,
+                        "ID": id,
+                        "Text": text,
+                        "TextSize": TextSize,
+                        "isUpdate":isUpdate,
+                    };
+                    console.log("UIList ",this.state.UIList[0]);
+                    let tempArr = this.state.UIList;
+                    tempArr.push(UIdata);
+                    console.log("UIList ",this.state.UIList[0]);
+                    this.setState({
+                        UIList: tempArr
+                    });
+                }
+                else if(widgetType.includes("ImageView"))
+                {
+                    //buffer 합치기
+                    //bitmap data 받아오기 및 저장
+                    
+                    // console.log('Buffer Length : ',data.length);
+                    // const bufferbuffer = data.concat(bitmap);
+                    
+                    var height = data.readUInt32BE(offset)* 0.75;
+                    console.log("Height : ",height);
+                    offset +=4;
+                    var width = data.readUInt32BE(offset)* 0.75;
+                    offset +=4;
+                    console.log("Width : ",width);
+    
+                    var length = data.readUInt32BE(offset) + 2;
+                    length_bitmap = length;
+                    console.log(length);
+                    offset += 4;
+                    
+                    
+                    
+                    var rest = data.length - offset;
+                    
+                    buffer_cur = 0;
+                    let temp = data.toString('utf8',offset,data.length);
+                    let current_bitmap = (''+temp).slice(1);
+                    let UIdata = {
+                        "WidgetType": widgetType,
+                        "ID": id,
+                        "Length": length,
+                        "Bitmap": current_bitmap,
+                        "Height": height,
+                        "isUpdate":isUpdate,
+                        "Width": width,
+                    };
+                    buffer_cur += rest;
+                    //console.log('client , ',client);
+                    cur_id = id;
+                    console.log("UIList ",this.state.UIList[0]);
+                    let tempArr = this.state.UIList;
+                    tempArr.push(UIdata);
+                    console.log("UIList ",this.state.UIList[0]);
+                    this.setState({
+                        UIList: tempArr
+                    });
+                    Acc_or_Han = 1;
+                }
+                else if(widgetType.includes("Button"))
+                {
+                    console.log('String Length',offset,data.readUInt32BE(offset));
+                    stringSize = data.readUInt32BE(offset)+2;
+                    offset += 4;
+                    console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
+                    var temp_text = data.toString('utf8',offset,offset+stringSize);
+                    var text = (''+temp_text).slice(1);
+                    offset += stringSize;
+                    var height = data.readUInt32BE(offset)* 0.75;
+                    console.log("Height : ",height);
+                    offset +=4;
+                    var width = data.readUInt32BE(offset)* 0.75;
+                    console.log("Width : ",width);
+                    offset += 4;
+                    let UIdata = {
+                        "WidgetType": widgetType,
+                        "ID": id,
+                        "Text": text,
+                        "Height": height,
+                        "isUpdate":isUpdate,
+                        "Width": width,
+                    };
+                    
+                    console.log("UIList ",this.state.UIList[0]);
+                    let tempArr = this.state.UIList;
+                    tempArr.push(UIdata);
+                    console.log("UIList ",this.state.UIList[0]);
+                    this.setState({
+                        UIList: tempArr
+                    });
+                }
+                
+                
+            }
+    
+            else if(isUpdate == 1){//update mode
+                let tempArr = this.state.UIList;
+                tempArr.forEach(function (targetUI){
+                    if(id == targetUI.ID){
+                        let stringSize = data.readUInt32BE(offset)+2;
+                        console.log("stringSize: ",offset, stringSize);
+                        offset += 4;
+                        let method = data.toString('utf8',offset,offset+stringSize);
+                        offset +=stringSize;
+                        let typeFlag = data.readUInt32BE(offset);
+                        offset += 4;
+                        //get parameters
+                        if(typeFlag == 2){
+                            var param = data.readUInt32BE(offset);
+                            offset +=4;
+                        }
+                        if(typeFlag == 3){
+                            stringSize = data.readUInt32BE(offset)+2;
+                            offset +=4;
+                            let param_temp = data.toString('utf8',offset,offset+stringSize);
+                            var param = (''+param_temp).slice(1);
+                            offset +=stringSize;
+                        }
+    
+                        //UI update
+                        if(method.includes("setTextColor")){
+                            console.log("color : ",param);
+                            let bb = param & 0x000000FF;
+                            let gg = param & 0x0000FF00;
+                            let rr = param & 0x00FF0000;
+                            let aa = param & 0xFF000000;
+                            rr = rr<<8;
+                            bb = bb<<8;
+                            gg = gg<<8;
+                            aa = aa>>>24;
+                            console.log(rr,bb,gg,aa)
+                            var newColor = rr|bb|gg|aa; //android native in aarrggbb react-native in rrggbbaa
+                            if(param == 4278190335)
+                            {
+                                targetUI.Color= newColor>>>0;
+                            }
+                            else if(param == 4294901760){
+                                targetUI.Color = newColor>>>0; //shift operator to make it unsigned
+                            }
+                        }
+                        else if(method.includes("setText")){
+                            targetUI.Text = param;
+                        }
+                    }
+                });
+                console.log("UIList ",this.state.UIList[0]);
+                this.setState({
+                    UIList: tempArr
+                });
+                console.log("UIList", this.state.UIList[0]);
+            }
         }
+        
         
     };
     onPressInListener = (e) => {
@@ -260,7 +344,21 @@ class App extends Component {
     render() {
         const utf8 = require('utf8');
         let Arr = this.state.UIList.map((item,index)=>{
-            console.log(item.WidgetType.includes("EditText"));
+            //console.log(item.WidgetType.includes("EditText"));
+            if(item.WidgetType.includes("ImageView")){
+                console.log("ImageView");
+                console.log("bitmap length  : ",item.Bitmap.length);
+                console.log("bitmap : ", item.Bitmap);
+                var bitmap = item.Bitmap
+                return (
+                    <View key={item.ID} style={{alignItems:'center', height: item.Height+ 10, width: item.Width +10}}>
+                        <Image
+                            source={{
+                                uri: `data:image/png;base64,${bitmap}`,
+                                }} style={{alignItems:'center', height: item.Height, width: item.Width}} resizeMode={'contain'}/>
+                    </View>
+                )
+            }
             if(item.WidgetType.includes("EditText")){
                 console.log("EditText");
                 return (

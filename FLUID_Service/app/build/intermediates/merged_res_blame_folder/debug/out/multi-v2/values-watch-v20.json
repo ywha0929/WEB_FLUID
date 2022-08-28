@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\jieun\\Desktop\\WEB_FLUID\\FLUID_Service\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-watch-v20\\values-watch-v20.xml",
+            "outputFile": "/home/ywha/WEB_FLUID/FLUID_Service/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\jieun\\.gradle\\caches\\transforms-3\\46d15f5c58a469270eeba15db4463d05\\transformed\\appcompat-1.4.0\\res\\values-watch-v20\\values-watch-v20.xml",
+                    "source": "/home/ywha/.gradle/caches/transforms-3/46d15f5c58a469270eeba15db4463d05/transformed/appcompat-1.4.0/res/values-watch-v20/values-watch-v20.xml",
                     "from": {
                         "startLines": "2,5,8",
                         "startColumns": "4,4,4",

@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -462,17 +463,21 @@ public class FLUIDMain {
 
             //bitmap to byte
             ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bitmapOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bitmapOutputStream);
             byte[] byteArray = bitmapOutputStream.toByteArray();
 
             //length of byte array
-            int byteLength = byteArray.length;
-
-            dataOutputStream.write(byteArray);
-            dataOutputStream.write(byteLength);
-
+            String encoded = Base64.getEncoder().encodeToString(byteArray);
+            int byteLength = encoded.getBytes(StandardCharsets.UTF_8).length;
             dataOutputStream.writeInt( convertPixelsToDpInt(image.getHeight(), instance.mContext));
             dataOutputStream.writeInt( convertPixelsToDpInt(image.getWidth(), instance.mContext));
+            dataOutputStream.writeInt(byteLength);
+            Log.d(TAG,"bitmap length : "+byteLength);
+            Log.d(TAG, "bitmap : \n"+encoded);
+            dataOutputStream.writeUTF(encoded);
+
+
+
 
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
