@@ -29,12 +29,15 @@ public class InstrumentUtil {
         Options.v().set_include_all(true);
         Options.v().set_process_multiple_dex(true);
         Options.v().set_output_dir(outputPath);
+        Scene.v().addBasicClass("java.lang.Class",SootClass.HIERARCHY);
         Scene.v().addBasicClass("java.io.PrintStream",SootClass.SIGNATURES);
         Scene.v().addBasicClass("java.lang.System",SootClass.SIGNATURES);
         Scene.v().addBasicClass("dalvik.system.DexClassLoader",SootClass.SIGNATURES);
         Scene.v().addBasicClass("java.lang.Class[]",SootClass.HIERARCHY);  
         Scene.v().addBasicClass("java.lang.String[]",SootClass.HIERARCHY);  
         Scene.v().addBasicClass("android.graphics.Bitmap[]",SootClass.HIERARCHY);
+        //Scene.v().addBasicClass("androidx.appcompat.app.AppCompatActivity",SootClass.HIERARCHY);
+        
         Scene.v().loadNecessaryClasses();
     }
 
@@ -111,7 +114,7 @@ public class InstrumentUtil {
 		SootClass cls = Scene.v().getSootClass(clsName);
 		NewExpr expr = Jimple.v().newNewExpr(cls.getType());
 		generated.add(Jimple.v().newAssignStmt(base, expr));
-		generated.addAll(InstrumentUtil.generateSpecialInvokeStmt(body, clsName, signature, base, args));
+		generated.addAll(InstrumentUtil.generateSpecialInvokeStmt(body, clsName, signature, base, null, args));
 		return generated;
 	}
 
@@ -168,7 +171,7 @@ public class InstrumentUtil {
 			generated.add(Jimple.v().newInvokeStmt(invokeExpr));
 		return generated;
 	}
-	public static List<Unit> generateSpecialInvokeStmt(Body body, String clsName, String signature, Local base, Value... args) {
+	public static List<Unit> generateSpecialInvokeStmt(Body body, String clsName, String signature, Local base, Local retVar, Value... args) {
         List<Unit> generated = new ArrayList<>();
 		SootClass cls = Scene.v().getSootClass(clsName);
 		SootMethod method = cls.getMethod(signature);
@@ -183,7 +186,10 @@ public class InstrumentUtil {
 			}
 		}
 		InvokeExpr invokeExpr = Jimple.v().newSpecialInvokeExpr(base, method.makeRef(), realArgs);
-		generated.add(Jimple.v().newInvokeStmt(invokeExpr));
+		if(retVar != null)
+			generated.add(Jimple.v().newAssignStmt(retVar, invokeExpr));
+		else
+			generated.add(Jimple.v().newInvokeStmt(invokeExpr));
 		return generated;
 	}
 
