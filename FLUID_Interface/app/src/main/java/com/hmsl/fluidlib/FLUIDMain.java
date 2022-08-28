@@ -170,7 +170,10 @@ public class FLUIDMain {
 
 
     }
-
+    public void runTouchCheck(MotionEvent e) {
+        Log.d(TAG,"This is runTouchCheck");
+        Log.d(TAG,"This is motionEvent.getPointerCount : "+e.getPointerCount());
+    }
     public void reverseBind() {
 
         Log.d(TAG, "this is reverseBind");

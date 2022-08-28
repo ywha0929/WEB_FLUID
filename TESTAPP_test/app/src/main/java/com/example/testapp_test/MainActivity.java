@@ -17,6 +17,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView text1;
 
     private Button btn1;
+
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Log.d("FLUID", "onTouchEvent");
+        return super.onTouchEvent(event);
+    }
+
     private Button btn2;
 
     @Override
@@ -33,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d("TAG", "onTouch: onTouch on whole layout");
+
                 return false;
             }
         });

@@ -35,7 +35,22 @@ public class MainActivity extends AppCompatActivity {
     Class<?> clazz = null;
     Method mtd;
     Object objFluidLib;
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.d("FLUID","dispatchTouchEvent");
 
+        Boolean retVar =  super.dispatchTouchEvent(ev);
+        try{
+            mtd = clazz.getDeclaredMethod("runTouchCheck",MotionEvent.class);
+            mtd.invoke(objFluidLib,ev);
+            return retVar;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
     //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
