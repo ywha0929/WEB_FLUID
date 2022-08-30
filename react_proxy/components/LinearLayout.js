@@ -3,6 +3,7 @@ import {StyleSheet, Pressable, View, Text, TextInput} from 'react-native';
 import Button from './Button';
 import EditText from './EditText';
 import TextView from './TextView';
+import ImageView from './ImageView';
 
 class LinearLayout extends Component{
     constructor(props) {
@@ -60,6 +61,15 @@ class LinearLayout extends Component{
                             position={"automatic"}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("ImageView")) {
+                    console.log("ImageView");
+                    return (
+                        <ImageView
+                            key={item.ID}
+                            setImageView={item}
+                            position={"automatic"}/>
                     )
                 }
             }

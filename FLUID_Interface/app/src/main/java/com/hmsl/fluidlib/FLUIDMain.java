@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -27,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +46,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -204,7 +208,8 @@ public class FLUIDMain {
             //Log.d("TAG","run test");
             byte[] layout = generate_lbyteArray(view);
             byte[] widget = generate_dbyteArray(widgetType, view);
-
+            Log.d(TAG,"layout bytearray length : "+layout.length);
+            Log.d(TAG,"widget bytearray length : "+widget.length);
             Log.d(TAG,"runDistribute : "+widgetType);
             bundle.putByteArray("layout", layout);
             bundle.putByteArray("widget", widget);
@@ -399,6 +404,7 @@ public class FLUIDMain {
             int width = convertPixelsToDpInt(linearLayout.getWidth(), instance.mContext);
             int height = convertPixelsToDpInt(linearLayout.getHeight(),instance.mContext);
             dataOutputStream.writeInt(layout.getId());
+
             dataOutputStream.writeInt(2); //2 for layout
             dataOutputStream.writeInt(layout_type);
             dataOutputStream.writeInt(orientation);
@@ -520,6 +526,40 @@ public class FLUIDMain {
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
+        }
+        else if (widgetType.contains("ImageView")) {
+            Log.d(TAG, "generate_byteArray: this is image view///////");
+            ////////////////////////////////////////////////////////////image///////////////////////////////////////////////////////
+            ImageView image = (ImageView) view;
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
+            dataOutputStream.writeUTF(widgetType);
+
+            //convert ImageView to bitmap
+            BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+
+            //bitmap to byte
+            ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bitmapOutputStream);
+            byte[] byteArray = bitmapOutputStream.toByteArray();
+
+            //length of byte array
+            String encoded = Base64.getEncoder().encodeToString(byteArray);
+            int byteLength = encoded.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt( convertPixelsToDpInt(image.getHeight(), instance.mContext));
+            dataOutputStream.writeInt( convertPixelsToDpInt(image.getWidth(), instance.mContext));
+            dataOutputStream.writeInt(byteLength);
+            Log.d(TAG,"bitmap length : "+byteLength);
+            Log.d(TAG, "bitmap : \n"+encoded);
+            dataOutputStream.writeUTF(encoded);
+
+
+
+
+            dataOutputStream.flush();
+            dtoByteArray = byteArrayOutputStream.toByteArray();
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
         return dtoByteArray;
     }

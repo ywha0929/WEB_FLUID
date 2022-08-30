@@ -3,6 +3,7 @@ import {StyleSheet, Pressable, View, Text, TextInput} from 'react-native';
 import Button from './Button';
 import EditText from './EditText';
 import TextView from './TextView';
+import ImageView from './ImageView';
 
 class OtherLayout extends Component{
     constructor(props) {
@@ -60,6 +61,15 @@ class OtherLayout extends Component{
                             position={"cordinate"}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("ImageView")) {
+                    console.log("ImageView");
+                    return (
+                        <ImageView
+                            key={item.ID}
+                            setImageView={item}
+                            position={"cordinate"}/>
                     )
                 }
             }

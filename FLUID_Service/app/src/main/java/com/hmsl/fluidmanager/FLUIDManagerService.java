@@ -14,6 +14,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -24,9 +25,11 @@ import androidx.annotation.NonNull;
 
 //import com.hmsl.fluidlib.IFLUIDService;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
@@ -316,9 +319,14 @@ public class FLUIDManagerService extends Service {
                         if (!is_distribute) {
                             id_list.add(id);
                             //Log.e(TAG, "전송하려는 Json Object" + input);
+//                            BufferedOutputStream os = (BufferedOutputStream) socket.getOutputStream();
+                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+//                            OutputStream os = socket.getOutputStream();
+                            dataOutputStream.writeInt(layout.length);
+                            dataOutputStream.write(layout);
 
-                            OutputStream os = socket.getOutputStream();
-                            os.write(layout);
+                            dataOutputStream.flush();
+                            //os.close();
                             Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
                             mRemoteService.doCheck(1);
                         } else {
@@ -360,10 +368,17 @@ public class FLUIDManagerService extends Service {
                             id_list.add(id);
                             //Log.e(TAG, "전송하려는 Json Object" + input);
 
-                            OutputStream os = socket.getOutputStream();
-                            os.write(widget);
+//                            BufferedOutputStream os = (BufferedOutputStream) socket.getOutputStream();
+                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+//                            OutputStream os = socket.getOutputStream();
+                            dataOutputStream.writeInt(widget.length);
+                            dataOutputStream.write(widget);
+                            //dataOutputStream.writeUTF("\n");
+                            while(dataOutputStream.size()!=0)
+                                dataOutputStream.flush();
+
                             Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
-                            mRemoteService.doCheck(1);
+                            mRemoteService.doCheck(2);
                         } else {
                             //Log.e(TAG, "이미 Distribute된 UI 입니다.");
                         }
@@ -394,10 +409,13 @@ public class FLUIDManagerService extends Service {
                             }
                         }
                         if (is_distribute) {
-                            OutputStream os = socket.getOutputStream();
-                            os.write(input);
+
+                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+//                            OutputStream os = socket.getOutputStream();
+                            dataOutputStream.writeInt(input.length);
+                            dataOutputStream.write(input);
                             Log.d(TAG, "update socket message sent : " + getTS());
-                            mRemoteService.doCheck(2);
+                            mRemoteService.doCheck(3);
                         } else {
                             Log.d("TAG", "undistributed UI's update");
                         }

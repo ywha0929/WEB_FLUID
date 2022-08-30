@@ -18,3 +18,5 @@ com/hmsl/fluidlib/FLUIDMain.java
  com.hmsl.fluidlib.FLUIDMain$1$3
  com.hmsl.fluidlib.FLUIDMain$2
  com.hmsl.fluidlib.FLUIDMain$textwatcher
+ com.hmsl.fluidlib.Layout_Tree
+ com.hmsl.fluidlib.Widget_Location

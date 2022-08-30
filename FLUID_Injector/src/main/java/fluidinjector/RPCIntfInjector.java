@@ -37,7 +37,7 @@ public class RPCIntfInjector extends BodyTransformer {
 
 		if (AndroidUtil.isAndroidMethod(b.getMethod()))
 			return;
-		System.out.println(body);
+		//System.out.println(body);
 		if (isAnalize) {
 			isAnalize = false;
 			printClasses(body);

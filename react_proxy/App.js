@@ -7,12 +7,17 @@ import LinearLayout from "./components/LinearLayout"
 import OtherLayout from "./components/OtherLayout"
 
 var client;
-
+var length_bitmap;
+var buffer_cur;
+var Acc_or_Han;
+var cur_id;
+var buffer;
 class App extends Component {
     constructor(props){
         super(props);
         this._Connect_to_Server();
-        
+        Acc_or_Han = 0;
+        buffer = 0;
     };
     state = {
         UIList: new Array(),
@@ -22,14 +27,85 @@ class App extends Component {
         client = TcpSocket.createConnection({host: "192.168.0.23", port: 5673}, ()=>{
             console.log("connection established");
         });
-        client.on('data', (data) => this.handleData(data));
+        client.on('data', (data) => this.parseData(data));
         
     };
-
+    accumulatedata(data) {
+        console.log("this is accumulatedata");
+        let tempArr = this.state.UIList;
+        tempArr.forEach(function (targetUI){
+            if(cur_id == targetUI.ID){
+                let cur_bitmap = data.toString('utf8',0,data.length);
+                console.log(targetUI.Bitmap.length);
+                console.log("cur bitmap = ",cur_bitmap);
+                var temp = targetUI.Bitmap.concat(cur_bitmap);
+                targetUI.Bitmap = temp;
+                //targetUI.Bitmap += cur_bitmap;
+                console.log(targetUI.Bitmap.length);
+                buffer_cur += data.length;
+            }
+        });
+        // console.log("UIList ",this.state.UIList[0]);
+        this.setState({
+            UIList: tempArr
+        });
+        // console.log("UIList", this.state.UIList[0]);
+        if(buffer_cur == length_bitmap)
+        {
+            Acc_or_Han = 0;
+        }
+    }
+    parseData(data) {
+        console.log("this is parseData");
+        console.log("data length : ",data.length);
+        console.log(data);
+        if(data.length < 4)
+        {
+            buffer = new Buffer(data);
+        }
+        else
+        {
+            if(buffer != null)
+            {
+                var temp = Buffer.concat([buffer,data]);
+                buffer = null;
+                data = Buffer.from(temp);
+                console.log(data);
+            }
+           
+            if(Acc_or_Han == 1)
+            {
+                this.accumulatedata(data);
+            }
+            else{
+                
+                var packet_length = data.readUInt32BE(0);
+                if(packet_length == data.length-4)
+                {
+                    var first_data = data.subarray(4,4+packet_length);
+                }
+                else
+                {
+                    console.log("packet length : ",packet_length);
+                
+                    var first_data = data.subarray(4,4+packet_length);
+                    var second_data = data.subarray(8+packet_length,data.length);
+                    this.handleData(first_data);
+                    this.handleData(second_data);
+                }
+                
+            }
+        }
+        
+    }
     handleData(data) {
-        var data = data;
+        console.log("handle data invocated");
+        
+        console.log("data length : ",data.length);
+        //var this_data = data;
         var offset = 0;
-        console.log('message received',data);
+    
+        //console.log('message received',data);
         console.log('id : ',offset, data.readUInt32BE(offset));
         var id = data.readUInt32BE(offset);
         offset += 4;
@@ -111,6 +187,57 @@ class App extends Component {
                 this.setState({
                     UIList: tempArr
                 });
+            }
+            else if(widgetType.includes("ImageView"))
+            {
+
+                //buffer 합치기
+                //bitmap data 받아오기 및 저장
+                
+                // console.log('Buffer Length : ',data.length);
+                // const bufferbuffer = data.concat(bitmap);
+                
+                var height = data.readUInt32BE(offset)* 0.75;
+                console.log("Height : ",height);
+                offset +=4;
+                var width = data.readUInt32BE(offset)* 0.75;
+                offset +=4;
+                console.log("Width : ",width);
+
+                var length = data.readUInt32BE(offset) + 2;
+                length_bitmap = length;
+                console.log(length);
+                offset += 4;
+                
+                
+                
+                var rest = data.length - offset;
+                
+                buffer_cur = 0;
+                let temp = data.toString('utf8',offset,data.length);
+                let current_bitmap = (''+temp).slice(1);
+                let UIdata = {
+                    "WidgetType": widgetType,
+                    "ID": id,
+                    "Length": length,
+                    "Bitmap": current_bitmap,
+                    "Height": height,
+                    "Width": width,
+                    "Parent_ID": layoutId,
+                    "X": X,
+                    "Y": Y,
+                };
+                buffer_cur += rest;
+                //console.log('client , ',client);
+                cur_id = id;
+                console.log("UIList ",this.state.UIList[0]);
+                let tempArr = this.state.UIList;
+                tempArr.push(UIdata);
+                console.log("UIList ",this.state.UIList[0]);
+                this.setState({
+                    UIList: tempArr
+                });
+                Acc_or_Han = 1;
             }
             else if(widgetType.includes("Button"))
             {
@@ -213,6 +340,7 @@ class App extends Component {
             console.log("UIList", this.state.UIList[0]);
         }
         else if(isUpdate ==2) {//distribute layout
+            console.log("distribute layout");
             var layout_type = data.readUInt32BE(offset);
             offset+=4;
             if(layout_type == 0){
@@ -248,12 +376,15 @@ class App extends Component {
                 LayoutList: tempArr
             });
             console.log(layout_Data);
+            
         }
+    
+        
         
     };
     onPressInListener = (e) => {
         var target_id = e.target._internalFiberInstanceHandleDEV.memoizedProps.id;
-        console.log(e.target._internalFiberInstanceHandleDEV.memoizedProps);
+        //console.log(e.target._internalFiberInstanceHandleDEV.memoizedProps);
         let tempArr = this.state.UIList;
 
             let buffer = Buffer.alloc(1000);
