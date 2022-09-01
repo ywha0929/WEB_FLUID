@@ -23,6 +23,7 @@
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/apks/ImageManger.apk" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" afterDir="false" />
@@ -38,7 +39,6 @@
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/build/tmp/compileDebugJavaWithJavac/source-classes-mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/build/tmp/compileDebugJavaWithJavac/source-classes-mapping.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.bin" afterDir="false" />
@@ -119,9 +119,14 @@
       <change beforePath="$PROJECT_DIR$/../ImageManager/.idea/libraries/Gradle__org_hamcrest_hamcrest_library_1_3.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../ImageManager/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../ImageManager/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TESTAPP_image/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TESTAPP_image/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react_proxy/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/Button.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/Button.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/EditText.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/EditText.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/ImageView.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/ImageView.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react_proxy/components/LinearLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/LinearLayout.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../react_proxy/components/OtherLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/OtherLayout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/TextView.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/TextView.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +161,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/app/src/main/aidl/com/hmsl/fluidmanager/IFLUIDService.aidl" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/FLUIDManagerService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/local.properties" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2BRCppl2lG8QiiPiHhg1Xuu3KBy" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">

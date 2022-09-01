@@ -18,7 +18,7 @@ class Button extends Component{
         this.props.onPressOutListener(e);
     }
     render() {
-        console.log("Button",this.state.thisData);
+        console.log("Button Component");
         if(this.state.position==="cordinate") {
             return (
                 <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y,height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>

@@ -8,7 +8,7 @@ import ImageView from './ImageView';
 class LinearLayout extends Component{
     constructor(props) {
         super(props);
-        console.log(this.props.setLinearLayout);
+        console.log("new LinearLayout instance created");
         this.state = {
             thisData: this.props.setLinearLayout,
             UIList: this.props.UIList
@@ -30,9 +30,9 @@ class LinearLayout extends Component{
     render() {
         let UIs = this.state.UIList.map((item,index)=>{
             if(item.Parent_ID == this.state.thisData.ID){
-                console.log("print child");
+                //console.log("print child");
                 if(item.WidgetType.includes("EditText")){
-                    console.log("EditText");
+                    console.log("LinearLayout : passing to EditText");
                     return (
                         <EditText 
                             key={item.ID}
@@ -42,7 +42,7 @@ class LinearLayout extends Component{
                     );
                 }
                 if(item.WidgetType.includes("TextView")){
-                    console.log("TextView");
+                    console.log("LinearLayout : passing to TextView");
                     return (
                         <TextView 
                             key={item.ID}
@@ -53,7 +53,7 @@ class LinearLayout extends Component{
                     );
                 }
                 if(item.WidgetType.includes("Button")){
-                    console.log("Button");
+                    console.log("LinearLayout : passing to Button");
                     return(
                         <Button 
                             key={item.ID}
@@ -64,7 +64,7 @@ class LinearLayout extends Component{
                     )
                 }
                 if(item.WidgetType.includes("ImageView")) {
-                    console.log("ImageView");
+                    console.log("LinearLayout : ImageView");
                     return (
                         <ImageView
                             key={item.ID}
@@ -74,14 +74,14 @@ class LinearLayout extends Component{
                 }
             }
             else{
-                console.log('not child');
+                console.log('LinearLayout : not child');
             }
             
         });
 
         if(this.state.thisData.Orientation == 0)
         {
-            console.log("column");
+            console.log("LinearLayout : column");
             return(
                 <View 
                     key={this.state.thisData.ID}
@@ -92,7 +92,7 @@ class LinearLayout extends Component{
         }
         else
         {
-            console.log("row");
+            console.log("LinearLayout : row");
             return(
                 <View 
                     key={this.state.thisData.ID}

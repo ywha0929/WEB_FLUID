@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -319,13 +320,28 @@ public class FLUIDManagerService extends Service {
                         if (!is_distribute) {
                             id_list.add(id);
                             //Log.e(TAG, "전송하려는 Json Object" + input);
-//                            BufferedOutputStream os = (BufferedOutputStream) socket.getOutputStream();
-                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-//                            OutputStream os = socket.getOutputStream();
-                            dataOutputStream.writeInt(layout.length);
-                            dataOutputStream.write(layout);
-
-                            dataOutputStream.flush();
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            byte[] length_byte = new byte[4];
+                            int length_int = layout.length;
+                            for(int i = 0; i< 4; i++)
+                            {
+                                int quotient = ((int) Math.floor( length_int / (int)Math.pow(128,3-i) ) );
+                                length_byte[i] = (byte) quotient;
+                                length_int -= quotient * (int) Math.pow(128,3-i);
+                                //Log.d(TAG,""+length_int+" "+(int)Math.pow(16,3-i) + " " + length_int/(int)Math.pow(16,3-i));
+                            }
+                            byteArrayOutputStream.write(length_byte);
+                            byteArrayOutputStream.write(layout);
+                            byte[] output = byteArrayOutputStream.toByteArray();
+                            OutputStream outputStream = socket.getOutputStream();
+                            outputStream.write(output);
+                            outputStream.flush();
+//                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+////                            OutputStream os = socket.getOutputStream();
+//                            dataOutputStream.writeInt(layout.length);
+//                            dataOutputStream.write(layout);
+//
+//                            dataOutputStream.flush();
                             //os.close();
                             Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
                             mRemoteService.doCheck(1);
@@ -369,13 +385,22 @@ public class FLUIDManagerService extends Service {
                             //Log.e(TAG, "전송하려는 Json Object" + input);
 
 //                            BufferedOutputStream os = (BufferedOutputStream) socket.getOutputStream();
-                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-//                            OutputStream os = socket.getOutputStream();
-                            dataOutputStream.writeInt(widget.length);
-                            dataOutputStream.write(widget);
-                            //dataOutputStream.writeUTF("\n");
-                            while(dataOutputStream.size()!=0)
-                                dataOutputStream.flush();
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            byte[] length_byte = new byte[4];
+                            int length_int = widget.length;
+                            for(int i = 0; i< 4; i++)
+                            {
+                                int quotient = ((int) Math.floor( length_int / (int)Math.pow(128,3-i) ) );
+                                length_byte[i] = (byte) quotient;
+                                length_int -= quotient * (int) Math.pow(128,3-i);
+                                //Log.d(TAG,""+length_int+" "+(int)Math.pow(16,3-i) + " " + length_int/(int)Math.pow(16,3-i));
+                            }
+                            byteArrayOutputStream.write(length_byte);
+                            byteArrayOutputStream.write(widget);
+                            byte[] output = byteArrayOutputStream.toByteArray();
+                            OutputStream outputStream = socket.getOutputStream();
+                            outputStream.write(output);
+                            outputStream.flush();
 
                             Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
                             mRemoteService.doCheck(2);

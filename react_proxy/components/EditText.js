@@ -14,7 +14,7 @@ class EditText extends Component{
         console.log("this is dummy TextChangeListener of EditText");
     }
     render() {
-        console.log("EditText",this.state.thisData);
+        console.log("EditText Component");
         if(this.state.position==="cordinate")
         {
             return (

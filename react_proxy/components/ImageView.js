@@ -14,7 +14,7 @@ class ImageView extends Component{
         console.log("this is dummy TextChangeListener of EditText");
     }
     render() {
-        console.log("ImageView",this.state.thisData);
+        console.log("ImageView Component");
         var bitmap = this.state.thisData.Bitmap;
         if(this.state.position==="cordinate")
         {

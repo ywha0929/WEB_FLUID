@@ -17,7 +17,7 @@ class App extends Component {
         super(props);
         this._Connect_to_Server();
         Acc_or_Han = 0;
-        buffer = 0;
+        buffer = null;
     };
     state = {
         UIList: new Array(),
@@ -36,12 +36,12 @@ class App extends Component {
         tempArr.forEach(function (targetUI){
             if(cur_id == targetUI.ID){
                 let cur_bitmap = data.toString('utf8',0,data.length);
-                console.log(targetUI.Bitmap.length);
-                console.log("cur bitmap = ",cur_bitmap);
+                //console.log(targetUI.Bitmap.length);
+                //console.log("cur bitmap = ",cur_bitmap);
                 var temp = targetUI.Bitmap.concat(cur_bitmap);
                 targetUI.Bitmap = temp;
                 //targetUI.Bitmap += cur_bitmap;
-                console.log(targetUI.Bitmap.length);
+                //console.log(targetUI.Bitmap.length);
                 buffer_cur += data.length;
             }
         });
@@ -58,7 +58,7 @@ class App extends Component {
     parseData(data) {
         console.log("this is parseData");
         console.log("data length : ",data.length);
-        console.log(data);
+        // console.log(data);
         if(data.length < 4)
         {
             buffer = new Buffer(data);
@@ -67,6 +67,7 @@ class App extends Component {
         {
             if(buffer != null)
             {
+                console.log("parseData : append to buffer");
                 var temp = Buffer.concat([buffer,data]);
                 buffer = null;
                 data = Buffer.from(temp);
@@ -75,14 +76,16 @@ class App extends Component {
            
             if(Acc_or_Han == 1)
             {
+                console.log("parseData : accumulate data");
                 this.accumulatedata(data);
             }
             else{
-                
+                console.log("parseData : split and pass to handleData");
                 var packet_length = data.readUInt32BE(0);
                 if(packet_length == data.length-4)
                 {
                     var first_data = data.subarray(4,4+packet_length);
+                    this.handleData(first_data);
                 }
                 else
                 {
@@ -230,10 +233,10 @@ class App extends Component {
                 buffer_cur += rest;
                 //console.log('client , ',client);
                 cur_id = id;
-                console.log("UIList ",this.state.UIList[0]);
+                //console.log("UIList ",this.state.UIList[0]);
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
-                console.log("UIList ",this.state.UIList[0]);
+                //console.log("UIList ",this.state.UIList[0]);
                 this.setState({
                     UIList: tempArr
                 });
@@ -476,55 +479,55 @@ class App extends Component {
             }
         });
 
-        let Arr = this.state.UIList.map((item,index)=>{
-            console.log(item.WidgetType.includes("EditText"));
-            if(item.WidgetType.includes("EditText")){
-                console.log("EditText");
-                return (
-                    <View key={item.ID} style={{alignItems:'flex-start', backgroundColor: 'blue', borderBottonWidth : StyleSheet.hairlineWidth}}>
-                        <TextInput style={{fontSize: item.TextSize,  textAlign: 'left', padding: 2, color: item.Color}} 
-                            value={item.Text}
-                            id={item.ID}
-                            onChange={this.TextChangeListener}>
-                        </TextInput>
-                    </View>
-                );
-            }
-            if(item.WidgetType.includes("TextView")){
-                console.log("TextView");
-                return (
-                    <View key={item.ID} style={{alignItems:'flex-start'}}>
-                        <Text  style={{fontSize: item.TextSize, textAlign: 'left', fontWeight: '500', width: 350}}>
-                            {item.Text}
-                        </Text>
-                    </View>
-                );
-            }
-            if(item.WidgetType.includes("Button")){
-                console.log("Button");
-                return(
-                    <View key={item.ID} style={{height: item.Height, width: item.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
-                        <Pressable style={{height: item.Height, width: item.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
-                            id={item.ID}
-                            onPressIn={this.onPressInListener}
-                            onPressOut={this.onPressOutListener}>
-                            <Text 
-                                style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
-                                id={item.ID}> 
-                                    {item.Text} 
-                            </Text>
+        // let Arr = this.state.UIList.map((item,index)=>{
+        //     console.log(item.WidgetType.includes("EditText"));
+        //     if(item.WidgetType.includes("EditText")){
+        //         console.log("App : pass to EditText");
+        //         return (
+        //             <View key={item.ID} style={{alignItems:'flex-start', backgroundColor: 'blue', borderBottonWidth : StyleSheet.hairlineWidth}}>
+        //                 <TextInput style={{fontSize: item.TextSize,  textAlign: 'left', padding: 2, color: item.Color}} 
+        //                     value={item.Text}
+        //                     id={item.ID}
+        //                     onChange={this.TextChangeListener}>
+        //                 </TextInput>
+        //             </View>
+        //         );
+        //     }
+        //     if(item.WidgetType.includes("TextView")){
+        //         console.log("App : pass to TextView");
+        //         return (
+        //             <View key={item.ID} style={{alignItems:'flex-start'}}>
+        //                 <Text  style={{fontSize: item.TextSize, textAlign: 'left', fontWeight: '500', width: 350}}>
+        //                     {item.Text}
+        //                 </Text>
+        //             </View>
+        //         );
+        //     }
+        //     if(item.WidgetType.includes("Button")){
+        //         console.log("App : pass to Button");
+        //         return(
+        //             <View key={item.ID} style={{height: item.Height, width: item.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
+        //                 <Pressable style={{height: item.Height, width: item.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
+        //                     id={item.ID}
+        //                     onPressIn={this.onPressInListener}
+        //                     onPressOut={this.onPressOutListener}>
+        //                     <Text 
+        //                         style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
+        //                         id={item.ID}> 
+        //                             {item.Text} 
+        //                     </Text>
                             
-                        </Pressable>
-                    </View>
-                )
-            }
+        //                 </Pressable>
+        //             </View>
+        //         )
+        //     }
             
-            return(
-                <Text> hi </Text>
-            );
+        //     return(
+        //         <Text> hi </Text>
+        //     );
             
             
-        });
+        // });
         return (
             <SafeAreaView Style={styles.container}>
                 {Layout}

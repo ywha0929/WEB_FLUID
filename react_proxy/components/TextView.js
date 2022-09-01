@@ -14,7 +14,7 @@ class TextView extends Component{
         console.log("this is dummy TextChangeListener of TextView");
     }
     render() {
-        console.log("TextView",this.state.thisData);
+        console.log("TextView Component");
         if(this.state.position==="cordinate")
         {
             return (

@@ -13,6 +13,7 @@ class OtherLayout extends Component{
             UIList: this.props.UIList
             
         };
+        console.log("new OtherLayout instance created");
     }
     TextChangeListener=(e)=>{
         this.props.TextChangeListener(e);
@@ -29,9 +30,8 @@ class OtherLayout extends Component{
     render() {
         let UIs = this.state.UIList.map((item,index)=>{
             if(item.Parent_ID == this.state.thisData.ID){
-                console.log("print child");
                 if(item.WidgetType.includes("EditText")){
-                    console.log("EditText");
+                    console.log("OtherLayout : passing to EditText");
                     return (
                         <EditText 
                             key={item.ID}
@@ -42,7 +42,7 @@ class OtherLayout extends Component{
                     );
                 }
                 if(item.WidgetType.includes("TextView")){
-                    console.log("TextView");
+                    console.log("OtherLayout : passing to TextView");
                     return (
                         <TextView 
                             key={item.ID}
@@ -53,7 +53,7 @@ class OtherLayout extends Component{
                     );
                 }
                 if(item.WidgetType.includes("Button")){
-                    console.log("Button");
+                    console.log("OtherLayout : passing to Button");
                     return(
                         <Button 
                             key={item.ID}
@@ -64,7 +64,7 @@ class OtherLayout extends Component{
                     )
                 }
                 if(item.WidgetType.includes("ImageView")) {
-                    console.log("ImageView");
+                    console.log("OtherLayout : passing to ImageView");
                     return (
                         <ImageView
                             key={item.ID}
@@ -74,13 +74,13 @@ class OtherLayout extends Component{
                 }
             }
             else{
-                console.log('not child');
+                console.log('OtherLayout : not child');
             }
             
         });
 
 
-        console.log("OtherLayout : ", this.state.thisData);
+        //console.log("OtherLayout : ", this.state.thisData);
         return(
             <View 
                 key={this.state.thisData.ID}
