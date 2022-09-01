@@ -41,7 +41,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			isInsert = false;
 			Object[] arr = Scene.v().getApplicationClasses().toArray();
 			for (int i = 0; i < arr.length; i++) {
-				if (arr[i].toString().equals("com.example.imagemanager.MainActivity")) {
+				if (arr[i].toString().equals("com.example.testapp_image.MainActivity")) {
 					MAINACTIVITY_INDEX = i;
 				}
 			}
@@ -423,7 +423,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		// get runtest
 		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Class",
 				"java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])", classVar, methodVar,
-				StringConstant.v("runtest"), classArrayVar));
+				StringConstant.v("runDistribute"), classArrayVar));
 
 		// create object array for invoke
 		SootClass cls2 = Scene.v().getSootClass("java.lang.Object");

@@ -14,6 +14,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
@@ -36,6 +37,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -324,6 +327,7 @@ public class FLUIDManagerService extends Service {
                             OutputStream os = socket.getOutputStream();
                             os.write(input);
                             Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
+                            Log.e(TAG, "UI distribute socket msg 전송 성공 : " + System.currentTimeMillis());
                             mRemoteService.doCheck(1);
                         } else {
                             //Log.e(TAG, "이미 Distribute된 UI 입니다.");
@@ -382,7 +386,9 @@ public class FLUIDManagerService extends Service {
 
     public static String getTS() {
         Long tsLong = System.nanoTime();
+
         String ts = tsLong.toString();
+
         return ts;
     }
 }

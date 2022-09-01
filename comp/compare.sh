@@ -1,0 +1,2 @@
+source getTime.sh
+./compareTime

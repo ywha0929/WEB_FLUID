@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final String TAG = "FLUID TargetApp";
 //test
         edit1 = (EditText) findViewById(R.id.edit1);
         text1 = (TextView) findViewById(R.id.text1);
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         edit1.setOnLongClickListener(new View.OnLongClickListener() {//distribute trigger
             @Override
             public boolean onLongClick(View v) {
+                Log.d(TAG,"onLongClick invocated : "+getTS());
                 return true;
             }
         });
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         text1.setOnLongClickListener(new View.OnLongClickListener() {//distribute trigger
             @Override
             public boolean onLongClick(View v) {
+                Log.d(TAG,"onLongClick invocated : "+getTS());
                 return true;
             }
         });
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         btn1.setOnLongClickListener(new View.OnLongClickListener() {//distribute trigger
             @Override
             public boolean onLongClick(View v) {
+                Log.d(TAG,"onLongClick invocated : "+getTS());
                 return true;
             }
         });
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("TAG", "btn1 short invoked");
+                Log.d(TAG,"onLongClick invocated : "+getTS());
                 if(edit1.getCurrentTextColor() == Color.BLUE)
                 {
                     edit1.setTextColor(Color.RED);
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         btn2.setOnLongClickListener(new View.OnLongClickListener() { //distribute trigger
             @Override
             public boolean onLongClick(View v) {
+                Log.d(TAG,"onLongClick invocated : "+getTS());
                 return true;
             }
         });
@@ -90,9 +96,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("TAG", "btn2 short invoked");
+                Log.d(TAG,"onLongClick invocated : "+getTS());
                 text1.setTextSize(90);
             }
         });
 
+    }
+    public static String getTS() {
+        Long tsLong = System.nanoTime();
+        String ts = tsLong.toString();
+        return ts;
     }
 }

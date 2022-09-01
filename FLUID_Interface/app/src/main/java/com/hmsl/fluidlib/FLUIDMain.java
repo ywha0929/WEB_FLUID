@@ -184,18 +184,18 @@ public class FLUIDMain {
         }
     }
 
-    public void runtest(String widgetType, View view) {
+    public void runDistribute(String widgetType, View view) {
         Bundle bundle = new Bundle();
 
         try {
             //Log.d("TAG","run test");
             byte[] toSend = generate_byteArray(widgetType, view);
-            Log.d(TAG,"runtest : "+widgetType);
+            Log.d(TAG,"runDistribute : "+widgetType);
             bundle.putByteArray("key", toSend);
-            Log.d(TAG, "runtest send : " + getTS());
+            Log.d(TAG, "runDistribute send : " + getTS());
             if(widgetType.contains("TextView") || widgetType.contains("EditText"))
             {
-                Log.d(TAG, "runtest add Listener : " + getTS());
+                Log.d(TAG, "runDistribute add Listener : " + getTS());
                 TextView textView = (TextView) view;
                 textwatcher watcher = new textwatcher(textView);
                 textView.addTextChangedListener(watcher);

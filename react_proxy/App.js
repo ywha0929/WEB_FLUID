@@ -3,6 +3,7 @@ import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView, Pres
 import TcpSocket from "react-native-tcp-socket";
 import utf8 from 'utf8';
 import {Buffer} from 'buffer';
+const now = require('nano-time');
 
 var client;
 var length_bitmap;
@@ -59,7 +60,8 @@ class App extends Component {
         {
             var data = data;
             var offset = 0;
-            console.log('message received',data);
+            console.log('message received ',performance.now()* 1000000);
+            console.log('message received ',Date.now());
             console.log('id : ',offset, data.readUInt32BE(offset));
             var id = data.readUInt32BE(offset);
             offset += 4;
