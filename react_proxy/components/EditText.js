@@ -8,10 +8,12 @@ class EditText extends Component{
             thisData : this.props.setEditText,
             position : this.props.position
         };
+        console.log(props);
     };
     TextChangeListener = (e) => {
-        this.props.TextChangeListener(e);
         console.log("this is dummy TextChangeListener of EditText");
+        this.props.TextChangeListener(e);
+        
     }
     render() {
         console.log("EditText Component");

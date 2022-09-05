@@ -12,22 +12,24 @@ var buffer_cur;
 var Acc_or_Han;
 var cur_id;
 var buffer;
+var socket_buffer;
 class App extends Component {
     constructor(props){
         super(props);
         this._Connect_to_Server();
         Acc_or_Han = 0;
         buffer = null;
+        socket_buffer = null;
     };
     state = {
         UIList: new Array(),
         LayoutList : new Array()
     };
     _Connect_to_Server = (bufer) => {
-        client = TcpSocket.createConnection({host: "192.168.0.23", port: 5673}, ()=>{
+        client = TcpSocket.createConnection({host: "192.168.0.19", port: 5673}, ()=>{
             console.log("connection established");
         });
-        client.on('data', (data) => this.parseData(data));
+        client.on('data', (data) => this.checkData(data));
         
     };
     accumulatedata(data) {
@@ -55,52 +57,117 @@ class App extends Component {
             Acc_or_Han = 0;
         }
     }
-    parseData(data) {
-        console.log("this is parseData");
-        console.log("data length : ",data.length);
-        // console.log(data);
-        if(data.length < 4)
+    checkData(data) {
+        console.log("this is checkData",data.length);
+        if(socket_buffer == null)
         {
-            buffer = new Buffer(data);
+            console.log("checkData : socket_buffer empty");
+            socket_buffer = Buffer.from(data);
         }
         else
         {
-            if(buffer != null)
+            console.log("checkData : socket_buffer not empty");
+            //console.log("socket_buffer length : ",socket_buffer.length);
+            var temp_buffer = Buffer.concat([socket_buffer,data]);
+            //console.log("socket_buffer length : ",socket_buffer.length);
+            socket_buffer = Buffer.from(temp_buffer);
+            //console.log("socket_buffer length : ",socket_buffer.length);
+        }
+
+        if(socket_buffer.length < 4)
+        {
+            console.log("checkData : data length below 4 byte");
+            return;
+        }
+        else
+        {
+            var target_length = socket_buffer.readUInt32BE(0);
+            var rest_length = socket_buffer.length - 4;
+            console.log("checkData : target_length : ", target_length);
+            console.log("checkData : rest_length : ", rest_length);
+            if(target_length == rest_length)
             {
-                console.log("parseData : append to buffer");
-                var temp = Buffer.concat([buffer,data]);
-                buffer = null;
-                data = Buffer.from(temp);
-                console.log(data);
+                console.log("checkData : target_length met");
+                target_Data = socket_buffer.subarray(4,4+target_length);
+                this.handleData(target_Data);
+                socket_buffer = null;
+                return;
             }
-           
-            if(Acc_or_Han == 1)
+            else if(target_length > rest_length)
             {
-                console.log("parseData : accumulate data");
-                this.accumulatedata(data);
+                console.log("checkData : target_length unmet");
+
+                return;
             }
-            else{
-                console.log("parseData : split and pass to handleData");
-                var packet_length = data.readUInt32BE(0);
-                if(packet_length == data.length-4)
-                {
-                    var first_data = data.subarray(4,4+packet_length);
-                    this.handleData(first_data);
-                }
-                else
-                {
-                    console.log("packet length : ",packet_length);
-                
-                    var first_data = data.subarray(4,4+packet_length);
-                    var second_data = data.subarray(8+packet_length,data.length);
-                    this.handleData(first_data);
-                    this.handleData(second_data);
-                }
-                
+            else //target_length > rest_length
+            {
+                console.log("checkData : target_length exceed");
+                var target_Data = socket_buffer.subarray(4,4+target_length);
+                var rest_Data = socket_buffer.subarray(4+target_length,socket_buffer.length);
+                this.handleData(target_Data);
+                socket_buffer = Buffer.from(rest_Data);
+                this.checkData(Buffer.alloc(0));
+                return;
             }
         }
-        
     }
+    // parseData(data) {
+    //     console.log("this is parseData");
+    //     console.log("data length : ",data.length);
+    //     // console.log(data);
+    //     if(data.length < 4)
+    //     {
+    //         buffer = new Buffer(data);
+    //     }
+    //     else
+    //     {
+    //         if(buffer != null)
+    //         {
+    //             console.log("parseData : append to buffer");
+    //             var temp = Buffer.concat([buffer,data]);
+    //             buffer = null;
+    //             data = Buffer.from(temp);
+    //             console.log(data);
+    //         }
+           
+    //         if(Acc_or_Han == 1)
+    //         {
+    //             console.log("parseData : accumulate data");
+    //             this.accumulatedata(data);
+    //         }
+    //         else{
+    //             console.log("parseData : split and pass to handleData");
+    //             var packet_length = data.readUInt32BE(0);
+    //             if(packet_length == data.length-4)
+    //             {
+    //                 var first_data = data.subarray(4,4+packet_length);
+    //                 this.handleData(first_data);
+    //             }
+    //             else if(packet_length < data.length-4) //data longer than expected
+    //             {
+    //                 console.log("packet length : ",packet_length);
+                
+    //                 var first_data = data.subarray(4,4+packet_length);
+    //                 var second_data = data.subarray(8+packet_length,data.length);
+    //                 this.handleData(first_data);
+    //                 this.handleData(second_data);
+    //             }
+    //             else //data shorter than expected
+    //             {
+    //                 if(socket_buffer == null)
+    //                 {
+    //                     socket_buffer = Buffer.from(data);
+    //                 }
+    //                 else
+    //                 {
+    //                     var temp_buffer = Buffer.concat([socket_buffer,data]);
+    //                     socket_buffer = Buffer.from(temp_buffer);
+    //                 }
+    //             }
+    //         }
+    //     }
+        
+    // }
     handleData(data) {
         console.log("handle data invocated");
         
@@ -240,7 +307,7 @@ class App extends Component {
                 this.setState({
                     UIList: tempArr
                 });
-                Acc_or_Han = 1;
+                //Acc_or_Han = 1;
             }
             else if(widgetType.includes("Button"))
             {
@@ -471,7 +538,7 @@ class App extends Component {
                         <OtherLayout
                             UIList={this.state.UIList}
                             setOtherLayout={item}
-                            TextChangListener={this.TextChangeListener}
+                            TextChangeListener={this.TextChangeListener}
                             onPressInListener={this.onPressInListener}
                             onPressOutListener={this.onPressOutListener}/>
                     </View>

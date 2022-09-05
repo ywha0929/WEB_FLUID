@@ -13,7 +13,7 @@ class OtherLayout extends Component{
             UIList: this.props.UIList
             
         };
-        console.log("new OtherLayout instance created");
+        console.log("new OtherLayout instance created",props);
     }
     TextChangeListener=(e)=>{
         this.props.TextChangeListener(e);
@@ -37,7 +37,7 @@ class OtherLayout extends Component{
                             key={item.ID}
                             setEditText={item}
                             position={"cordinate"}
-                            TextChangeListener={this.props.TextChangeListener}
+                            TextChangeListener={this.TextChangeListener}
                             />
                     );
                 }

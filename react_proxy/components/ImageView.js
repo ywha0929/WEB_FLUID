@@ -33,7 +33,7 @@ class ImageView extends Component{
                 <View key={this.state.thisData.ID} style={{alignItems:'flex-start',height: this.state.thisData.Height, width: this.state.thisData.Width, borderBottonWidth : StyleSheet.hairlineWidth}}>
                     <Image
                         source={{
-                            uri: `data:image/png;base64,${bitmap}`,
+                            uri: `data:image/jpeg;base64,${bitmap}`,
                             }} style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}/>
                 </View>
             )

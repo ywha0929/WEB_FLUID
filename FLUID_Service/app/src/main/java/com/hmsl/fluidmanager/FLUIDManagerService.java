@@ -116,7 +116,7 @@ public class FLUIDManagerService extends Service {
             mServiceConnection.onServiceConnected((ComponentName) bundle.getParcelable("ComponentName"), bundle.getBinder("Binder"));
 
             try {
-                mRemoteService.doCheck(30);
+                mRemoteService.doCheck("FLUID Service reverse bind done");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -164,17 +164,17 @@ public class FLUIDManagerService extends Service {
         }
     }
 
-    public static <T> T bytes2Parcelable(final byte[] bytes,
-                                         final Parcelable.Creator<T> creator) {
-        if (bytes == null) return null;
-        Parcel parcel = Parcel.obtain();
-        parcel.unmarshall(bytes, 0, bytes.length);
-        parcel.setDataPosition(0);
-        parcel.readInt();
-        T result = creator.createFromParcel(parcel);
-        parcel.recycle();
-        return result;
-    }
+//    public static <T> T bytes2Parcelable(final byte[] bytes,
+//                                         final Parcelable.Creator<T> creator) {
+//        if (bytes == null) return null;
+//        Parcel parcel = Parcel.obtain();
+//        parcel.unmarshall(bytes, 0, bytes.length);
+//        parcel.setDataPosition(0);
+//        parcel.readInt();
+//        T result = creator.createFromParcel(parcel);
+//        parcel.recycle();
+//        return result;
+//    }
 
     class SocketInputThread extends Thread {
         InputStream inputStream;
@@ -200,7 +200,7 @@ public class FLUIDManagerService extends Service {
             }
             Log.d(TAG, "input stream set");
             try {
-                mRemoteService.doCheck(40);
+                mRemoteService.doCheck("FLUID Service socket connected");
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -287,7 +287,8 @@ public class FLUIDManagerService extends Service {
             try {
                 socket = server.accept();
                 Log.e(TAG, "Socket connected");
-            } catch (IOException e) {
+                //mRemoteService.doCheck("Socket connected");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -298,6 +299,7 @@ public class FLUIDManagerService extends Service {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
                     Bundle bundle = (Bundle) msg.obj;
+
                     //Log.e(TAG, "Message 받음 " + input);
                     try {
                         byte[] layout = bundle.getByteArray("layout");
@@ -325,10 +327,14 @@ public class FLUIDManagerService extends Service {
                             int length_int = layout.length;
                             for(int i = 0; i< 4; i++)
                             {
-                                int quotient = ((int) Math.floor( length_int / (int)Math.pow(128,3-i) ) );
+                                int quotient = ((int) Math.floor( length_int / (int)Math.pow(256,3-i) ) );
                                 length_byte[i] = (byte) quotient;
-                                length_int -= quotient * (int) Math.pow(128,3-i);
+                                length_int -= quotient * (int) Math.pow(256,3-i);
                                 //Log.d(TAG,""+length_int+" "+(int)Math.pow(16,3-i) + " " + length_int/(int)Math.pow(16,3-i));
+                            }
+                            for(int i = 0; i< 4; i++)
+                            {
+                                Log.e(TAG,"layout length byte = ["+i+"] : " + length_byte[i]);
                             }
                             byteArrayOutputStream.write(length_byte);
                             byteArrayOutputStream.write(layout);
@@ -344,7 +350,7 @@ public class FLUIDManagerService extends Service {
 //                            dataOutputStream.flush();
                             //os.close();
                             Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
-                            mRemoteService.doCheck(1);
+                            mRemoteService.doCheck("FLUID Service : distribute layout sent");
                         } else {
                             //Log.e(TAG, "이미 Distribute된 UI 입니다.");
                         }
@@ -390,10 +396,17 @@ public class FLUIDManagerService extends Service {
                             int length_int = widget.length;
                             for(int i = 0; i< 4; i++)
                             {
-                                int quotient = ((int) Math.floor( length_int / (int)Math.pow(128,3-i) ) );
+                                int quotient = ((int) Math.floor( length_int / (int)Math.pow(256,3-i) ) );
                                 length_byte[i] = (byte) quotient;
-                                length_int -= quotient * (int) Math.pow(128,3-i);
-                                //Log.d(TAG,""+length_int+" "+(int)Math.pow(16,3-i) + " " + length_int/(int)Math.pow(16,3-i));
+                                length_int -= quotient * (int) Math.pow(256,3-i);
+                                Log.d(TAG, "handleMessage: convert" +i);
+                                Log.d(TAG, "handleMessage: quotient : " + quotient);
+                                Log.d(TAG, "handleMessage: power : " + (int) Math.pow(256,3-i));
+                                Log.d(TAG, "handleMessage: length_int" + length_int);
+                            }
+                            for(int i = 0; i< 4; i++)
+                            {
+                                Log.e(TAG,"widget length byte = ["+i+"] : " + length_byte[i]);
                             }
                             byteArrayOutputStream.write(length_byte);
                             byteArrayOutputStream.write(widget);
@@ -403,7 +416,7 @@ public class FLUIDManagerService extends Service {
                             outputStream.flush();
 
                             Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
-                            mRemoteService.doCheck(2);
+                            mRemoteService.doCheck("FLUID Service : distribute widget sent");
                         } else {
                             //Log.e(TAG, "이미 Distribute된 UI 입니다.");
                         }
@@ -440,7 +453,7 @@ public class FLUIDManagerService extends Service {
                             dataOutputStream.writeInt(input.length);
                             dataOutputStream.write(input);
                             Log.d(TAG, "update socket message sent : " + getTS());
-                            mRemoteService.doCheck(3);
+                            mRemoteService.doCheck("FLUID Service update msg sent");
                         } else {
                             Log.d("TAG", "undistributed UI's update");
                         }

@@ -36,7 +36,7 @@ public class InstrumentUtil {
         Scene.v().addBasicClass("java.lang.Class[]",SootClass.HIERARCHY);  
         Scene.v().addBasicClass("java.lang.String[]",SootClass.HIERARCHY);  
         Scene.v().addBasicClass("android.graphics.Bitmap[]",SootClass.HIERARCHY);
-        //Scene.v().addBasicClass("androidx.appcompat.app.AppCompatActivity",SootClass.HIERARCHY);
+        Scene.v().addBasicClass("com.simplemobiletools.notes.MainActivity",SootClass.HIERARCHY);
         
         Scene.v().loadNecessaryClasses();
     }

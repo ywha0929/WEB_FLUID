@@ -10,7 +10,14 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -22,10 +29,12 @@ import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,17 +68,21 @@ public class FLUIDMain {
     private static final int MAX_BUFFER = 1024;
     public Context mContext = null;
     static FLUIDMain instance;
+    static int isChooseMode = 0;
+    static int isChooseModeWait = 0;
+    private ArrayList<View> distributeList = new ArrayList<>();
     private ArrayList<Layout_Tree> layout_trees = new ArrayList<>();
     private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
+    private Map<Integer,ViewGroup> listBackground = new HashMap<>();
     private final IBinder mBinder = new IReverseConnection.Stub() {
         @Override
-        public void doCheck(int a) throws RemoteException {
+        public void doCheck(String msg) throws RemoteException {
             Log.d(TAG, "this is doCheck");
             Activity activity = (Activity) mContext;
             activity.runOnUiThread(new Runnable(){
                 @Override
                 public void run() {
-                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service" + a, Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(mContext.getApplicationContext(), msg, Toast.LENGTH_SHORT);
                     toast.show();
                 }
             });
@@ -137,6 +150,7 @@ public class FLUIDMain {
 
     public FLUIDMain(Context context) {
         Log.d(TAG, "FluidMain");
+        distributeList.clear();
         mContext = context;
         mServiceConnection = new ServiceConnection() {
             @Override
@@ -174,9 +188,150 @@ public class FLUIDMain {
 
 
     }
-    public void runTouchCheck(MotionEvent e) {
+
+    private View findViewAt(ViewGroup viewGroup, float x, float y) {
+        for(int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            if (child instanceof ViewGroup) {
+                View foundView = findViewAt((ViewGroup) child, x, y);
+                if (foundView != null && foundView.isShown()) {
+                    return foundView;
+                }
+            } else {
+                int[] location = new int[2];
+                child.getLocationOnScreen(location);
+                Rect rect = new Rect(location[0], location[1], location[0] + child.getWidth(), location[1] + child.getHeight());
+                if (rect.contains((int)x, (int)y)) {
+                    return child;
+                }
+            }
+        }
+
+        return null;
+    }
+    public int runTouchCheck(MotionEvent e) {
+        //if return true, mainActivity will pass the event to view
+        //if return false, mainActivity will not pass the event to view
         Log.d(TAG,"This is runTouchCheck");
-        Log.d(TAG,"This is motionEvent.getPointerCount : "+e.getPointerCount());
+        Log.d(TAG,"This is motionEvent.getPointerCount, Action : "+e.getPointerCount()+", "+e.getAction());
+        long Action = e.getAction();
+        long filtered_Action = Action & 111;
+        if(isChooseMode == 0) { //current mode is normal mode
+
+            if (e.getPointerCount() == 3 && filtered_Action == MotionEvent.ACTION_POINTER_DOWN ){ //switch to choose mode
+                Log.d(TAG,"wait change to choose mode");
+                isChooseModeWait = 1;
+                return 1;
+            }
+            else if(isChooseModeWait == 1 &&Action == MotionEvent.ACTION_UP)
+            {
+                Log.d(TAG,"change to choose mode");
+                isChooseModeWait = 0;
+                isChooseMode = 1;
+                Activity activity = (Activity) mContext;
+                activity.runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(mContext.getApplicationContext(), "Choose Mode", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
+                return 1;
+            }
+            else { //normal mode
+                Log.d(TAG,"normal mode");
+                return 1;
+            }
+        }
+        else{ //current mode is chooseMode
+            if(e.getPointerCount() == 3 && filtered_Action == MotionEvent.ACTION_POINTER_DOWN) //switch to normal mode
+            {
+                Log.d(TAG, "distribute and switch to normal mode");
+                for(int i = 0; i<distributeList.size(); i++)
+                {
+                    View thisView = distributeList.get(i);
+                    ViewGroup thisBorder = listBackground.get(thisView.getId());
+                    WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+                    windowManager.removeView(thisBorder);
+                    Log.d(TAG,"Distributing ["+i+"]th Widget");
+                    runDistribute(thisView.getClass().toString(),thisView);
+
+
+                }
+                isChooseMode = 0;
+                distributeList.clear();
+                Activity activity = (Activity) mContext;
+                activity.runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(mContext.getApplicationContext(), "Normal Mode", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
+                return 0;
+            }
+            else if(e.getAction() == MotionEvent.ACTION_UP) { //choose
+
+                Log.d(TAG,"choose mode");
+                Activity activity = (Activity) mContext;
+                ViewGroup rootLayout = (ViewGroup) activity.getWindow().getDecorView().getRootView();
+                View targetView = findViewAt(rootLayout,e.getX(),e.getY());
+
+                if(targetView != null)
+                {
+                    if(!distributeList.contains(targetView))
+                    {
+                        distributeList.add(targetView);
+                        int[] location = new int[2];
+                        targetView.getLocationOnScreen(location);
+                        //create layout for box
+                        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                                targetView.getWidth(),
+                                targetView.getHeight(),
+                                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                                |WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                                |WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                                PixelFormat.TRANSLUCENT
+                            );
+                        params.gravity = Gravity.LEFT | Gravity.TOP;
+                        params.x = location[0];
+                        params.y = location[1];
+                        LinearLayout overlayBoundary = new LinearLayout((Activity)instance.mContext);
+                        Log.d(TAG,"layout creation : "+overlayBoundary);
+                        GradientDrawable border = new GradientDrawable();
+                        border.setStroke(10,Color.RED);
+                        border.setColor(0); //transparent
+                        overlayBoundary.setBackground(border);
+
+                        WindowManager windowManager = (WindowManager) instance.mContext.getSystemService(Context.WINDOW_SERVICE);
+                        Log.d(TAG, "windowManager : "+windowManager);
+                        Log.d(TAG, "params : " + params);
+
+                        windowManager.addView(overlayBoundary,params);
+                        listBackground.put(targetView.getId(),overlayBoundary);
+
+
+//                    Canvas canvas = new Canvas();
+//                    Paint paint = new Paint();
+//                    paint.setColor(Color.RED);
+//                    int[] location = new int[2];
+//                    targetView.getL3..[ocationOnScreen(location);
+//                    Rect rect = new Rect(location[0], location[1], location[0] + targetView.getWidth(), location[1] + targetView.getHeight());
+//                    canvas.drawRect(rect,paint);
+
+                    }
+
+                }
+                return 0;
+
+            }
+            else
+            {
+                return 0;
+            }
+
+        }
     }
     public void reverseBind() {
 
@@ -205,15 +360,15 @@ public class FLUIDMain {
         Bundle bundle = new Bundle();
 
         try {
-            //Log.d("TAG","run test");
+            Log.d(TAG, "runDistribute: ID, Type" + view.getId()+", " +view.getClass().toString());
             byte[] layout = generate_lbyteArray(view);
             byte[] widget = generate_dbyteArray(widgetType, view);
             Log.d(TAG,"layout bytearray length : "+layout.length);
             Log.d(TAG,"widget bytearray length : "+widget.length);
-            Log.d(TAG,"runDistribute : "+widgetType);
+//            Log.d(TAG,"runDistribute : "+widgetType);
             bundle.putByteArray("layout", layout);
             bundle.putByteArray("widget", widget);
-            Log.d(TAG, "runDistribute send : " + getTS());
+            Log.d(TAG, "runDistribute send to service: " + getTS());
             if(widgetType.contains("TextView") || widgetType.contains("EditText"))
             {
                 Log.d(TAG, "runDistribute add Listener : " + getTS());

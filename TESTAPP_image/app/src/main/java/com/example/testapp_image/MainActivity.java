@@ -3,6 +3,7 @@ package com.example.testapp_image;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final String TAG = "[FLUID]TESTAPP_image";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         back_btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                Log.d(TAG,"onLongClick invoked");
                 return true;
             }
         });
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         next_btn.setOnLongClickListener(new View.OnLongClickListener(){
             @Override
             public boolean onLongClick(View view) {
+                Log.d(TAG,"onLongClick invoked");
                 return true;
             }
         });
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                Log.d(TAG,"onLongClick invoked");
                 return true;
             }
         });
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG,"onClick invoked");
                 state++;
                 if (state == 0) {
                     imageView.setImageResource(R.drawable.pocketmonball);

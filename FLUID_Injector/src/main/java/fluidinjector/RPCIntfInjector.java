@@ -2,6 +2,7 @@ package fluidinjector;
 
 import soot.*;
 import soot.jimple.*;
+import soot.jimple.internal.JEqExpr;
 import soot.tagkit.Tag;
 import soot.util.Chain;
 import soot.util.EmptyChain;
@@ -49,10 +50,25 @@ public class RPCIntfInjector extends BodyTransformer {
 			isInsert = false;
 			
 			Object[] arr = Scene.v().getApplicationClasses().toArray();
+			SootClass hi = (SootClass)arr[0];
+			
+			boolean found = false;
+			int index = 0;
 			for (int i = 0; i < arr.length; i++) {
 				if (arr[i].toString().equals(MAINACTIVITY_CLASS_NAME)) {
-					MAINACTIVITY_INDEX = i;
+					found = true;
+					index = i;
 				}
+			}
+			if(found == true)
+			{
+				System.err.println("found MainActivity");
+				MAINACTIVITY_INDEX = index;
+				System.err.println("super class name"+((SootClass)arr[index]).getSuperclass().toString());
+			}
+			else
+			{
+				System.err.println("unable to find MainActivity");
 			}
 			SootClass classMainActivity = (SootClass) arr[MAINACTIVITY_INDEX];// MainActivity
 			System.err.println("mainactivity : "+classMainActivity.toString());
@@ -106,9 +122,6 @@ public class RPCIntfInjector extends BodyTransformer {
 			System.err.println("dispatchTouchEvent");
 //			printLocals((JimpleBody)b);
 //			injectiDispatchTouchEvent((JimpleBody) b);
-
-			System.out.println("==== after ====");
-			System.out.println(b);
 		}
 	}
 
@@ -820,10 +833,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		//newBody.getDefBoxes().add(Jimple.v().newArgBox((new ThisRef(RefType.v(MAINACTIVITY_CLASS_NAME)))));
 		//units.add(Jimple.v().newAssignStmt(thisVar, newBody.getThisLocal()));
 		
-		//call super.dispatchTouchEvent
-		units.addAll(InstrumentUtil.generateLogStmts(newBody, "override dispatch touch event"));
-		units.addAll(InstrumentUtil.generateSpecialInvokeStmt(newBody, "android.app.Activity", 
-				"boolean dispatchTouchEvent(android.view.MotionEvent)", newBody.getThisLocal(), retVar, newBody.getParameterLocal(0)));
+		
 		
 		
 		
@@ -847,7 +857,10 @@ public class RPCIntfInjector extends BodyTransformer {
 		Local classArrayVar = InstrumentUtil.generateNewLocal(newBody, ArrayType.v(RefType.v("java.lang.Class"), 1));
 		Local objectArrayVar = InstrumentUtil.generateNewLocal(newBody, ArrayType.v(RefType.v("java.lang.Object"), 1));
 		Local objectFluidInterfaceVar = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.Object"));
-		
+		Local isPass = InstrumentUtil.generateNewLocal(newBody, IntType.v());
+		Local isPassObject = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.Object"));
+		Local isPassString = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.String"));
+		Local isPassInteger = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.Integer"));
 		Local classAppCompatActivity = InstrumentUtil.generateNewLocal(newBody, Scene.v().getSootClass("androidx.appcompat.app.AppCompatActivity").getType());
 		Local clazz = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.Class"));
 		Local classLoaderVar2 = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.ClassLoader"));
@@ -855,6 +868,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		Local objectArrayVar2 = InstrumentUtil.generateNewLocal(newBody, ArrayType.v(RefType.v("java.lang.Object"), 1));
 		Local methodVar2 = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.reflect.Method"));
 		Local retObjVar = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.Object"));
+		
 		System.out.println("onLongClick : ");
 		SootClass clsClass = Scene.v().getSootClass("java.lang.Class");
 		SootClass clsObject = Scene.v().getSootClass("java.lang.Object");
@@ -929,13 +943,40 @@ public class RPCIntfInjector extends BodyTransformer {
 		units.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(0)), newBody.getParameterLocal(0)));
 		// invoke runtest
 		units.addAll(InstrumentUtil.generateVirtualInvokeStmt(newBody, "java.lang.reflect.Method",
-				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
+				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, isPassObject,
 				objectFluidInterfaceVar, objectArrayVar));
+		units.add(Jimple.v().newAssignStmt(isPassInteger, Jimple.v().newCastExpr(isPassObject, RefType.v("java.lang.Integer"))));
+		units.addAll(InstrumentUtil.generateVirtualInvokeStmt(newBody, "java.lang.Integer", "java.lang.String toString()", isPassInteger, isPassString));
+		units.addAll(InstrumentUtil.generateStaticInvokeStmt(newBody, "java.lang.Integer", "int parseInt(java.lang.String)", isPass, isPassString));
+		units.addAll(InstrumentUtil.generateLogStmts(newBody, "isPass Value : ", isPass));
+		//call super.dispatchTouchEvent
+		//Unit target1 = InstrumentUtil.generateLogStmts(newBody, "override dispatch touch event"));
+		soot.jimple.internal.JEqExpr condition_true = new JEqExpr(isPass,IntConstant.v(1));
+		List<Unit> supercall_Unit =  InstrumentUtil.generateSpecialInvokeStmt(newBody, "android.app.Activity", 
+				"boolean dispatchTouchEvent(android.view.MotionEvent)", newBody.getThisLocal(), retVar, newBody.getParameterLocal(0));
+		supercall_Unit.add(Jimple.v().newReturnStmt(retVar));
+		Unit supercall = supercall_Unit.get(0);
+		
+		
+		//supercall_UnitBox.setUnit();
+		//Value condition = (Value) Jimple.v().newConditionExprBox(isPass);
+		units.add(Jimple.v().newIfStmt(condition_true, supercall));
+		soot.jimple.internal.JEqExpr condition_false = new JEqExpr(isPass,IntConstant.v(0));
+		Unit just_return = Jimple.v().newReturnStmt(IntConstant.v(0));
+		
+		units.add(Jimple.v().newIfStmt(condition_false, just_return));
+		
+		units.addAll(supercall_Unit);
+		
+		
+		
+		units.add(just_return);
+		//ValueBox condition = Jimple.v().newConditionExprBox(isPass);
 		
 		
 		
 		//units.add(Jimple.v().newReturnStmt(IntConstant.v(0)));
-		units.add(Jimple.v().newReturnStmt(retVar));
+		
 		
 		Object[] unitArr = units.toArray();
 		for(int i = 0; i<unitArr.length; i++)

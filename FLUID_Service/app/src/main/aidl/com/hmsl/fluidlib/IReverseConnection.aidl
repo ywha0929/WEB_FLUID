@@ -8,7 +8,7 @@ interface IReverseConnection {
      * Demonstrates some basic types that you can use as parameters
      * and return values in AIDL.
      */
-    void doCheck(int a);
+    void doCheck(String msg);
     void reverseMotionEvent(in Bundle bundle);
     void reverseKeyboardEvent(in Bundle bundle);
 }
