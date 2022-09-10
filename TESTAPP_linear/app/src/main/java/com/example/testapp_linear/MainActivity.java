@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 if(edit1.getCurrentTextColor() == Color.BLUE)
                 {
                     edit1.setTextColor(Color.RED);
+
                 }
                 else {
                     edit1.setTextColor(Color.BLUE);
