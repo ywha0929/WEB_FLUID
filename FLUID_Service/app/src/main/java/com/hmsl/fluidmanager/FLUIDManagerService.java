@@ -448,10 +448,33 @@ public class FLUIDManagerService extends Service {
                         }
                         if (is_distribute) {
 
-                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-//                            OutputStream os = socket.getOutputStream();
-                            dataOutputStream.writeInt(input.length);
-                            dataOutputStream.write(input);
+//                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+////                            OutputStream os = socket.getOutputStream();
+//                            dataOutputStream.writeInt(input.length);
+//                            dataOutputStream.write(input);
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            byte[] length_byte = new byte[4];
+                            int length_int = input.length;
+                            for(int i = 0; i< 4; i++)
+                            {
+                                int quotient = ((int) Math.floor( length_int / (int)Math.pow(256,3-i) ) );
+                                length_byte[i] = (byte) quotient;
+                                length_int -= quotient * (int) Math.pow(256,3-i);
+                                Log.d(TAG, "handleMessage: convert" +i);
+                                Log.d(TAG, "handleMessage: quotient : " + quotient);
+                                Log.d(TAG, "handleMessage: power : " + (int) Math.pow(256,3-i));
+                                Log.d(TAG, "handleMessage: length_int" + length_int);
+                            }
+                            for(int i = 0; i< 4; i++)
+                            {
+                                Log.e(TAG,"widget length byte = ["+i+"] : " + length_byte[i]);
+                            }
+                            byteArrayOutputStream.write(length_byte);
+                            byteArrayOutputStream.write(input);
+                            byte[] output = byteArrayOutputStream.toByteArray();
+                            OutputStream outputStream = socket.getOutputStream();
+                            outputStream.write(output);
+                            outputStream.flush();
                             Log.d(TAG, "update socket message sent : " + getTS());
                             mRemoteService.doCheck("FLUID Service update msg sent");
                         } else {

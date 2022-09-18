@@ -73,7 +73,7 @@ public class FLUIDMain {
     private ArrayList<View> distributeList = new ArrayList<>();
     private ArrayList<Layout_Tree> layout_trees = new ArrayList<>();
     private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
-    private Map<Integer,ViewGroup> listBackground = new HashMap<>();
+    private Map<Integer,Drawable> listBackground = new HashMap<>();
     private final IBinder mBinder = new IReverseConnection.Stub() {
         @Override
         public void doCheck(String msg) throws RemoteException {
@@ -250,10 +250,13 @@ public class FLUIDMain {
                 for(int i = 0; i<distributeList.size(); i++)
                 {
                     View thisView = distributeList.get(i);
-                    ViewGroup thisBorder = listBackground.get(thisView.getId());
-                    WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-                    windowManager.removeView(thisBorder);
+//                    ViewGroup thisBorder = listBackground.get(thisView.getId());
+//                    WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+//                    windowManager.removeView(thisBorder);
                     Log.d(TAG,"Distributing ["+i+"]th Widget");
+                    Drawable originBackground = listBackground.get(thisView.getId());
+                    thisView.setBackground(originBackground);
+
                     runDistribute(thisView.getClass().toString(),thisView);
 
 
@@ -281,35 +284,45 @@ public class FLUIDMain {
                 {
                     if(!distributeList.contains(targetView))
                     {
-                        distributeList.add(targetView);
-                        int[] location = new int[2];
-                        targetView.getLocationOnScreen(location);
-                        //create layout for box
-                        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                                targetView.getWidth(),
-                                targetView.getHeight(),
-                                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                                |WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                                |WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                                PixelFormat.TRANSLUCENT
-                            );
-                        params.gravity = Gravity.LEFT | Gravity.TOP;
-                        params.x = location[0];
-                        params.y = location[1];
-                        LinearLayout overlayBoundary = new LinearLayout((Activity)instance.mContext);
-                        Log.d(TAG,"layout creation : "+overlayBoundary);
-                        GradientDrawable border = new GradientDrawable();
-                        border.setStroke(10,Color.RED);
-                        border.setColor(0); //transparent
-                        overlayBoundary.setBackground(border);
+                        if(!distributeList.contains(targetView))
+                        {
+                            distributeList.add(targetView);
+                            GradientDrawable border = new GradientDrawable();
+                            border.setStroke(20,Color.RED);
+                            border.setColor(0);
+                            listBackground.put(targetView.getId(),targetView.getBackground());
+                            targetView.setBackground(border);
+//                        int[] location = new int[2];
+//                        targetView.getLocationOnScreen(location);
+//                        //create layout for box
+//                        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+//                                targetView.getWidth(),
+//                                targetView.getHeight(),
+//                                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+//                                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+//                                |WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+//                                |WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+//                                PixelFormat.TRANSLUCENT
+//                            );
+//                        params.gravity = Gravity.LEFT | Gravity.TOP;
+//                        params.x = location[0];
+//                        params.y = location[1];
+//                        LinearLayout overlayBoundary = new LinearLayout((Activity)instance.mContext);
+//                        Log.d(TAG,"layout creation : "+overlayBoundary);
+//                        GradientDrawable border = new GradientDrawable();
+//                        border.setStroke(10,Color.RED);
+//                        border.setColor(0); //transparent
+//                        overlayBoundary.setBackground(border);
+//
+//                        WindowManager windowManager = (WindowManager) instance.mContext.getSystemService(Context.WINDOW_SERVICE);
+//                        Log.d(TAG, "windowManager : "+windowManager);
+//                        Log.d(TAG, "params : " + params);
+//
+//                        windowManager.addView(overlayBoundary,params);
+//                        listBackground.put(targetView.getId(),overlayBoundary);
+                        }
 
-                        WindowManager windowManager = (WindowManager) instance.mContext.getSystemService(Context.WINDOW_SERVICE);
-                        Log.d(TAG, "windowManager : "+windowManager);
-                        Log.d(TAG, "params : " + params);
 
-                        windowManager.addView(overlayBoundary,params);
-                        listBackground.put(targetView.getId(),overlayBoundary);
 
 
 //                    Canvas canvas = new Canvas();
@@ -449,7 +462,9 @@ public class FLUIDMain {
             if (method.contains("setTextSize")){
                 convertPixelsToDpFloat((float)params[0], instance.mContext);
             }
-            bundle.putByteArray("key", generate_ubyteArray(method, view, params));
+            byte[] update = generate_ubyteArray(method, view, params);
+            bundle.putByteArray("key", update);
+            Log.d(TAG,"update bytearray length : "+update.length);
             Log.d(TAG, "runUpdate send : " + getTS());
             mRemoteService.update(bundle);
         } catch (Exception e) {
@@ -506,39 +521,64 @@ public class FLUIDMain {
         int size = method.getBytes(StandardCharsets.UTF_8).length;
         dataOutputStream.writeInt(size);
         dataOutputStream.writeUTF(method);
+        if(method.contains("setImage")){
+            ImageView imview = (ImageView) view;
+            //typrflag 3으로
+            //stringsize
+            //bitmap
+            //convert ImageView to bitmap
+            BitmapDrawable drawable = (BitmapDrawable) imview.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
 
-        for (int i = 0; i < params.length; i++) {
-            Object param = params[i];
-            int flag = setTypeFlag(param);
-            dataOutputStream.writeInt(flag);
-            switch (flag) {
-                case 1:
-                    dataOutputStream.writeFloat((Float) param);
-                    break;
-                case 2:
-                    dataOutputStream.writeInt((int) param);
-                    break;
-                case 3:
-                    int length = ((String) param).getBytes(StandardCharsets.UTF_8).length;
-                    dataOutputStream.writeInt(length);
-                    dataOutputStream.writeUTF((String) param);
-                    break;
-                case 4:
-                    dataOutputStream.writeBoolean((Boolean) param);
-                    break;
-                case 5:
-                    dataOutputStream.writeDouble((Double) param);
-                    break;
-                case 6:
-                    dataOutputStream.writeLong((Long) param);
-                    break;
-                case 7:
-                    dataOutputStream.writeChar((Character) param);
-                    break;
-                default:
-                    //Log.d("TAG","invalid param");
+            //bitmap to byte
+            ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bitmapOutputStream);
+            byte[] byteArray = bitmapOutputStream.toByteArray();
+
+            //length of byte array
+            String encoded = Base64.getEncoder().encodeToString(byteArray);
+            int byteLength = encoded.getBytes(StandardCharsets.UTF_8).length;
+
+            dataOutputStream.writeInt(3);
+            dataOutputStream.writeInt(byteLength);
+            dataOutputStream.writeUTF(encoded);
+        }
+        else
+        {
+            for (int i = 0; i < params.length; i++) {
+                Object param = params[i];
+                int flag = setTypeFlag(param);
+                dataOutputStream.writeInt(flag);
+                switch (flag) {
+                    case 1:
+                        dataOutputStream.writeFloat((Float) param);
+                        break;
+                    case 2:
+                        dataOutputStream.writeInt((int) param);
+                        break;
+                    case 3:
+                        int length = ((String) param).getBytes(StandardCharsets.UTF_8).length;
+                        dataOutputStream.writeInt(length);
+                        dataOutputStream.writeUTF((String) param);
+                        break;
+                    case 4:
+                        dataOutputStream.writeBoolean((Boolean) param);
+                        break;
+                    case 5:
+                        dataOutputStream.writeDouble((Double) param);
+                        break;
+                    case 6:
+                        dataOutputStream.writeLong((Long) param);
+                        break;
+                    case 7:
+                        dataOutputStream.writeChar((Character) param);
+                        break;
+                    default:
+                        //Log.d("TAG","invalid param");
+                }
             }
         }
+
 
         dataOutputStream.flush();
         utoByteArray = byteArrayOutputStream.toByteArray();
@@ -708,9 +748,6 @@ public class FLUIDMain {
             Log.d(TAG,"bitmap length : "+byteLength);
             Log.d(TAG, "bitmap : \n"+encoded);
             dataOutputStream.writeUTF(encoded);
-
-
-
 
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
