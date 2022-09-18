@@ -398,6 +398,9 @@ class App extends Component {
                     else if(method.includes("setTextSize")){
                         targetUI.TextSize = param;
                     }
+                    else if(method.includes("setImage")){
+                        targetUI.Bitmap = param;
+                    }
                     else if(method.includes("setText")){
                         targetUI.Text = param;
                     }

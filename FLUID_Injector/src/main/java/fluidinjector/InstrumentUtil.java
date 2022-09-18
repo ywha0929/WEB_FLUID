@@ -29,6 +29,8 @@ public class InstrumentUtil {
         Options.v().set_include_all(true);
         Options.v().set_process_multiple_dex(true);
         Options.v().set_output_dir(outputPath);
+        //new options
+//        Options.v().set_oaat(true);
         Scene.v().addBasicClass("java.lang.Class",SootClass.HIERARCHY);
         Scene.v().addBasicClass("java.io.PrintStream",SootClass.SIGNATURES);
         Scene.v().addBasicClass("java.lang.System",SootClass.SIGNATURES);

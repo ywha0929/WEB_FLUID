@@ -16,7 +16,7 @@ public class FLUIDInjector {
 
     public static void main(String[] args){
 		if (args.length != 2) {
-			System.out.println("./gradlew run --args=\"APK_FILE_PATH\" PACKAGENAME");
+			System.out.println("./gradlew run --args APK_FILE_PATH");
 			System.exit(-1);
 		}
 		String apkPath = args[0];
@@ -31,7 +31,7 @@ public class FLUIDInjector {
 
         PackManager.v().getPack("jtp").add(
                 new Transform("jtp.RPCIntfInjector", new RPCIntfInjector(namePackage)));
-
+        
         PackManager.v().runPacks();
         PackManager.v().writeOutput();
     }
