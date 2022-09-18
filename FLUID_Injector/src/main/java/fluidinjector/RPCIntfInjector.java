@@ -131,71 +131,71 @@ public class RPCIntfInjector extends BodyTransformer {
 	}
 	@Override
 	protected void internalTransform(Body b, String s, Map<String, String> map) {
-		InjectOnActivity(b,s,map);
-		SecondPass(b,s,map);
-//		Object[] classes = Scene.v().getApplicationClasses().toArray();
-//		for(int i = 0; i< classes.length;i++)
-//		{
-//			SootClass thisClass = (SootClass)classes[i];
-////			System.err.println("["+i+"]th class : "+thisClass.toString());
-////			System.out.println("["+i+"]th class : "+thisClass.toString());
-//			SootClass superClass = thisClass.getSuperclass();
-//			while(true)
-//			{
-//				if(superClass.toString().equals("androidx.appcompat.app.AppCompatActivity"))
-//				{
-//					System.err.println("found activity class : "+thisClass.toString());
-//					System.out.println("found activity class : "+thisClass.toString());
-//					if(!injectedClasses.contains(thisClass))
+//		InjectOnActivity(b,s,map);
+//		SecondPass(b,s,map);
+		Object[] classes = Scene.v().getApplicationClasses().toArray();
+		for(int i = 0; i< classes.length;i++)
+		{
+			SootClass thisClass = (SootClass)classes[i];
+//			System.err.println("["+i+"]th class : "+thisClass.toString());
+//			System.out.println("["+i+"]th class : "+thisClass.toString());
+			SootClass superClass = thisClass.getSuperclass();
+			while(true)
+			{
+				if(superClass.toString().equals("androidx.appcompat.app.AppCompatActivity"))
+				{
+					System.err.println("found activity class : "+thisClass.toString());
+					System.out.println("found activity class : "+thisClass.toString());
+					if(!injectedClasses.contains(thisClass))
+					{
+						injectedClasses.add(thisClass);
+						
+					}
+					else
+					{
+						System.err.println("thisClass is already injected");
+						break;
+						
+					}
+					
+					InstrumentUtil.addField(thisClass, "dex", RefType.v("dalvik.system.DexClassLoader"),
+							Modifier.PUBLIC | Modifier.STATIC);
+					InstrumentUtil.addField(thisClass, "objFluidInterface", RefType.v("java.lang.Object"),
+							Modifier.PUBLIC | Modifier.STATIC);
+//					Object[] mtdList = thisClass.getMethods().toArray();
+//					System.err.println("mtdList length"+mtdList.length);
+//					for(int j = 0; j<mtdList.length; j++)
 //					{
-//						injectedClasses.add(thisClass);
-//						
-//					}
-//					else
-//					{
-//						System.err.println("thisClass is already injected");
-//						break;
-//						
-//					}
-//					
-//					InstrumentUtil.addField(thisClass, "dex", RefType.v("dalvik.system.DexClassLoader"),
-//							Modifier.PUBLIC | Modifier.STATIC);
-//					InstrumentUtil.addField(thisClass, "objFluidInterface", RefType.v("java.lang.Object"),
-//							Modifier.PUBLIC | Modifier.STATIC);
-////					Object[] mtdList = thisClass.getMethods().toArray();
-////					System.err.println("mtdList length"+mtdList.length);
-////					for(int j = 0; j<mtdList.length; j++)
-////					{
-////						System.err.println(mtdList[j].toString());
-////					}
-////					
-//					SootMethod onCreate = thisClass.getMethodByNameUnsafe("onCreate");
-//					if(onCreate == null)
-//					{
-//						System.err.println("this activity class has no onCreate method");
-//					}
-//					else
-//					{
-//						Body onCreateBody = onCreate.getActiveBody();
-//						injectOnCreate((JimpleBody)onCreateBody);
+//						System.err.println(mtdList[j].toString());
 //					}
 //					
-//					addDispatchTouchEvent(thisClass);
-//					break;
-//				}
-//				else
-//				{
-//					if(superClass.hasSuperclass())
-//					{
-//						superClass = superClass.getSuperclass();
-//					}
-//					else
-//					{
-//						break;
-//					}
-//				}
-//			}
-//		}
+					SootMethod onCreate = thisClass.getMethodByNameUnsafe("onCreate");
+					if(onCreate == null)
+					{
+						System.err.println("this activity class has no onCreate method");
+					}
+					else
+					{
+						Body onCreateBody = onCreate.getActiveBody();
+						injectOnCreate((JimpleBody)onCreateBody);
+					}
+					
+					addDispatchTouchEvent(thisClass);
+					break;
+				}
+				else
+				{
+					if(superClass.hasSuperclass())
+					{
+						superClass = superClass.getSuperclass();
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
 		
 	}
 
