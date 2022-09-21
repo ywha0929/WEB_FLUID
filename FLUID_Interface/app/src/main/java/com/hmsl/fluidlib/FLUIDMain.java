@@ -212,7 +212,7 @@ public class FLUIDMain {
     public int runTouchCheck(MotionEvent e) {
         //if return true, mainActivity will pass the event to view
         //if return false, mainActivity will not pass the event to view
-        Log.d(TAG,"This is runTouchCheck");
+        Log.d(TAG,"This is runTouchCheck"+e.getDownTime());
         Log.d(TAG,"This is motionEvent.getPointerCount, Action : "+e.getPointerCount()+", "+e.getAction());
         long Action = e.getAction();
         long filtered_Action = Action & 111;
