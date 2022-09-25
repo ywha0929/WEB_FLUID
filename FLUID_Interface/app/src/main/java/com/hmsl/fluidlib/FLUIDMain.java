@@ -265,7 +265,7 @@ public class FLUIDMain {
                 classType = "OtherView";
             }
         }
-
+//
         return classType;
     }
     public int runTouchCheck(MotionEvent e) {
