@@ -200,7 +200,7 @@ public class FLUIDManagerService extends Service {
             }
             Log.d(TAG, "input stream set");
             try {
-                mRemoteService.doCheck("FLUID Service socket connected");
+                mRemoteService.doCheck("FLUID Service socket input connected");
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -213,7 +213,7 @@ public class FLUIDManagerService extends Service {
                     dataInputStream = new DataInputStream(byteArrayInputStream);
                     int ID = dataInputStream.readInt();
                     int typeEvent = dataInputStream.readInt();
-                    Log.d(TAG,"type Event : "+typeEvent+" ID : "+ID);
+                    Log.d(TAG,"type Event : "+typeEvent+", ID : "+ID);
 //                    long ID = Integer.toUnsignedLong(dataInputStream.readInt());
 //                    long typeEvent = Integer.toUnsignedLong(dataInputStream.readInt());
 
@@ -230,7 +230,7 @@ public class FLUIDManagerService extends Service {
                         int up_down = dataInputStream.readInt();
                         if(up_down == 0){
 //                            down_time = System.
-                            Log.i(TAG,"down Time : "+down_time);
+//                            Log.i(TAG,"down Time : "+down_time);
                             MotionEvent motiondown = MotionEvent.obtain(0,0,MotionEvent.ACTION_DOWN,0,0,0);
                             Bundle bundledown = new Bundle();
                             bundledown.putParcelable("motionevent",motiondown);
@@ -253,8 +253,8 @@ public class FLUIDManagerService extends Service {
                         inputStream.read(buffer);
                         byte[] newBuffer = Arrays.copyOfRange(buffer,0,textlength);
                         String text = new String(newBuffer, StandardCharsets.UTF_8);
-                        Log.d(TAG,"input ID : "+ID);
-                        Log.d(TAG, "input typeEvent : "+typeEvent);
+//                        Log.d(TAG,"input ID : "+ID);
+//                        Log.d(TAG, "input typeEvent : "+typeEvent);
                         Log.d(TAG, "input text : "+text);
                         Bundle bundle = new Bundle();
                         bundle.putInt("ID", ID);
@@ -287,7 +287,7 @@ public class FLUIDManagerService extends Service {
             try {
                 socket = server.accept();
                 Log.e(TAG, "Socket connected");
-                //mRemoteService.doCheck("Socket connected");
+                mRemoteService.doCheck("Socket connected");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -332,10 +332,7 @@ public class FLUIDManagerService extends Service {
                                 length_int -= quotient * (int) Math.pow(256,3-i);
                                 //Log.d(TAG,""+length_int+" "+(int)Math.pow(16,3-i) + " " + length_int/(int)Math.pow(16,3-i));
                             }
-                            for(int i = 0; i< 4; i++)
-                            {
-                                Log.e(TAG,"layout length byte = ["+i+"] : " + length_byte[i]);
-                            }
+
                             byteArrayOutputStream.write(length_byte);
                             byteArrayOutputStream.write(layout);
                             byte[] output = byteArrayOutputStream.toByteArray();
@@ -399,15 +396,12 @@ public class FLUIDManagerService extends Service {
                                 int quotient = ((int) Math.floor( length_int / (int)Math.pow(256,3-i) ) );
                                 length_byte[i] = (byte) quotient;
                                 length_int -= quotient * (int) Math.pow(256,3-i);
-                                Log.d(TAG, "handleMessage: convert" +i);
-                                Log.d(TAG, "handleMessage: quotient : " + quotient);
-                                Log.d(TAG, "handleMessage: power : " + (int) Math.pow(256,3-i));
-                                Log.d(TAG, "handleMessage: length_int" + length_int);
+//                                Log.d(TAG, "handleMessage: convert" +i);
+//                                Log.d(TAG, "handleMessage: quotient : " + quotient);
+//                                Log.d(TAG, "handleMessage: power : " + (int) Math.pow(256,3-i));
+//                                Log.d(TAG, "handleMessage: length_int" + length_int);
                             }
-                            for(int i = 0; i< 4; i++)
-                            {
-                                Log.e(TAG,"widget length byte = ["+i+"] : " + length_byte[i]);
-                            }
+
                             byteArrayOutputStream.write(length_byte);
                             byteArrayOutputStream.write(widget);
                             byte[] output = byteArrayOutputStream.toByteArray();

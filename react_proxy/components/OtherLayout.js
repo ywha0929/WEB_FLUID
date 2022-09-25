@@ -4,6 +4,7 @@ import Button from './Button';
 import EditText from './EditText';
 import TextView from './TextView';
 import ImageView from './ImageView';
+import OtherView from './OtherView';
 
 class OtherLayout extends Component{
     constructor(props) {
@@ -38,6 +39,8 @@ class OtherLayout extends Component{
                             setEditText={item}
                             position={"cordinate"}
                             TextChangeListener={this.TextChangeListener}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}
                             />
                     );
                 }
@@ -48,7 +51,9 @@ class OtherLayout extends Component{
                             key={item.ID}
                             setTextView={item}
                             position={"cordinate"}
-                            TextChangeListener={this.props.TextChangeListener}/>
+                            TextChangeListener={this.props.TextChangeListener}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
                         
                     );
                 }
@@ -69,7 +74,20 @@ class OtherLayout extends Component{
                         <ImageView
                             key={item.ID}
                             setImageView={item}
-                            position={"cordinate"}/>
+                            position={"cordinate"}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("OtherView")) {
+                    console.log("OtherLayout : passing to OtherView");
+                    return (
+                        <OtherView 
+                            key={item.ID}
+                            setOtherView={item}
+                            position={"cordinate"}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
                     )
                 }
             }

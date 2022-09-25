@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,View, TextInput} from 'react-native';
+import {StyleSheet,View, TextInput,Pressable} from 'react-native';
 
 class EditText extends Component{
     constructor(props){
@@ -15,17 +15,31 @@ class EditText extends Component{
         this.props.TextChangeListener(e);
         
     }
+    onPressInListener = (e) => {
+        console.log("onPressInListener of EditText");
+        this.props.onPressInListener(e);
+    }
+    onPressOutListener = (e) => {
+        console.log("onPressOutListener of EditText");
+        this.props.onPressOutListener(e);
+    }
     render() {
         console.log("EditText Component");
         if(this.state.position==="cordinate")
         {
             return (
                 <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y, alignItems:'flex-start', borderBottonWidth : StyleSheet.hairlineWidth}}>
-                    <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
-                        value={this.state.thisData.Text}
+                    <Pressable style={{alignContent: 'center',   justifyContent: 'center', alignItems: "center", }}
                         id={this.state.thisData.ID}
-                        onChange={this.TextChangeListener}>
-                    </TextInput>
+                        onPressIn={this.onPressInListener}
+                        onPressOut={this.onPressOutListener}>
+                    
+                        <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
+                            value={this.state.thisData.Text}
+                            id={this.state.thisData.ID}
+                            onChange={this.TextChangeListener}>
+                        </TextInput>
+                    </Pressable>
                 </View>
             )
         }
@@ -33,11 +47,16 @@ class EditText extends Component{
         {
             return (
                 <View key={this.state.thisData.ID} style={{alignItems:'flex-start', borderBottonWidth : StyleSheet.hairlineWidth}}>
-                    <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
-                        value={this.state.thisData.Text}
+                    <Pressable style={{alignContent: 'center',   justifyContent: 'center', alignItems: "center", }}
                         id={this.state.thisData.ID}
-                        onChange={this.TextChangeListener}>
-                    </TextInput>
+                        onPressIn={this.onPressInListener}
+                        onPressOut={this.onPressOutListener}>
+                        <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
+                            value={this.state.thisData.Text}
+                            id={this.state.thisData.ID}
+                            onChange={this.TextChangeListener}>
+                        </TextInput>
+                    </Pressable>
                 </View>
             )
         }

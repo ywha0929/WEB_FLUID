@@ -4,6 +4,7 @@ import Button from './Button';
 import EditText from './EditText';
 import TextView from './TextView';
 import ImageView from './ImageView';
+import OtherView from './OtherView';
 
 class LinearLayout extends Component{
     constructor(props) {
@@ -69,7 +70,20 @@ class LinearLayout extends Component{
                         <ImageView
                             key={item.ID}
                             setImageView={item}
-                            position={"automatic"}/>
+                            position={"automatic"}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("OtherView")) {
+                    console.log("LinearLayout : OtherView");
+                    return (
+                        <OtherView
+                            key={item.ID}
+                            setOtherView={item}
+                            position={"automatic"}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
                     )
                 }
             }

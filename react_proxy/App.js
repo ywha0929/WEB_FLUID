@@ -193,25 +193,30 @@ class App extends Component {
             var Y = data.readFloatBE(offset);
             offset+=4;
 
-            console.log('String Length',offset,data.readUInt32BE(offset));
+            // console.log('String Length',offset,data.readUInt32BE(offset));
             var stringSize = data.readUInt32BE(offset)+2;
             offset += 4;
-            console.log('widgetType : ',offset,data.toString('utf8',offset,offset+stringSize));
+            // console.log('widgetType : ',offset,data.toString('utf8',offset,offset+stringSize));
             var widgetType = data.toString('utf8',offset,offset+stringSize);
             offset += stringSize;
-            console.log("check : ",widgetType,widgetType.includes("EditText"));
+            // console.log("check : ",widgetType,widgetType.includes("EditText"));
             if(widgetType.includes("EditText")==1)
             {
-                console.log('String Length',offset,data.readUInt32BE(offset));
+                console.log("handleData : creating EditText data");
+                // console.log('String Length',offset,data.readUInt32BE(offset));
                 stringSize = data.readUInt32BE(offset)+2;
                 offset += 4;
-                console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
+                // console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
                 var temp_text = data.toString('utf8',offset,offset+stringSize);
                 var text = (''+temp_text).slice(1);
                 offset += stringSize;
-                console.log('TextSize : ',data.readFloatBE(offset));
+                // console.log('TextSize : ',data.readFloatBE(offset));
                 var TextSize = data.readFloatBE(offset);
                 offset += 4;
+                var height = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                var width = data.readUInt32BE(offset)*0.728;
+                offset +=4;
                 let UIdata = {
                     "WidgetType": widgetType,
                     "ID": id,
@@ -221,27 +226,33 @@ class App extends Component {
                     "Parent_ID": layoutId,
                     "X": X,
                     "Y": Y,
+                    "Height": height,
+                    "Width": width,
                 };
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
-                console.log("UIdata ",UIdata);
+                console.log("UIdata : ",UIdata);
                 this.setState({
                     UIList: tempArr
                 });
             }
             else if (widgetType.includes("TextView"))
             {
-                
-                console.log('String Length',offset,data.readUInt32BE(offset));
+                console.log("handleData : creating TextView data");
+                // console.log('String Length',offset,data.readUInt32BE(offset));
                 stringSize = data.readUInt32BE(offset)+2;
                 offset += 4;
-                console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
+                // console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
                 var temp_text = data.toString('utf8',offset,offset+stringSize);
                 var text = (''+temp_text).slice(1);
                 offset += stringSize;
-                console.log('TextSize : ',data.readFloatBE(offset));
+                // console.log('TextSize : ',data.readFloatBE(offset));
                 var TextSize = data.readFloatBE(offset);
                 offset += 4
+                var height = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                var width = data.readUInt32BE(offset)*0.728;
+                offset +=4;
                 let UIdata = {
                     "WidgetType": widgetType,
                     "ID": id,
@@ -250,10 +261,12 @@ class App extends Component {
                     "Parent_ID": layoutId,
                     "X": X,
                     "Y": Y,
+                    "Height": height,
+                    "Width": width,
                 };
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
-                console.log("UIdata ",UIdata);
+                console.log("UIdata : ",UIdata);
                 this.setState({
                     UIList: tempArr
                 });
@@ -261,6 +274,7 @@ class App extends Component {
             else if(widgetType.includes("ImageView"))
             {
 
+                console.log("handleData : creating ImageView data");
                 //buffer 합치기
                 //bitmap data 받아오기 및 저장
                 
@@ -268,15 +282,15 @@ class App extends Component {
                 // const bufferbuffer = data.concat(bitmap);
                 
                 var height = data.readUInt32BE(offset)* 0.75;
-                console.log("Height : ",height);
+                // console.log("Height : ",height);
                 offset +=4;
                 var width = data.readUInt32BE(offset)* 0.75;
                 offset +=4;
-                console.log("Width : ",width);
+                // console.log("Width : ",width);
 
                 var length = data.readUInt32BE(offset) + 2;
                 length_bitmap = length;
-                console.log(length);
+                // console.log(length);
                 offset += 4;
                 
                 
@@ -303,6 +317,7 @@ class App extends Component {
                 //console.log("UIList ",this.state.UIList[0]);
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
+                console.log("UIdata : ",UIdata);
                 //console.log("UIList ",this.state.UIList[0]);
                 this.setState({
                     UIList: tempArr
@@ -311,18 +326,19 @@ class App extends Component {
             }
             else if(widgetType.includes("Button"))
             {
-                console.log('String Length',offset,data.readUInt32BE(offset));
+                console.log("handleData : creating Button data");
+                // console.log('String Length',offset,data.readUInt32BE(offset));
                 stringSize = data.readUInt32BE(offset)+2;
                 offset += 4;
-                console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
+                // console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
                 var temp_text = data.toString('utf8',offset,offset+stringSize);
                 var text = (''+temp_text).slice(1);
                 offset += stringSize;
                 var height = data.readUInt32BE(offset)* 0.728;
-                console.log("Height : ",height);
+                // console.log("Height : ",height);
                 offset +=4;
                 var width = data.readUInt32BE(offset)* 0.728;
-                console.log("Width : ",width);
+                // console.log("Width : ",width);
                 offset += 4;
                 let UIdata = {
                     "WidgetType": widgetType,
@@ -337,7 +353,31 @@ class App extends Component {
 
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
-                console.log("UIdata ",UIdata);
+                console.log("UIdata : ",UIdata);
+                this.setState({
+                    UIList: tempArr
+                });
+            }
+            else if(widgetType.includes("OtherView"))
+            {
+                console.log("handleData : creating OtherView data");
+                var height = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                var width = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                let UIdata = {
+                    "WidgetType": widgetType,
+                    "ID": id,
+                    "Text": 'others',
+                    "Height": height,
+                    "Width": width,
+                    "Parent_ID":layoutId,
+                    "X": X,
+                    "Y": Y,
+                };
+                let tempArr = this.state.UIList;
+                tempArr.push(UIdata);
+                console.log("UIdata : ",UIdata);
                 this.setState({
                     UIList: tempArr
                 });
@@ -432,15 +472,22 @@ class App extends Component {
                 }
 
             }
-            else if(layout_type == 1) {
+            else if(layout_type == 1) { //other layout
                 var width = data.readUInt32BE(offset)* 0.728;
                 offset +=4;
                 var height = data.readUInt32BE(offset)* 0.728;
+                offset +=4;
+                var X = data.readFloatBE(offset)*0.728;
+                offset +=4;
+                var Y = data.readFloatBE(offset)*0.728;
+                offset +=4;
                 var layout_Data = {
                     "ID": id,
                     "Layout_Type": layout_type,
                     "Height": height,
                     "Width": width,
+                    "X": X,
+                    "Y": Y,
                 }
             }
             tempArr = this.state.LayoutList;
