@@ -55,7 +55,7 @@ public class FLUIDManagerService extends Service {
     private Handler updateHandler;
     ServerSocket server;
     Socket socket;
-
+    //
     private ArrayList<Integer> id_list = new ArrayList<>();
 
     private final IBinder mBinder = new IFLUIDService.Stub() {
