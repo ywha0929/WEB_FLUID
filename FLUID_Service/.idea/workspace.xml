@@ -13,14 +13,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51666edf-a32a-4fc2-bc9b-a00a2873453e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/FLUIDManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/FLUIDManagerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/FLUIDInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/FLUIDInjector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[07131JEC202162]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[08191JEC212484]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -48,9 +49,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/local.properties" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/FLUIDManagerService.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/app/src/main/aidl/com/hmsl/fluidmanager/IFLUIDService.aidl" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/FLUIDManagerService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/local.properties" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2BRCppl2lG8QiiPiHhg1Xuu3KBy" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -97,8 +98,7 @@
       <option name="MODE" value="default_activity" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
       <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
