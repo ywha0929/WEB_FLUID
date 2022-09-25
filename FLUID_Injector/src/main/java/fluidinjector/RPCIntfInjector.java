@@ -28,16 +28,316 @@ public class RPCIntfInjector extends BodyTransformer {
 	static String MAINACTIVITY_CLASS_NAME;
 	static String MAIN_PACKAGE_NAME;
 	static List<SootClass> injectedClasses = new ArrayList<>();
-	public RPCIntfInjector() {
+	public RPCIntfInjector(String namePackage) {
 		
 		super();
-//		MAIN_PACKAGE_NAME = namePackage;
-//		String classname = namePackage+".MainActivity";
-//		MAINACTIVITY_CLASS_NAME = classname;
+		MAIN_PACKAGE_NAME = namePackage;
+		String classname = namePackage+".MainActivity";
+		MAINACTIVITY_CLASS_NAME = classname;
 	}
 	
-	void InjectOnActivity(Body b, String s, Map<String,String> map) //insert method, fields
-	{
+//	void InjectOnActivity(Body b, String s, Map<String,String> map) //insert method, fields
+//	{
+//		JimpleBody body = (JimpleBody) b;
+//
+//		if (AndroidUtil.isAndroidMethod(b.getMethod()))
+//			return;
+//		//System.out.println(body);
+//		if (isAnalize) {
+//			isAnalize = false;
+//			printClasses(body);
+//		}
+//
+//		if (isInsert) {
+//			isInsert = false;
+//			
+//			Object[] arr = Scene.v().getApplicationClasses().toArray();
+//			SootClass hi = (SootClass)arr[0];
+//			
+//			boolean found = false;
+//			int index = 0;
+//			for (int i = 0; i < arr.length; i++) {
+//				if (arr[i].toString().equals(MAINACTIVITY_CLASS_NAME)) {
+//					found = true;
+//					index = i;
+//				}
+//			}
+//			if(found == true)
+//			{
+//				System.err.println("found MainActivity");
+//				MAINACTIVITY_INDEX = index;
+//				System.err.println("super class name"+((SootClass)arr[index]).getSuperclass().toString());
+//				
+//			}
+//			else
+//			{
+//				System.err.println("unable to find MainActivity");
+//			}
+//			SootClass classMainActivity = (SootClass) arr[MAINACTIVITY_INDEX];// MainActivity
+//			System.err.println("mainactivity : "+classMainActivity.toString());
+////			Object[] fields = classMainActivity.getFields().toArray();
+////			for(int i = 0; i<fields.length;i++)
+////			{
+////				System.err.println("mainactivity field : ["+i+"] - "+fields[i].toString());
+////			}
+////			SootClass aa = Scene.v().getSootClass("dalvik.system.DexClassLoader");
+////			SootField testfld = new SootField("dex", aa.getType());
+////			a.addField(testfld);
+//
+//			InstrumentUtil.addField(classMainActivity, "dex", RefType.v("dalvik.system.DexClassLoader"),
+//					Modifier.PUBLIC | Modifier.STATIC);
+//			InstrumentUtil.addField(classMainActivity, "objFluidInterface", RefType.v("java.lang.Object"),
+//					Modifier.PUBLIC | Modifier.STATIC);
+////			dispatchTouchEvent(Soo);
+//			
+//		}
+//	}
+//	void EditMethods(Body b, String s, Map<String,String> map) //edit methods
+//	{
+//		while(isFirstDone == false);
+//		if (b.getMethod().getName().equals("onCreate")) {
+//			System.out.println("==== before ====");
+//			System.out.println(b);
+//			//injectOnCreate((JimpleBody) b);
+//			// injectfield((JimpleBody) b);
+//			// injectClassLoader((JimpleBody) b);
+//			System.out.println("==== after ====");
+//			System.out.println(b);
+//		}
+//		if (b.getMethod().getName().equals("onLongClick")) {
+//			System.out.println("==== before ====");
+//			System.out.println(b);
+//			injectTriggerCode((JimpleBody) b);
+//			// injectClassLoader((JimpleBody) b);
+//			System.out.println("==== after ====");
+//			System.out.println(b);
+//		} 
+//		if (b.getMethod().getName().equals("onClick")) {
+//			System.out.println("==== before ====");
+//			System.out.println(b);
+//			System.out.println("onClick");
+////			printLocals((JimpleBody)b);
+//			injectUpdateCode((JimpleBody) b);
+//
+//			System.out.println("==== after ====");
+//			System.out.println(b);
+//		}
+//		if(b.getMethod().getSignature().contains("dispatchTouchEvent") && b.getMethod().getSignature().contains("Activity"))
+//		{
+//			System.out.println("==== before ====");
+//			System.out.println(b);
+//			System.err.println("dispatchTouchEvent");
+////			printLocals((JimpleBody)b);
+////			injectiDispatchTouchEvent((JimpleBody) b);
+//		}
+//	}
+//	void findLeafActivities(Object[] arrClasses)
+//	{
+//		List<SootClass> listNodes = new ArrayList<>();
+//		for(int i = 0; i< arrClasses.length; i++)
+//		{ 
+//			//
+//			SootClass thisClass = (SootClass)arrClasses[i];
+//			if(listNodes.contains(thisClass))
+//			{
+//				continue;
+//			}
+//			listNodes.add(thisClass);
+////			System.err.println("["+i+"]th class : "+thisClass.toString());
+////			System.out.println("["+i+"]th class : "+thisClass.toString());
+//			SootClass superClass = thisClass.getSuperclass();
+//			
+//			while(true)
+//			{
+//				listNodes.add(superClass);
+//				if(injectedClasses.contains(superClass)) //if ancestor in list -> switch
+//				{
+//					System.err.println("switching Class "+superClass.toString()+" -> "+thisClass.toString());
+//					System.out.println("switching Class "+superClass.toString()+" -> "+thisClass.toString());
+//					injectedClasses.remove(superClass);
+//					injectedClasses.add(thisClass);
+//					break;
+//				}
+//				if(superClass.toString().equals("androidx.appcompat.app.AppCompatActivity")|| superClass.toString().equals("android.app.Activity"))
+//				{
+//					System.err.println("found activity class : "+thisClass.toString());
+//					System.out.println("found activity class : "+thisClass.toString());
+//					if(!injectedClasses.contains(thisClass))
+//					{
+//						injectedClasses.add(thisClass);
+//						break;
+//						
+//					}
+//					else
+//					{
+//						System.out.println("thisClass is already injected");
+//						break;
+//						
+//					}
+//					
+//				}
+//				else
+//				{
+//					if(superClass.hasSuperclass())
+//					{
+//						superClass = superClass.getSuperclass();
+//					}
+//					else
+//					{
+//						break;
+//					}
+//				}
+//			}
+//			
+//		}
+//	}
+//	void performFirstPass(Body b, String s, Map<String, String> map) //inject fields and edit onCreate
+//	{
+//		if (isAnalize) {
+//			isAnalize = false;
+//			printClasses((JimpleBody)b);
+//		}
+//		for(int i = 0; i< injectedClasses.size(); i++)
+//		{
+//			SootClass thisClass = (SootClass) injectedClasses.get(i);
+//			System.out.println("performFirstPass : injecting "+thisClass.toString());
+//			//inject fields
+//			InstrumentUtil.addField(thisClass, "dex", RefType.v("dalvik.system.DexClassLoader"),
+//					Modifier.PUBLIC | Modifier.STATIC);
+//			InstrumentUtil.addField(thisClass, "objFluidInterface", RefType.v("java.lang.Object"),
+//					Modifier.PUBLIC | Modifier.STATIC);
+//			SootMethod onCreate = thisClass.getMethodByNameUnsafe("onCreate");
+//			//System.err.println("onCreate "+onCreate.toString());
+//			
+//			if(onCreate == null)
+//			{
+//				System.err.println("this activity class has no onCreate method");
+//				System.out.println("this activity class has no onCreate method");
+//				addOnCreate(thisClass);
+//			}
+//			else
+//			{
+//				Body onCreateBody = onCreate.getActiveBody();
+//				injectOnCreate((JimpleBody)onCreateBody);
+//			}
+//			SootMethod dispatchTouchEvent = thisClass.getMethodByNameUnsafe("dispatchTouchEvent");
+//			if(dispatchTouchEvent == null)
+//			{
+//				System.err.println("this activity class has no dispatchTouchEvent method");
+//				System.out.println("this activity class has no dispatchTouchEvent method");
+//				addDispatchTouchEvent();
+//			}
+//			else
+//			{
+//				Body dispatchTouchEventBody = dispatchTouchEvent.getActiveBody();
+//				editDispatchTouchEvent((JimpleBody)dispatchTouchEventBody,thisClass);
+//			}
+//			
+//		}
+//		
+//		
+////		Object[] classes = Scene.v().getApplicationClasses().toArray();
+////		for(int i = 0; i< classes.length;i++)
+////		{
+////			SootClass thisClass = (SootClass)classes[i];
+//////			System.err.println("["+i+"]th class : "+thisClass.toString());
+//////			System.out.println("["+i+"]th class : "+thisClass.toString());
+////			SootClass superClass = thisClass.getSuperclass();
+////			while(true)
+////			{
+////				
+////				if(superClass.toString().equals("androidx.appcompat.app.AppCompatActivity")|| superClass.toString().equals("android.app.Activity"))
+////				{
+////					System.err.println("found activity class : "+thisClass.toString());
+////					System.out.println("found activity class : "+thisClass.toString());
+////					if(!injectedClasses.contains(thisClass))
+////					{
+////						injectedClasses.add(thisClass);
+////						
+////					}
+////					else
+////					{
+////						System.out.println("thisClass is already injected");
+////						break;
+////						
+////					}
+////					
+////					InstrumentUtil.addField(thisClass, "dex", RefType.v("dalvik.system.DexClassLoader"),
+////							Modifier.PUBLIC | Modifier.STATIC);
+////					InstrumentUtil.addField(thisClass, "objFluidInterface", RefType.v("java.lang.Object"),
+////							Modifier.PUBLIC | Modifier.STATIC);
+//////					Object[] mtdList = thisClass.getMethods().toArray();
+//////					System.err.println("mtdList length"+mtdList.length);
+//////					for(int j = 0; j<mtdList.length; j++)
+//////					{
+//////						System.err.println(mtdList[j].toString());
+//////					}
+//////					
+////					SootMethod onCreate = thisClass.getMethodByNameUnsafe("onCreate");
+////					//System.err.println("onCreate "+onCreate.toString());
+////					
+////					if(onCreate == null)
+////					{
+////						System.err.println("this activity class has no onCreate method");
+////						System.out.println("this activity class has no onCreate method");
+////						addOnCreate(thisClass);
+////					}
+////					else
+////					{
+////						Body onCreateBody = onCreate.getActiveBody();
+////						injectOnCreate((JimpleBody)onCreateBody,thisClass);
+////					}
+////					SootMethod dispatchTouchEvent = thisClass.getMethodByNameUnsafe("dispatchTouchEvent");
+////					if(dispatchTouchEvent == null)
+////					{
+////						System.err.println("this activity class has no dispatchTouchEvent method");
+////						System.out.println("this activity class has no dispatchTouchEvent method");
+////						addDispatchTouchEvent(thisClass);
+////					}
+////					else
+////					{
+////						Body dispatchTouchEventBody = dispatchTouchEvent.getActiveBody();
+////						editDispatchTouchEvent((JimpleBody)dispatchTouchEventBody,thisClass);
+////					}
+////					
+////					break;
+////				}
+////				else
+////				{
+////					if(superClass.hasSuperclass())
+////					{
+////						superClass = superClass.getSuperclass();
+////					}
+////					else
+////					{
+////						break;
+////					}
+////				}
+////			}
+////		}
+//		System.out.println("First Pass Done");
+//		b.validate();
+//		isFirstDone = true;
+//	}
+//	void performSecondPass(Body b, String s, Map<String, String> map,int threadNum)
+//	{
+//		//System.out.println("performSecondPass start : "+threadNum);
+//		
+////		if(injectedClasses.contains(b.getMethod().getDeclaringClass()))
+////		{
+////			System.out.println("injecting Update code : "+b.getMethod().toString());
+////			System.err.println("injecting Update code : "+b.getMethod().toString());
+////			injectUpdateCode((JimpleBody)b);
+////		}
+////		else
+////		{
+////			System.out.println("not injecting Update code : "+b.getMethod().toString());
+////			System.err.println("not injecting Update code : "+b.getMethod().toString());
+////		}
+//	}
+	@Override
+	protected void internalTransform(Body b, String s, Map<String, String> map) {
+//		System.out.println("Thread ID start: "+Thread.currentThread().getId());
 		JimpleBody body = (JimpleBody) b;
 
 		if (AndroidUtil.isAndroidMethod(b.getMethod()))
@@ -66,7 +366,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			{
 				System.err.println("found MainActivity");
 				MAINACTIVITY_INDEX = index;
-				System.err.println("super class name"+((SootClass)arr[index]).getSuperclass().toString());
+//				System.err.println("super class name"+((SootClass)arr[index]).getSuperclass().toString());
 				
 			}
 			else
@@ -88,17 +388,14 @@ public class RPCIntfInjector extends BodyTransformer {
 					Modifier.PUBLIC | Modifier.STATIC);
 			InstrumentUtil.addField(classMainActivity, "objFluidInterface", RefType.v("java.lang.Object"),
 					Modifier.PUBLIC | Modifier.STATIC);
-//			dispatchTouchEvent(Soo);
+			addDispatchTouchEvent();
 			
 		}
-	}
-	void EditMethods(Body b, String s, Map<String,String> map) //edit methods
-	{
-		while(isFirstDone == false);
+		
 		if (b.getMethod().getName().equals("onCreate")) {
 			System.out.println("==== before ====");
 			System.out.println(b);
-			//injectOnCreate((JimpleBody) b);
+			injectOnCreate((JimpleBody) b);
 			// injectfield((JimpleBody) b);
 			// injectClassLoader((JimpleBody) b);
 			System.out.println("==== after ====");
@@ -130,234 +427,6 @@ public class RPCIntfInjector extends BodyTransformer {
 //			printLocals((JimpleBody)b);
 //			injectiDispatchTouchEvent((JimpleBody) b);
 		}
-	}
-	void findLeafActivities(Object[] arrClasses)
-	{
-		List<SootClass> listNodes = new ArrayList<>();
-		for(int i = 0; i< arrClasses.length; i++)
-		{ 
-			//
-			SootClass thisClass = (SootClass)arrClasses[i];
-			if(listNodes.contains(thisClass))
-			{
-				continue;
-			}
-			listNodes.add(thisClass);
-//			System.err.println("["+i+"]th class : "+thisClass.toString());
-//			System.out.println("["+i+"]th class : "+thisClass.toString());
-			SootClass superClass = thisClass.getSuperclass();
-			
-			while(true)
-			{
-				listNodes.add(superClass);
-				if(injectedClasses.contains(superClass)) //if ancestor in list -> switch
-				{
-					System.err.println("switching Class "+superClass.toString()+" -> "+thisClass.toString());
-					System.out.println("switching Class "+superClass.toString()+" -> "+thisClass.toString());
-					injectedClasses.remove(superClass);
-					injectedClasses.add(thisClass);
-					break;
-				}
-				if(superClass.toString().equals("androidx.appcompat.app.AppCompatActivity")|| superClass.toString().equals("android.app.Activity"))
-				{
-					System.err.println("found activity class : "+thisClass.toString());
-					System.out.println("found activity class : "+thisClass.toString());
-					if(!injectedClasses.contains(thisClass))
-					{
-						injectedClasses.add(thisClass);
-						break;
-						
-					}
-					else
-					{
-						System.out.println("thisClass is already injected");
-						break;
-						
-					}
-					
-				}
-				else
-				{
-					if(superClass.hasSuperclass())
-					{
-						superClass = superClass.getSuperclass();
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-			
-		}
-	}
-	void performFirstPass(Body b, String s, Map<String, String> map) //inject fields and edit onCreate
-	{
-		if (isAnalize) {
-			isAnalize = false;
-			printClasses((JimpleBody)b);
-		}
-		for(int i = 0; i< injectedClasses.size(); i++)
-		{
-			SootClass thisClass = (SootClass) injectedClasses.get(i);
-			System.out.println("performFirstPass : injecting "+thisClass.toString());
-			//inject fields
-			InstrumentUtil.addField(thisClass, "dex", RefType.v("dalvik.system.DexClassLoader"),
-					Modifier.PUBLIC | Modifier.STATIC);
-			InstrumentUtil.addField(thisClass, "objFluidInterface", RefType.v("java.lang.Object"),
-					Modifier.PUBLIC | Modifier.STATIC);
-			SootMethod onCreate = thisClass.getMethodByNameUnsafe("onCreate");
-			//System.err.println("onCreate "+onCreate.toString());
-			
-			if(onCreate == null)
-			{
-				System.err.println("this activity class has no onCreate method");
-				System.out.println("this activity class has no onCreate method");
-				addOnCreate(thisClass);
-			}
-			else
-			{
-				Body onCreateBody = onCreate.getActiveBody();
-				injectOnCreate((JimpleBody)onCreateBody,thisClass);
-			}
-			SootMethod dispatchTouchEvent = thisClass.getMethodByNameUnsafe("dispatchTouchEvent");
-			if(dispatchTouchEvent == null)
-			{
-				System.err.println("this activity class has no dispatchTouchEvent method");
-				System.out.println("this activity class has no dispatchTouchEvent method");
-				addDispatchTouchEvent(thisClass);
-			}
-			else
-			{
-				Body dispatchTouchEventBody = dispatchTouchEvent.getActiveBody();
-				editDispatchTouchEvent((JimpleBody)dispatchTouchEventBody,thisClass);
-			}
-			
-		}
-		
-		
-//		Object[] classes = Scene.v().getApplicationClasses().toArray();
-//		for(int i = 0; i< classes.length;i++)
-//		{
-//			SootClass thisClass = (SootClass)classes[i];
-////			System.err.println("["+i+"]th class : "+thisClass.toString());
-////			System.out.println("["+i+"]th class : "+thisClass.toString());
-//			SootClass superClass = thisClass.getSuperclass();
-//			while(true)
-//			{
-//				
-//				if(superClass.toString().equals("androidx.appcompat.app.AppCompatActivity")|| superClass.toString().equals("android.app.Activity"))
-//				{
-//					System.err.println("found activity class : "+thisClass.toString());
-//					System.out.println("found activity class : "+thisClass.toString());
-//					if(!injectedClasses.contains(thisClass))
-//					{
-//						injectedClasses.add(thisClass);
-//						
-//					}
-//					else
-//					{
-//						System.out.println("thisClass is already injected");
-//						break;
-//						
-//					}
-//					
-//					InstrumentUtil.addField(thisClass, "dex", RefType.v("dalvik.system.DexClassLoader"),
-//							Modifier.PUBLIC | Modifier.STATIC);
-//					InstrumentUtil.addField(thisClass, "objFluidInterface", RefType.v("java.lang.Object"),
-//							Modifier.PUBLIC | Modifier.STATIC);
-////					Object[] mtdList = thisClass.getMethods().toArray();
-////					System.err.println("mtdList length"+mtdList.length);
-////					for(int j = 0; j<mtdList.length; j++)
-////					{
-////						System.err.println(mtdList[j].toString());
-////					}
-////					
-//					SootMethod onCreate = thisClass.getMethodByNameUnsafe("onCreate");
-//					//System.err.println("onCreate "+onCreate.toString());
-//					
-//					if(onCreate == null)
-//					{
-//						System.err.println("this activity class has no onCreate method");
-//						System.out.println("this activity class has no onCreate method");
-//						addOnCreate(thisClass);
-//					}
-//					else
-//					{
-//						Body onCreateBody = onCreate.getActiveBody();
-//						injectOnCreate((JimpleBody)onCreateBody,thisClass);
-//					}
-//					SootMethod dispatchTouchEvent = thisClass.getMethodByNameUnsafe("dispatchTouchEvent");
-//					if(dispatchTouchEvent == null)
-//					{
-//						System.err.println("this activity class has no dispatchTouchEvent method");
-//						System.out.println("this activity class has no dispatchTouchEvent method");
-//						addDispatchTouchEvent(thisClass);
-//					}
-//					else
-//					{
-//						Body dispatchTouchEventBody = dispatchTouchEvent.getActiveBody();
-//						editDispatchTouchEvent((JimpleBody)dispatchTouchEventBody,thisClass);
-//					}
-//					
-//					break;
-//				}
-//				else
-//				{
-//					if(superClass.hasSuperclass())
-//					{
-//						superClass = superClass.getSuperclass();
-//					}
-//					else
-//					{
-//						break;
-//					}
-//				}
-//			}
-//		}
-		System.out.println("First Pass Done");
-		b.validate();
-		isFirstDone = true;
-	}
-	void performSecondPass(Body b, String s, Map<String, String> map,int threadNum)
-	{
-		//System.out.println("performSecondPass start : "+threadNum);
-		
-//		if(injectedClasses.contains(b.getMethod().getDeclaringClass()))
-//		{
-//			System.out.println("injecting Update code : "+b.getMethod().toString());
-//			System.err.println("injecting Update code : "+b.getMethod().toString());
-//			injectUpdateCode((JimpleBody)b);
-//		}
-//		else
-//		{
-//			System.out.println("not injecting Update code : "+b.getMethod().toString());
-//			System.err.println("not injecting Update code : "+b.getMethod().toString());
-//		}
-	}
-	@Override
-	protected void internalTransform(Body b, String s, Map<String, String> map) {
-		System.out.println("Thread ID start: "+Thread.currentThread().getId());
-		int threadNum = this.threadNum.getAndIncrement();
-		if(threadNum ==0)
-		{
-			System.out.println("starting first pass");
-			System.err.println("starting first pass");
-			findLeafActivities(Scene.v().getApplicationClasses().toArray());
-			performFirstPass(b,s,map);
-			System.out.println("finishing first pass");
-			System.err.println("finishing first pass");
-		}
-		else
-		{
-//			System.out.println("Thread ID start : "+Thread.currentThread().getId());
-			while(!isFirstDone);
-			performSecondPass(b,s,map,threadNum);
-			System.out.println("Thread ID end : "+Thread.currentThread().getId());
-		}
-//		InjectOnActivity(b,s,map);
-//		SecondPass(b,s,map);
-		
 	}
 
 	void printClasses(JimpleBody body) {
@@ -425,7 +494,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		Object[] unitarray = units.toArray();
 		for (int i = 0; i < unitarray.length; i++) {
 			String targetUnit = unitarray[i].toString();
-			if (targetUnit.contains("goto") &&(targetUnit.contains("setText") || targetUnit.contains("setImage")))  {
+			if ((targetUnit.contains("setText") || targetUnit.contains("setImage")))  {
 				System.out.println("found update code : "+targetUnit+"\n"+body.getMethod().toString()+"\n");
 				System.err.println("found update code : "+targetUnit+"\n"+body.getMethod().toString()+"\n");
 				List<Unit> generated = new ArrayList<>();
@@ -1015,7 +1084,7 @@ public class RPCIntfInjector extends BodyTransformer {
 	
 	
 	
-	void injectOnCreate(JimpleBody body,SootClass classActivity) {
+	void injectOnCreate(JimpleBody body) {
 		UnitPatchingChain units = body.getUnits();
 		List<Unit> generated = new ArrayList<>();
 		// local variables
@@ -1036,7 +1105,7 @@ public class RPCIntfInjector extends BodyTransformer {
 //		Local IDVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Integer"));
 		Local IDVar = InstrumentUtil.generateNewLocal(body, IntType.v());
 		Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
-		SootClass classMainActivity = classActivity;
+		SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
 		SootField fieldDex = classMainActivity.getFieldByName("dex");
 		generated.add(Jimple.v().newAssignStmt(dexLoaderVar,Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
 		SootField fieldFluidInterface = classMainActivity.getFieldByName("objFluidInterface");
@@ -1405,9 +1474,9 @@ public class RPCIntfInjector extends BodyTransformer {
 	}
 	
 	
-	void addDispatchTouchEvent(SootClass classActivity) {
-		
-//		SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
+	void addDispatchTouchEvent() {
+		Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
+		SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
 		List<Type> parameterType = new ArrayList<Type>();
 		parameterType.add(Scene.v().getSootClass("android.view.MotionEvent").getType());
 		
@@ -1425,14 +1494,14 @@ public class RPCIntfInjector extends BodyTransformer {
 //		}
 //		dispatchTouchEvent.setDeclared(true);
 //		dispatchTouchEvent.setDeclaringClass(classMainActivity);
-		classActivity.addMethod(dispatchTouchEvent);
+		classMainActivity.addMethod(dispatchTouchEvent);
 		//newBody.getDefBoxes().add( Jimple.v().newIdentityRefBox(Jimple.v().newThisRef(RefType.v(MAINACTIVITY_CLASS_NAME))) );
-		Local thisVar = InstrumentUtil.generateNewLocal(newBody, RefType.v(classActivity.toString()));
+		Local thisVar = InstrumentUtil.generateNewLocal(newBody, RefType.v(classMainActivity.toString()));
 		Local paramVar = InstrumentUtil.generateNewLocal(newBody, Scene.v().getSootClass("android.view.MotionEvent").getType());
 //		Local retVar = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.Boolean"));
 		Local retVar = InstrumentUtil.generateNewLocal(newBody, IntType.v());
 		
-		units.add( Jimple.v().newIdentityStmt(thisVar, Jimple.v().newThisRef(RefType.v(classActivity.toString()))));
+		units.add( Jimple.v().newIdentityStmt(thisVar, Jimple.v().newThisRef(RefType.v(classMainActivity.toString()))));
 		units.add( Jimple.v().newIdentityStmt(paramVar, Jimple.v().newParameterRef(Scene.v().getSootClass("android.view.MotionEvent").getType(), 0) ));
 		//newBody.getDefBoxes().add(Jimple.v().newArgBox((new ThisRef(RefType.v(MAINACTIVITY_CLASS_NAME)))));
 		//units.add(Jimple.v().newAssignStmt(thisVar, newBody.getThisLocal()));
@@ -1477,9 +1546,9 @@ public class RPCIntfInjector extends BodyTransformer {
 
 		// get dexloader from field
 		
-		SootField fieldDex = classActivity.getFieldByName("dex");
+		SootField fieldDex = classMainActivity.getFieldByName("dex");
 		units.add(Jimple.v().newAssignStmt(dexLoaderVar, Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
-		SootField fieldFluidInterface = classActivity.getFieldByName("objFluidInterface");
+		SootField fieldFluidInterface = classMainActivity.getFieldByName("objFluidInterface");
 		units.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,
 				Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
 		
