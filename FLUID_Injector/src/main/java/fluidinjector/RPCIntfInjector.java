@@ -135,7 +135,8 @@ public class RPCIntfInjector extends BodyTransformer {
 	{
 		List<SootClass> listNodes = new ArrayList<>();
 		for(int i = 0; i< arrClasses.length; i++)
-		{
+		{ 
+			//
 			SootClass thisClass = (SootClass)arrClasses[i];
 			if(listNodes.contains(thisClass))
 			{
