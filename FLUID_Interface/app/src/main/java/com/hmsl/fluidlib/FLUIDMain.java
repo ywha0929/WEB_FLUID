@@ -235,7 +235,7 @@ public class FLUIDMain {
             else if( !(thisType.equals(EditText.toString()) || thisType.equals(Button.toString()) || thisType.equals(TextView.toString())) )
             {
                 //treat unsupported TextView child view as custom view
-                classType = "OtherView";
+                classType = "SpecialImageView";
             }
             else
             {
@@ -812,6 +812,77 @@ public class FLUIDMain {
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
         }
+
+        else if (widgetType.contains("SpecialImageView")) {
+//            Log.d(TAG, "generate_byteArray: this is image view///////");
+            ////////////////////////////////////////////////////////////image///////////////////////////////////////////////////////
+            View image = view;
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
+            dataOutputStream.writeUTF(widgetType);
+
+
+            //convert ImageView to bitmap
+            Bitmap bitmap = loadBitmapFromView(image);
+//            Drawable drawable = image.getDrawable();
+//            BitmapDrawable Bitmapdrawable;
+//            if(drawable.getClass() == VectorDrawable.class)
+//            {
+//                Drawable newDrawable = new Drawable() {
+//                    @Override
+//                    public void draw(@NonNull Canvas canvas) {
+//                        Paint paint = new Paint();
+//                        paint.setStyle(Paint.Style.FILL);
+//                        canvas.drawCircle(image.getWidth()/2, image.getHeight()/2 , image.getWidth()/2, paint);
+//                    }
+//
+//                    @Override
+//                    public void setAlpha(int alpha) {
+//
+//                    }
+//
+//                    @Override
+//                    public void setColorFilter(@Nullable ColorFilter colorFilter) {
+//
+//                    }
+//
+//                    @Override
+//                    public int getOpacity() {
+//                        return PixelFormat.UNKNOWN;
+//                    }
+//                };
+//
+//                Bitmapdrawable = (BitmapDrawable) newDrawable;
+//            }
+//            else
+//            {
+//                Bitmapdrawable = (BitmapDrawable) image.getDrawable();
+//            }
+//            Bitmap bitmap = Bitmapdrawable.getBitmap();
+
+            //bitmap to byte
+            ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bitmapOutputStream);
+            byte[] byteArray = bitmapOutputStream.toByteArray();
+
+            //length of byte array
+            String encoded = Base64.getEncoder().encodeToString(byteArray);
+            int byteLength = encoded.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt( convertPixelsToDpInt(image.getHeight(), instance.mContext));
+            dataOutputStream.writeInt( convertPixelsToDpInt(image.getWidth(), instance.mContext));
+            dataOutputStream.writeInt(byteLength);
+            Log.d(TAG,"bitmap length : "+byteLength);
+//            Log.d(TAG, "bitmap : \n"+encoded);
+            dataOutputStream.writeUTF(encoded);
+
+
+
+
+            dataOutputStream.flush();
+            dtoByteArray = byteArrayOutputStream.toByteArray();
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        }
+
         else if (widgetType.contains("ImageView")) {
 //            Log.d(TAG, "generate_byteArray: this is image view///////");
             ////////////////////////////////////////////////////////////image///////////////////////////////////////////////////////
@@ -881,6 +952,9 @@ public class FLUIDMain {
             dtoByteArray = byteArrayOutputStream.toByteArray();
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
+
+
+
         else if(widgetType.contains("OtherView"))
         {
             View thisView = (View) view;

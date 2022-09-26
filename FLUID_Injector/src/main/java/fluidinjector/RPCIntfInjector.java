@@ -424,7 +424,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		Object[] unitarray = units.toArray();
 		for (int i = 0; i < unitarray.length; i++) {
 			String targetUnit = unitarray[i].toString();
-			if (targetUnit.contains("goto") &&(targetUnit.contains("setText") || targetUnit.contains("setImage")))  {
+			if (!targetUnit.contains("goto") &&(targetUnit.contains("setText") || targetUnit.contains("setImage")))  {
 				System.out.println("found update code : "+targetUnit+"\n"+body.getMethod().toString()+"\n");
 				System.err.println("found update code : "+targetUnit+"\n"+body.getMethod().toString()+"\n");
 				List<Unit> generated = new ArrayList<>();

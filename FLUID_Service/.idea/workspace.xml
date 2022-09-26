@@ -13,7 +13,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51666edf-a32a-4fc2-bc9b-a00a2873453e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/App.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

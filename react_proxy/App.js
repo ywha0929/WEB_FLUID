@@ -477,9 +477,9 @@ class App extends Component {
                 offset +=4;
                 var height = data.readUInt32BE(offset)* 0.728;
                 offset +=4;
-                var X = data.readFloatBE(offset)*0.728;
+                var X = data.readFloatBE(offset);
                 offset +=4;
-                var Y = data.readFloatBE(offset)*0.728;
+                var Y = data.readFloatBE(offset);
                 offset +=4;
                 var layout_Data = {
                     "ID": id,
