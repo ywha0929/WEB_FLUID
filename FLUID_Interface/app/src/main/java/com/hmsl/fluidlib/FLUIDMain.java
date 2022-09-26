@@ -316,7 +316,7 @@ public class FLUIDMain {
                     Log.d(TAG,"Distributing ["+i+"]th Widget");
                     //todo
 //                    runDistribute(thisView.getClass().toString(),thisView);
-                    runDistribute(getViewType(thisView),thisView);
+                    runDistribute(thisView.getClass().toString(),thisView);
 
                 }
                 isChooseMode = 0;
