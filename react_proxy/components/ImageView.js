@@ -23,7 +23,7 @@ class ImageView extends Component{
     }
     render() {
         console.log("ImageView Component");
-        var bitmap = this.state.thisData.Bitmap;
+        var image = this.state.thisData.Image;
         if(this.state.position==="cordinate")
         {
             return (
@@ -35,7 +35,7 @@ class ImageView extends Component{
                         <Image
                             id={this.state.thisData.ID}
                             source={{
-                                uri: `data:image/png;base64,${bitmap}`,
+                                uri: `data:image/png;base64,${image}`,
                                 }} style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}/>
                     </Pressable>
                 </View>

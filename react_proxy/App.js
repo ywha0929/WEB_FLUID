@@ -253,6 +253,21 @@ class App extends Component {
                 offset +=4;
                 var width = data.readUInt32BE(offset)*0.728;
                 offset +=4;
+                var hasImage = data.readUInt32BE(offset);
+                offset +=4;
+                if(hasImage == 1)
+                {
+                    var length = data.readUInt32BE(offset) + 2;
+                    length_bitmap = length;
+                    // console.log(length);
+                    offset += 4;
+                    let temp = data.toString('utf8',offset,data.length);
+                    var image = (''+temp).slice(1);
+                }
+                else
+                {
+                    var image = null;
+                }
                 let UIdata = {
                     "WidgetType": widgetType,
                     "ID": id,
@@ -263,6 +278,7 @@ class App extends Component {
                     "Y": Y,
                     "Height": height,
                     "Width": width,
+                    "Image": image,
                 };
                 let tempArr = this.state.UIList;
                 tempArr.push(UIdata);
@@ -304,7 +320,7 @@ class App extends Component {
                     "WidgetType": widgetType,
                     "ID": id,
                     "Length": length,
-                    "Bitmap": current_bitmap,
+                    "Image": current_bitmap,
                     "Height": height,
                     "Width": width,
                     "Parent_ID": layoutId,

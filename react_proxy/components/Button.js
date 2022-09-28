@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,View,Pressable,Text} from 'react-native';
+import {StyleSheet,View,Pressable,Text,ImageBackground} from 'react-native';
 
 class Button extends Component{
     constructor(props){
@@ -19,6 +19,7 @@ class Button extends Component{
     }
     render() {
         console.log("Button Component");
+        var image = this.state.thisData.Image;
         if(this.state.position==="cordinate") {
             return (
                 <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y,height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
@@ -26,12 +27,16 @@ class Button extends Component{
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}
                         onPressOut={this.onPressOutListener}>
-                        <Text 
-                            style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
-                            id={this.state.thisData.ID}> 
-                                {this.state.thisData.Text} 
-                        </Text>
-                        
+                            <ImageBackground
+                                id={this.state.thisData.ID}
+                                source={{ uri: `data:image/png;base64,${image}`, }} 
+                                style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}>
+                                    <Text 
+                                        style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
+                                        id={this.state.thisData.ID}> 
+                                            {this.state.thisData.Text} 
+                                    </Text>
+                            </ImageBackground>
                     </Pressable>
                 </View>
             )
@@ -43,12 +48,16 @@ class Button extends Component{
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}
                         onPressOut={this.onPressOutListener}>
-                        <Text 
-                            style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
-                            id={this.state.thisData.ID}> 
-                                {this.state.thisData.Text} 
-                        </Text>
-                        
+                            <ImageBackground
+                                id={this.state.thisData.ID}
+                                source={{ uri: `data:image/png;base64,${image}`, }} 
+                                style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}>
+                                    <Text 
+                                        style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
+                                        id={this.state.thisData.ID}> 
+                                            {this.state.thisData.Text} 
+                                    </Text>
+                            </ImageBackground>
                     </Pressable>
                 </View>
             )

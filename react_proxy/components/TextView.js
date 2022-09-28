@@ -1,5 +1,5 @@
 import React, {useState, Component} from 'react';
-import {StyleSheet, View, Text, Pressable} from 'react-native';
+import {StyleSheet, View, Text, Pressable, ImageBackground} from 'react-native';
 
 class TextView extends Component{
     constructor(props){
@@ -24,19 +24,26 @@ class TextView extends Component{
     }
     render() {
         console.log("TextView Component");
+        var image = this.state.thisData.Image;
         if(this.state.position==="cordinate")
         {
+            
             return (
                 <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y, left: this.state.thisData.X, top: this.state.thisData.Y, alignItems:'flex-start'}}>
                     <Pressable style={{alignContent: 'center',   justifyContent: 'center', alignItems: "center", height: this.state.thisData.Height, width: this.state.thisData.Width,}}
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}
                         onPressOut={this.onPressOutListener}>
-                        <Text 
-                            style={{fontSize: this.state.thisData.TextSize, textAlign: 'left', alignContent: 'center', color: 'black',fontWeight: '500'}}
-                            id={this.state.thisData.ID}> 
-                                {this.state.thisData.Text} 
-                        </Text>
+                            <ImageBackground
+                                id={this.state.thisData.ID}
+                                source={{ uri: `data:image/png;base64,${image}`, }} 
+                                style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}>
+                                    <Text 
+                                        style={{fontSize: this.state.thisData.TextSize, textAlign: 'left', alignContent: 'center', color: 'black',fontWeight: '500'}}
+                                        id={this.state.thisData.ID}> 
+                                            {this.state.thisData.Text} 
+                                    </Text>
+                            </ImageBackground>
                         
                     </Pressable>
                     
@@ -54,11 +61,16 @@ class TextView extends Component{
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}
                         onPressOut={this.onPressOutListener}>
-                        <Text  
-                            style={{fontSize: this.state.thisData.TextSize, textAlign: 'left', fontWeight: '500', width: 350}}
-                            id={this.state.thisData.ID}>
-                                {this.state.thisData.Text}
-                        </Text>
+                            <ImageBackground
+                                id={this.state.thisData.ID}
+                                source={{ uri: `data:image/png;base64,${image}`, }} 
+                                style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}>
+                                    <Text  
+                                        style={{fontSize: this.state.thisData.TextSize, textAlign: 'left', fontWeight: '500', width: 350}}
+                                        id={this.state.thisData.ID}>
+                                            {this.state.thisData.Text}
+                                    </Text>
+                            </ImageBackground>
                     </Pressable>
                 </View>
             )

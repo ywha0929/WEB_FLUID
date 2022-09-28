@@ -225,46 +225,68 @@ public class FLUIDMain {
         Class ImageView = ImageView.class;
         String classType="";
 
-        if(view.getClass().toString().contains("android"))
+        if(EditText.isInstance(view))
         {
-            String thisType = view.getClass().toString();
-            if(ImageView.isInstance(view))
-            {
-                classType = ImageView.toString();
-            }
-            else if( !(thisType.equals(EditText.toString()) || thisType.equals(Button.toString()) || thisType.equals(TextView.toString())) )
-            {
-                //treat unsupported TextView child view as custom view
-                classType = "SpecialImageView";
-            }
-            else
-            {
-                classType = thisType;
-            }
+            classType = EditText.toString();
+        }
+        else if(Button.isInstance(view))
+        {
+            classType = Button.toString();
+        }
+        else if(TextView.isInstance(view))
+        {
+            classType = TextView.toString();
+        }
+        else if(ImageView.isInstance(view))
+        {
+            classType = ImageView.toString();
         }
         else
         {
-            if(EditText.isInstance(view))
-            {
-                classType = EditText.toString();
-            }
-            else if(Button.isInstance(view))
-            {
-                classType = Button.toString();
-            }
-            else if(TextView.isInstance(view))
-            {
-                classType = TextView.toString();
-            }
-            else if(ImageView.isInstance(view))
-            {
-                classType = ImageView.toString();
-            }
-            else
-            {
-                classType = "OtherView";
-            }
+            classType = "OtherView";
         }
+
+
+//        if(view.getClass().toString().contains("android"))
+//        {
+//            String thisType = view.getClass().toString();
+//            if(ImageView.isInstance(view))
+//            {
+//                classType = ImageView.toString();
+//            }
+//            else if( !(thisType.equals(EditText.toString()) || thisType.equals(Button.toString()) || thisType.equals(TextView.toString())) )
+//            {
+//                //treat unsupported TextView child view as custom view
+//                classType = "SpecialImageView";
+//            }
+//            else
+//            {
+//                classType = thisType;
+//            }
+//        }
+//        else
+//        {
+//            if(EditText.isInstance(view))
+//            {
+//                classType = EditText.toString();
+//            }
+//            else if(Button.isInstance(view))
+//            {
+//                classType = Button.toString();
+//            }
+//            else if(TextView.isInstance(view))
+//            {
+//                classType = TextView.toString();
+//            }
+//            else if(ImageView.isInstance(view))
+//            {
+//                classType = ImageView.toString();
+//            }
+//            else
+//            {
+//                classType = "OtherView";
+//            }
+//        }
 //
         return classType;
     }
@@ -596,8 +618,9 @@ public class FLUIDMain {
             //stringsize
             //bitmap
             //convert ImageView to bitmap
-            BitmapDrawable drawable = (BitmapDrawable) imview.getDrawable();
-            Bitmap bitmap = drawable.getBitmap();
+//            BitmapDrawable drawable = (BitmapDrawable) imview.getDrawable();
+//            Bitmap bitmap = drawable.getBitmap();
+            Bitmap bitmap = loadBitmapFromView(imview);
 
             //bitmap to byte
             ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
@@ -734,7 +757,9 @@ public class FLUIDMain {
         dataOutputStream.writeInt(view.getId());
         Log.d(TAG,"view.getX : "+view.getX());
         Log.d(TAG,"view.getY : "+view.getY());
-        //Log.d("TAG",""+view.getId());
+        Log.d(TAG,"View BackgroundDrawable"+view.getBackground());
+        Log.d(TAG,"View ForegroundDrawable"+view.getForeground());
+        //Log.d("TAG","View getDrawable"+((ImageView)view).getDrawable());
         dataOutputStream.writeInt(0); //0 for distribute
         dataOutputStream.writeInt(((ViewGroup)view.getParent()).getId());
         //added
@@ -788,7 +813,28 @@ public class FLUIDMain {
             dataOutputStream.writeUTF(btn.getText().toString());
             dataOutputStream.writeInt( convertPixelsToDpInt(btn.getHeight(), instance.mContext));
             dataOutputStream.writeInt( convertPixelsToDpInt(btn.getWidth(), instance.mContext));
+            Drawable back = btn.getBackground();
+            Drawable fore = btn.getForeground();
+            if(back != null || fore != null) //if there is drawable
+            {
+                dataOutputStream.writeInt(1); //there is drawable
+                Bitmap bitmap = loadBitmapFromView(btn);
+                ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bitmapOutputStream);
+                byte[] byteArray = bitmapOutputStream.toByteArray();
 
+                //length of byte array
+                String encoded = Base64.getEncoder().encodeToString(byteArray);
+                int byteLength = encoded.getBytes(StandardCharsets.UTF_8).length;
+                dataOutputStream.writeInt(byteLength);
+                Log.d(TAG,"bitmap length : "+byteLength);
+//              Log.d(TAG, "bitmap : \n"+encoded);
+                dataOutputStream.writeUTF(encoded);
+            }
+            else
+            {
+                dataOutputStream.writeInt(0);
+            }
 //            dataOutputStream.writeInt( btn.getHeight());
 //            dataOutputStream.writeInt( btn.getWidth());
             dataOutputStream.flush();
@@ -808,6 +854,28 @@ public class FLUIDMain {
             dataOutputStream.writeFloat( convertPixelsToDpFloat(edit.getTextSize(), instance.mContext));
             dataOutputStream.writeInt(convertPixelsToDpInt(edit.getHeight(),instance.mContext));
             dataOutputStream.writeInt(convertPixelsToDpInt(edit.getWidth(), instance.mContext));
+            Drawable back = edit.getBackground();
+            Drawable fore = edit.getForeground();
+            if(back != null || fore != null) //if there is drawable
+            {
+                dataOutputStream.writeInt(1); //there is drawable
+                Bitmap bitmap = loadBitmapFromView(edit);
+                ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bitmapOutputStream);
+                byte[] byteArray = bitmapOutputStream.toByteArray();
+
+                //length of byte array
+                String encoded = Base64.getEncoder().encodeToString(byteArray);
+                int byteLength = encoded.getBytes(StandardCharsets.UTF_8).length;
+                dataOutputStream.writeInt(byteLength);
+                Log.d(TAG,"bitmap length : "+byteLength);
+//              Log.d(TAG, "bitmap : \n"+encoded);
+                dataOutputStream.writeUTF(encoded);
+            }
+            else
+            {
+                dataOutputStream.writeInt(0);
+            }
             dataOutputStream.flush();
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
