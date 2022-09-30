@@ -54,7 +54,7 @@ public class RPCIntfInjector extends BodyTransformer {
 //			System.out.println("Thread ID start : "+Thread.currentThread().getId());
 			while(!isFirstDone);
 //			performSecondPassbySignature(b,s,map,threadNum,1);
-//			performSecondPassbyBaseClass(b,s,map,threadNum,0);
+			performSecondPassbyBaseClass(b,s,map,threadNum,0);
 			System.out.println("Thread ID end : "+Thread.currentThread().getId());
 		}
 //		InjectOnActivity(b,s,map);
@@ -380,15 +380,18 @@ public class RPCIntfInjector extends BodyTransformer {
 			System.err.println("this is Library Class : "+declaringClass.toString());
 			return;
 		}
-
-		if(onlyInjectedClass == 1)
+		if(injectedClasses.contains(b.getMethod().getDeclaringClass()))
 		{
-			
+			if(onlyInjectedClass == 1)
+			{
+				
+			}
+			else
+			{
+				injectUpdateCodebyBaseClass((JimpleBody)b);
+			}
 		}
-		else
-		{
-			injectUpdateCodebyBaseClass((JimpleBody)b);
-		}
+		
 	}
 	
 
@@ -529,8 +532,8 @@ public class RPCIntfInjector extends BodyTransformer {
 					
 					//generated.add(Jimple.v().newAssignStmt(viewVar, body.getParameterLocal(0)));
 					Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
-					SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
-					SootField fieldDex = classMainActivity.getFieldByNameUnsafe("dex");
+					SootClass thisActivity = body.getMethod().getDeclaringClass();
+					SootField fieldDex = thisActivity.getFieldByNameUnsafe("dex");
 					if(fieldDex == null)
 					{
 						System.err.println("this class has no dex");
@@ -538,7 +541,7 @@ public class RPCIntfInjector extends BodyTransformer {
 						return;
 					}
 					generated.add(Jimple.v().newAssignStmt(dexLoaderVar, Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
-					SootField fieldFluidInterface = classMainActivity.getFieldByNameUnsafe("objFluidInterface");
+					SootField fieldFluidInterface = thisActivity.getFieldByNameUnsafe("objFluidInterface");
 					if(fieldFluidInterface == null)
 					{
 						System.err.println("this class has no objFluidInterface");
@@ -654,8 +657,8 @@ public class RPCIntfInjector extends BodyTransformer {
 				
 				//generated.add(Jimple.v().newAssignStmt(viewVar, body.getParameterLocal(0)));
 				Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
-				SootClass classMainActivity = (SootClass) arrayClasses[MAINACTIVITY_INDEX];
-				SootField fieldDex = classMainActivity.getFieldByNameUnsafe("dex");
+				SootClass thisClass = body.getMethod().getDeclaringClass();
+				SootField fieldDex = thisClass.getFieldByNameUnsafe("dex");
 				if(fieldDex == null)
 				{
 					System.err.println("this class has no dex");
@@ -663,7 +666,7 @@ public class RPCIntfInjector extends BodyTransformer {
 					return;
 				}
 				generated.add(Jimple.v().newAssignStmt(dexLoaderVar, Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
-				SootField fieldFluidInterface = classMainActivity.getFieldByNameUnsafe("objFluidInterface");
+				SootField fieldFluidInterface = thisClass.getFieldByNameUnsafe("objFluidInterface");
 				if(fieldFluidInterface == null)
 				{
 					System.err.println("this class has no objFluidInterface");

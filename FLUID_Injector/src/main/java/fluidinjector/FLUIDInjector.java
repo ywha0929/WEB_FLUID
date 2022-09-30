@@ -31,9 +31,16 @@ public class FLUIDInjector {
 
         PackManager.v().getPack("jtp").add(
                 new Transform("jtp.RPCIntfInjector", new RPCIntfInjector()));
-        
+        System.out.println("execute runPacks() ...");
+        System.err.println("execute runPacks() ...");
         PackManager.v().runPacks();
+        System.out.println("execute runPacks() ...done");
+        System.err.println("execute runPacks() ...done");
+        System.out.println("execute writeoutput() ...");
+        System.err.println("execute writeoutput() ...");
         PackManager.v().writeOutput();
+        System.out.println("execute writeoutput() ...done");
+        System.err.println("execute writeoutput() ...done");
     }
 
 	static void check(String name) {
