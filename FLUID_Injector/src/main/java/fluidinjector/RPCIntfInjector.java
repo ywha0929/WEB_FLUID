@@ -592,7 +592,8 @@ public class RPCIntfInjector extends BodyTransformer {
 					generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method",
 							"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
 							objectFluidInterfaceVar, objectArrayVar));
-					generated.add(Jimple.v().newReturnVoidStmt());
+//					if(unitarray[i+1].toString().contains("return"))
+//						generated.add(Jimple.v().newReturnVoidStmt());
 					Unit tryEnd = generated.get(generated.size() - 1);
 					CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
 					Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
@@ -611,6 +612,8 @@ public class RPCIntfInjector extends BodyTransformer {
 			
 
 		}
+		System.out.println("Edited code : "+body.getMethod().toString());
+		System.out.println(body.getMethod()+" \n"+body.toString());
 		body.validate();
 
 	}
