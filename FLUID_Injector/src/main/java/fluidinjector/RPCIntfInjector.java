@@ -54,7 +54,11 @@ public class RPCIntfInjector extends BodyTransformer {
 //			System.out.println("Thread ID start : "+Thread.currentThread().getId());
 			while(!isFirstDone);
 //			performSecondPassbySignature(b,s,map,threadNum,1);
-			performSecondPassbyBaseClass(b,s,map,threadNum,0);
+			if(!b.getMethod().toString().contains("init"))
+			{
+				performSecondPassbyBaseClass(b,s,map,threadNum,0);
+			}
+			
 			System.out.println("Thread ID end : "+Thread.currentThread().getId());
 		}
 //		InjectOnActivity(b,s,map);
@@ -600,10 +604,12 @@ public class RPCIntfInjector extends BodyTransformer {
 					generated.add(catchBegin);
 					generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable",
 							"void printStackTrace()", exceptionVar, null));
-					
+					//return at catch
+					//generated.add(Jimple.v().newReturnVoidStmt());
 					SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
 					Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
-					units.insertBefore(generated, units.getSuccOf((Unit)unitarray[i]));
+//					units.insertBefore(generated, units.getSuccOf((Unit)unitarray[i]));
+					units.insertAfter(generated, (Unit) unitarray[i]);
 					body.getTraps().add(trap);
 					
 					
