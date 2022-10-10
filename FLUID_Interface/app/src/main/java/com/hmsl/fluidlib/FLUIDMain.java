@@ -148,6 +148,7 @@ public class FLUIDMain {
     };
 
 
+
     public static FLUIDMain getInstance(Context context) {
         if (instance == null) {
             instance = new FLUIDMain(context);
@@ -596,8 +597,9 @@ public class FLUIDMain {
             //stringsize
             //bitmap
             //convert ImageView to bitmap
-            BitmapDrawable drawable = (BitmapDrawable) imview.getDrawable();
-            Bitmap bitmap = drawable.getBitmap();
+//            BitmapDrawable drawable = (BitmapDrawable) imview.getDrawable();
+//            Bitmap bitmap = drawable.getBitmap();
+            Bitmap bitmap = loadBitmapFromView(imview);
 
             //bitmap to byte
             ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();

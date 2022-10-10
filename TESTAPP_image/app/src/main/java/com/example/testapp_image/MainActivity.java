@@ -1,7 +1,9 @@
 package com.example.testapp_image;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,22 +12,116 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    final String TAG = "[FLUID]TESTAPP_image";
+    private Button back_btn;
+    private Button next_btn;
+    private ImageView imageView;
+    private int state = 0;
 
-    Button back_btn;
-    Button next_btn;
-    ImageView imageView;
-    int state = 0;
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) //landscape screen
+        {
+            setContentView(R.layout.activity_main_landscape);
+            Log.d(TAG,"This is Landscape screen!");
+        }
+        else //portrait screen
+        {
+            setContentView(R.layout.activity_main);
+            Log.d(TAG,"This is Portrait screen!");
+        }
+        super.onConfigurationChanged(newConfig);
+    }
+
+    ////////////////////save InstanceState///////////////////////////////
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSave executed");
+        outState.putInt("state", state);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        state=savedInstanceState.getInt("state");
+        Log.d(TAG,"onRestore executed");
+//        back_btn = findViewById(R.id.button1);
+//        next_btn = findViewById(R.id.button2);
+//        imageView = findViewById(R.id.imageView);
+        if (state == 0) {
+            imageView.setImageResource(R.drawable.pocketmonball);
+        }
+        else if (state == 1) {
+            imageView.setImageResource(R.drawable.stepone);
+        }
+        else if (state == 2) {
+            imageView.setImageResource(R.drawable.steptwo);
+        }
+        else if (state == 3) {
+            imageView.setImageResource(R.drawable.stepthree);
+        }
+//        Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
+
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+    //////////////////////////////////////////////////////////////////////
+
+//    @Override
+//    protected void onResume() {
+//        Log.d(TAG,"onResume executed");
+//        Configuration newConfig = getResources().getConfiguration();
+//        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) //landscape screen
+//        {
+//            setContentView(R.layout.activity_main_landscape);
+//            Log.d(TAG,"This is Landscape screen!");
+//            back_btn = findViewById(R.id.button1);
+//            next_btn = findViewById(R.id.button2);
+//            imageView = findViewById(R.id.imageView);
+//            Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
+//        }
+//        else //portrait screen
+//        {
+//            setContentView(R.layout.activity_main);
+//            Log.d(TAG,"This is Portrait screen!");
+//            back_btn = findViewById(R.id.button1);
+//            next_btn = findViewById(R.id.button2);
+//            imageView = findViewById(R.id.imageView);
+//            Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
+//        }
+//        super.onResume();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final String TAG = "[FLUID]TESTAPP_image";
+
+
+        Log.d(TAG,"onCreate executed");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        back_btn = findViewById(R.id.button1);
-        next_btn = findViewById(R.id.button2);
-        imageView = findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.pocketmonball);
+        Configuration newConfig = getResources().getConfiguration();
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) //landscape screen
+        {
+            setContentView(R.layout.activity_main_landscape);
+            Log.d(TAG,"This is Landscape screen!");
+            back_btn = findViewById(R.id.button3);
+            next_btn = findViewById(R.id.button4);
+            imageView = findViewById(R.id.imageView);
+//            Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
+        }
+        else //portrait screen
+        {
+            setContentView(R.layout.activity_main);
+            Log.d(TAG,"This is Portrait screen!");
+            back_btn = findViewById(R.id.button1);
+            next_btn = findViewById(R.id.button2);
+            imageView = findViewById(R.id.imageView);
+//            Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
+        }
+//        back_btn = findViewById(R.id.button1);
+//        next_btn = findViewById(R.id.button2);
+//        imageView = findViewById(R.id.imageView);
+//        imageView.setImageResource(R.drawable.pocketmonball);
 
         back_btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -98,6 +194,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+//        if (savedInstanceState != null)
+//        {
+//            state = savedInstanceState.getInt("state");
+//            back_btn.setText(state+"");
+//            next_btn.setText(state+"");
+//            imageView.setImage();
+//
+//
+////            private Button back_btn;
+////            private Button next_btn;
+////            private ImageView imageView;
+//        }
 
     }
 
