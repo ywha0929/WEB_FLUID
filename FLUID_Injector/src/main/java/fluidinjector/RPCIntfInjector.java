@@ -38,25 +38,33 @@ public class RPCIntfInjector extends BodyTransformer {
 	
 	@Override
 	protected void internalTransform(Body b, String s, Map<String, String> map) {
-		//System.out.println("Thread ID start: "+Thread.currentThread().getId());
+
 		int threadNum = this.threadNum.getAndIncrement();
 		if(threadNum ==0)
 		{
+			System.out.println("Thread ID start: "+Thread.currentThread().getId());
 			System.out.println("starting first pass");
 			System.err.println("starting first pass");
 			findLeafActivities(Scene.v().getApplicationClasses().toArray());
 			performFirstPass(b,s,map);
+
 			System.out.println("finishing first pass");
 			System.err.println("finishing first pass");
+			System.out.println("Thread ID end : "+Thread.currentThread().getId());
+			isFirstDone = true;
 		}
 		else
 		{
-//			System.out.println("Thread ID start : "+Thread.currentThread().getId());
-			while(!isFirstDone);
-//			performSecondPassbySignature(b,s,map,threadNum,1);
-			if(!b.getMethod().toString().contains("init"))
+			System.out.println("Thread ID created : "+Thread.currentThread().getId());
+			while(!isFirstDone)
 			{
-				performSecondPassbyBaseClass(b,s,map,threadNum,0);
+				System.out.println("Thread ID : "+Thread.currentThread().getId() + "waiting");
+			};
+			System.out.println("Thread ID start : "+Thread.currentThread().getId());
+//			performSecondPassbySignature(b,s,map,threadNum,1);
+			if(!b.getMethod().toString().contains("init") && !b.getMethod().toString().contains("onCreate"))
+			{
+				performSecondPassbyBaseClass(b,s,map,threadNum,1);
 			}
 			
 			System.out.println("Thread ID end : "+Thread.currentThread().getId());
@@ -382,20 +390,28 @@ public class RPCIntfInjector extends BodyTransformer {
 		{
 			System.out.println("this is Library Class : "+declaringClass.toString());
 			System.err.println("this is Library Class : "+declaringClass.toString());
+			System.out.println("this end of performSecondPassbyBaseClass : ");
+			System.err.println("this end of performSecondPassbyBaseClass : ");
 			return;
 		}
-		if(injectedClasses.contains(b.getMethod().getDeclaringClass()))
-		{
-			if(onlyInjectedClass == 1)
-			{
-				
-			}
-			else
+
+		if(onlyInjectedClass == 1) {
+			if(injectedClasses.contains(declaringClass))
 			{
 				injectUpdateCodebyBaseClass((JimpleBody)b);
 			}
+			else if(declaringClass.hasOuterClass() && injectedClasses.contains(declaringClass.getOuterClass())){
+				injectUpdateCodebyBaseClass((JimpleBody)b);
+			}
+			else {
+
+			}
 		}
-		
+		else {
+
+		}
+		System.out.println("this end of performSecondPassbyBaseClass : ");
+		System.err.println("this end of performSecondPassbyBaseClass : ");
 	}
 	
 
@@ -451,6 +467,7 @@ public class RPCIntfInjector extends BodyTransformer {
 	
 	void injectUpdateCodebyBaseClass(JimpleBody body) {
 		UnitPatchingChain units = body.getUnits();
+		Boolean hasUpdateCode = false;
 		// List<Unit> generated = new ArrayList<>();
 		
 //		Local thisVar = body.getThisLocal();
@@ -522,7 +539,12 @@ public class RPCIntfInjector extends BodyTransformer {
 
 				}
 				if(!local.contains("$"))
+				{
+					System.out.println("this is primitive");
+					System.err.println("this is primitive");
 					continue;
+				}
+
 				Type baseType = Base.getType();
 				String baseClassString = baseType.toString();
 				SootClass baseSootClass = Scene.v().getSootClass(baseClassString);
@@ -532,7 +554,9 @@ public class RPCIntfInjector extends BodyTransformer {
 				if (isView(baseSootClass))  {
 					System.out.println("found update code : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
 					System.err.println("found update code : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
+					hasUpdateCode = true;
 					List<Unit> generated = new ArrayList<>();
+					List<Unit> generated_catch = new ArrayList<>();
 					
 					//generated.add(Jimple.v().newAssignStmt(viewVar, body.getParameterLocal(0)));
 					Object[] arrayClasses = Scene.v().getApplicationClasses().toArray();
@@ -597,20 +621,39 @@ public class RPCIntfInjector extends BodyTransformer {
 							"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
 							objectFluidInterfaceVar, objectArrayVar));
 //					if(unitarray[i+1].toString().contains("return"))
-//						generated.add(Jimple.v().newReturnVoidStmt());
-					Unit tryEnd = generated.get(generated.size() - 1);
-					CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
-					Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
-					generated.add(catchBegin);
-					generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable",
-							"void printStackTrace()", exceptionVar, null));
+//					generated.add(Jimple.v().newGotoStmt((Unit)unitarray[i+1]));
+//					Unit tryEnd = generated.get(generated.size() - 1);
+
+//					CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
+
+//					Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
+
+//					generated_catch.add(catchBegin);
+//					generated.add(catchBegin);
+
 					//return at catch
-					//generated.add(Jimple.v().newReturnVoidStmt());
-					SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
-					Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
-//					units.insertBefore(generated, units.getSuccOf((Unit)unitarray[i]));
+//					SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
+
+//					generated_catch.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable",
+//							"void printStackTrace()", exceptionVar, null));
+//					generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable",
+//							"void printStackTrace()", exceptionVar, null));
+//					generated.add(Jimple.v().newReturnVoidStmt());
+
+					//Unit catchEnd = Jimple.v().newReturnVoidStmt();
+					//generated.add(catchEnd);
+//					generated.add(Jimple.v().newBreakpointStmt());
+
+//					Unit returnStmt = (Unit) ((Unit)unitarray[i+1]).clone();
+//					units.insertBefore(returnStmt, (Unit) unitarray[i+1]);
 					units.insertAfter(generated, (Unit) unitarray[i]);
-					body.getTraps().add(trap);
+//					units.insertBefore(generated_catch, units.getLast());
+//					Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
+//					units.insertBefore(generated, units.getSuccOf((Unit)unitarray[i]));
+
+//					body.getTraps().add(trap);
+//					System.out.println("trap : "+trap.toString());
+
 					
 					
 				}
@@ -618,6 +661,69 @@ public class RPCIntfInjector extends BodyTransformer {
 			
 
 		}
+
+		//wrap entire code with try catch
+		if(hasUpdateCode == true)
+		{
+			Unit tryBegin = units.getFirst();
+			Unit tryEnd = units.getLast();
+
+			CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
+
+			Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
+
+//					generated_catch.add(catchBegin);
+			units.add(catchBegin);
+
+			//return at catch
+			SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
+
+//					generated_catch.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable",
+//							"void printStackTrace()", exceptionVar, null));
+			units.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable",
+					"void printStackTrace()", exceptionVar, null));
+
+			Type returnType = body.getMethod().getReturnType();
+			SootClass returnTypeClass = Scene.v().getSootClass(returnType.toString());
+			SootClass returnTypeSuperClass = returnTypeClass;
+			Boolean isReturnTypeRef = false;
+			//search if return type is child class of Object
+			while(returnTypeSuperClass.hasSuperclass())
+			{
+				returnTypeSuperClass = returnTypeSuperClass.getSuperclass();
+				if(returnTypeSuperClass.toString().contains("Object"))
+				{
+					isReturnTypeRef = true;
+				}
+
+			}
+			if(returnType.equals(VoidType.v())) //void type
+			{
+				units.addLast(Jimple.v().newReturnVoidStmt());
+			}
+			else if(returnTypeClass.toString().contains("String"))
+			{
+				units.addLast(Jimple.v().newReturnStmt(StringConstant.v("")));
+			}
+			else if(isReturnTypeRef) //other ref type
+			{
+				units.addLast(Jimple.v().newReturnStmt(NullConstant.v()));
+			}
+			else
+			{
+				units.addLast(Jimple.v().newReturnStmt(IntConstant.v(0)));
+			}
+
+
+			Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
+//					units.insertBefore(generated, units.getSuccOf((Unit)unitarray[i]));
+
+			body.getTraps().add(trap);
+		}
+
+
+
+
 		System.out.println("Edited code : "+body.getMethod().toString());
 		System.out.println(body.getMethod()+" \n"+body.toString());
 		body.validate();
@@ -750,6 +856,8 @@ public class RPCIntfInjector extends BodyTransformer {
 				generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method",
 						"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
 						objectFluidInterfaceVar, objectArrayVar));
+//				generated.add(Jimple.v().newGotoStmt(units.getLast()));
+
 				generated.add(Jimple.v().newReturnVoidStmt());
 				Unit tryEnd = generated.get(generated.size() - 1);
 				CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
@@ -1368,6 +1476,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method",
 				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
 				objectFluidInterfaceVar, NullConstant.v()));
+//		generated.add(Jimple.v().newGotoStmt(units.getLast()));
 		// generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
 		// insert new code
 		units.insertBefore(generated, units.getLast());
