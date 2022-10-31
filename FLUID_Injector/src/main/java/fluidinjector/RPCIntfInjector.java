@@ -249,24 +249,28 @@ public class RPCIntfInjector extends BodyTransformer {
 			
 			if(onCreate == null)
 			{
-				System.err.println("this activity class has no onCreate method");
-				System.out.println("this activity class has no onCreate method");
+				System.err.println("this activity class("+thisClass.toString()+ ") has no onCreate method");
+				System.out.println("this activity class("+thisClass.toString()+ ") has no onCreate method");
 				addOnCreate(thisClass);
 			}
 			else
 			{
+				System.err.println("this activity class("+thisClass.toString()+ ") has onCreate method");
+				System.out.println("this activity class("+thisClass.toString()+ ") has onCreate method");
 				Body onCreateBody = onCreate.getActiveBody();
 				injectOnCreate((JimpleBody)onCreateBody,thisClass);
 			}
 			SootMethod dispatchTouchEvent = thisClass.getMethodByNameUnsafe("dispatchTouchEvent");
 			if(dispatchTouchEvent == null)
 			{
-				System.err.println("this activity class has no dispatchTouchEvent method");
-				System.out.println("this activity class has no dispatchTouchEvent method");
+				System.err.println("this activity class("+thisClass.toString()+ ") has no dispatchTouchEvent method");
+				System.out.println("this activity class("+thisClass.toString()+ ") has no dispatchTouchEvent method");
 				addDispatchTouchEvent(thisClass);
 			}
 			else
 			{
+				System.err.println("this activity class("+thisClass.toString()+ ") has dispatchTouchEvent method");
+				System.out.println("this activity class("+thisClass.toString()+ ") has dispatchTouchEvent method");
 				Body dispatchTouchEventBody = dispatchTouchEvent.getActiveBody();
 				editDispatchTouchEvent((JimpleBody)dispatchTouchEventBody,thisClass);
 			}
@@ -364,23 +368,23 @@ public class RPCIntfInjector extends BodyTransformer {
 		{
 			if(injectedClasses.contains(b.getMethod().getDeclaringClass()))
 			{
-				System.out.println("injecting Update code : "+b.getMethod().toString());
-				System.err.println("injecting Update code : "+b.getMethod().toString());
+				System.out.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString());
+				System.err.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString());
 				injectUpdateCodebySignature((JimpleBody)b);
 			}
 			else
 			{
-				System.out.println("not injecting Update code : "+b.getMethod().toString());
-				System.err.println("not injecting Update code : "+b.getMethod().toString());
+				System.out.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString());
+				System.err.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString());
 			}
 		}
 		else
 		{
-			System.out.println("injecting Update code : "+b.getMethod().toString());
-			System.err.println("injecting Update code : "+b.getMethod().toString());
+			System.out.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString());
+			System.err.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString());
 			injectUpdateCodebySignature((JimpleBody)b);
-			System.out.println("injecting Update code : "+b.getMethod().toString()+"...done");
-			System.err.println("injecting Update code : "+b.getMethod().toString()+"...done");
+			System.out.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString()+"...done");
+			System.err.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString()+"...done");
 		}
 	}
 	void performSecondPassbyBaseClass(Body b, String s, Map<String, String> map,int threadNum,int onlyInjectedClass)
@@ -1224,7 +1228,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		Local thisClassVar = InstrumentUtil.generateNewLocal(newBody, RefType.v("java.lang.Class"));
 		units.addAll(InstrumentUtil.generateVirtualInvokeStmt(newBody, "java.lang.Object", "java.lang.Class getClass()", thisVar, thisClassVar));
 		units.addAll(InstrumentUtil.generateLogStmts(newBody, "onCreate of : ", thisClassVar));
-		
+		units.addAll(InstrumentUtil.generateLogStmts(newBody,"Method Invocation check"+newBody.getMethod().toString()));
 		
 		
 		
@@ -1405,7 +1409,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		
 		//TODO: override dispatchTouchEvent
 		
-		
+		generated.addAll(InstrumentUtil.generateLogStmts(body,"Method Invocation check"+body.getMethod().toString()));
 		
 		// create DexClassLoader instance
 		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Object",
