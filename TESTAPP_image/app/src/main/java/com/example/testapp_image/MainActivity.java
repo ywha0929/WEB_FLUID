@@ -11,7 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
     final String TAG = "[FLUID]TESTAPP_image";
     private Button back_btn;
     private Button next_btn;
@@ -19,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private int state = 0;
 
     @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig)
+    {
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) //landscape screen
         {
             setContentView(R.layout.activity_main_landscape);
@@ -33,73 +35,51 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    ////////////////////save InstanceState///////////////////////////////
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState)
+    {
         super.onSaveInstanceState(outState);
         Log.d(TAG,"onSave executed");
         outState.putInt("state", state);
     }
 
     @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState)
+    {
         state=savedInstanceState.getInt("state");
         Log.d(TAG,"onRestore executed");
-//        back_btn = findViewById(R.id.button1);
-//        next_btn = findViewById(R.id.button2);
-//        imageView = findViewById(R.id.imageView);
-        if (state == 0) {
+
+        if (state == 0)
+        {
             imageView.setImageResource(R.drawable.pocketmonball);
         }
-        else if (state == 1) {
+        else if (state == 1)
+        {
             imageView.setImageResource(R.drawable.stepone);
         }
-        else if (state == 2) {
+        else if (state == 2)
+        {
             imageView.setImageResource(R.drawable.steptwo);
         }
-        else if (state == 3) {
+        else if (state == 3)
+        {
             imageView.setImageResource(R.drawable.stepthree);
         }
-//        Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
 
         super.onRestoreInstanceState(savedInstanceState);
     }
-    //////////////////////////////////////////////////////////////////////
 
-//    @Override
-//    protected void onResume() {
-//        Log.d(TAG,"onResume executed");
-//        Configuration newConfig = getResources().getConfiguration();
-//        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) //landscape screen
-//        {
-//            setContentView(R.layout.activity_main_landscape);
-//            Log.d(TAG,"This is Landscape screen!");
-//            back_btn = findViewById(R.id.button1);
-//            next_btn = findViewById(R.id.button2);
-//            imageView = findViewById(R.id.imageView);
-//            Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
-//        }
-//        else //portrait screen
-//        {
-//            setContentView(R.layout.activity_main);
-//            Log.d(TAG,"This is Portrait screen!");
-//            back_btn = findViewById(R.id.button1);
-//            next_btn = findViewById(R.id.button2);
-//            imageView = findViewById(R.id.imageView);
-//            Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
-//        }
-//        super.onResume();
-//    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    protected void onCreate(Bundle savedInstanceState)
+    {
 
         Log.d(TAG,"onCreate executed");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Configuration newConfig = getResources().getConfiguration();
+
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) //landscape screen
         {
             setContentView(R.layout.activity_main_landscape);
@@ -107,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
             back_btn = findViewById(R.id.button3);
             next_btn = findViewById(R.id.button4);
             imageView = findViewById(R.id.imageView);
-//            Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
         }
         else //portrait screen
         {
@@ -116,16 +95,13 @@ public class MainActivity extends AppCompatActivity {
             back_btn = findViewById(R.id.button1);
             next_btn = findViewById(R.id.button2);
             imageView = findViewById(R.id.imageView);
-//            Log.d(TAG,"back_btn hasOnClickListeners : " + back_btn.hasOnClickListeners());
         }
-//        back_btn = findViewById(R.id.button1);
-//        next_btn = findViewById(R.id.button2);
-//        imageView = findViewById(R.id.imageView);
-//        imageView.setImageResource(R.drawable.pocketmonball);
+
 
         back_btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public boolean onLongClick(View view)
+            {
                 Log.d(TAG,"onLongClick invoked");
                 return true;
             }
@@ -141,7 +117,8 @@ public class MainActivity extends AppCompatActivity {
 
         imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public boolean onLongClick(View view)
+            {
                 Log.d(TAG,"onLongClick invoked");
                 return true;
             }
@@ -149,22 +126,28 @@ public class MainActivity extends AppCompatActivity {
 
         next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 Log.d(TAG,"onClick invoked");
                 state++;
-                if (state == 0) {
+                if (state == 0)
+                {
                     imageView.setImageResource(R.drawable.pocketmonball);
                 }
-                else if (state == 1) {
+                else if (state == 1)
+                {
                     imageView.setImageResource(R.drawable.stepone);
                 }
-                else if (state == 2) {
+                else if (state == 2)
+                {
                     imageView.setImageResource(R.drawable.steptwo);
                 }
-                else if (state == 3) {
+                else if (state == 3)
+                {
                     imageView.setImageResource(R.drawable.stepthree);
                 }
-                else {
+                else
+                {
                     state=3;
                     Toast.makeText(getApplicationContext(), "This is the last image.", Toast.LENGTH_SHORT).show();
                 }
@@ -174,39 +157,33 @@ public class MainActivity extends AppCompatActivity {
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 state--;
-                if (state == 0) {
+                if (state == 0)
+                {
                     imageView.setImageResource(R.drawable.pocketmonball);
                 }
-                else if (state == 1) {
+                else if (state == 1)
+                {
                     imageView.setImageResource(R.drawable.stepone);
                 }
-                else if (state == 2) {
+                else if (state == 2)
+                {
                     imageView.setImageResource(R.drawable.steptwo);
                 }
-                else if (state == 3) {
+                else if (state == 3)
+                {
                     imageView.setImageResource(R.drawable.stepthree);
                 }
-                else {//if state < 0
+                else
+                { //if state < 0
                     state=0;
                     Toast.makeText(getApplicationContext(), "This is the first image.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-//        if (savedInstanceState != null)
-//        {
-//            state = savedInstanceState.getInt("state");
-//            back_btn.setText(state+"");
-//            next_btn.setText(state+"");
-//            imageView.setImage();
-//
-//
-////            private Button back_btn;
-////            private Button next_btn;
-////            private ImageView imageView;
-//        }
 
     }
 

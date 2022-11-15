@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -66,6 +67,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class FLUIDMain {
@@ -81,6 +83,9 @@ public class FLUIDMain {
     private ArrayList<Layout_Tree> layout_trees = new ArrayList<>();
     private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
     private Map<Integer,Object> listBorder = new HashMap<>();
+    private ArrayList<Widget> listPortraitWidget = new ArrayList<>();
+    private ArrayList<Widget> listLandscapeWidget = new ArrayList<>();
+    private Map<Integer,Integer> matchIds = new HashMap<>();
     private final IBinder mBinder = new IReverseConnection.Stub() {
         @Override
         public void doCheck(String msg) throws RemoteException {
@@ -130,7 +135,8 @@ public class FLUIDMain {
                 @Override
                 public void run() {
 
-                    int ID = bundle.getInt("ID");
+                    int ID_temp = bundle.getInt("ID");
+                    int ID = getRealID(ID_temp);
                     MotionEvent motionEvent = bundle.getParcelable("motionevent");
                     View view = (View) activity.findViewById(ID);
 
@@ -147,7 +153,102 @@ public class FLUIDMain {
 
     };
 
+    public int getRealID(int tempID)
+    {
 
+        if(instance.mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            for(int i = 0; i< listPortraitWidget.size(); i++)
+            {
+                if(listPortraitWidget.get(i).id == tempID)
+                {
+
+                    return tempID;
+                }
+            } //id not found
+        }
+        else
+        {
+            for(int i = 0; i< listLandscapeWidget.size();i++)
+            {
+                if(listLandscapeWidget.get(i).id == tempID)
+                {
+
+                    return tempID;
+                }
+            } //id not found
+        }
+        /////////////////////////////////////todo UI match
+        //already match
+        if (matchIds.containsKey(tempID))
+        {
+            return matchIds.get(tempID);
+        }
+        //not match, make new match, save
+        else
+        {
+            //text 일치
+            Activity activity = (Activity) instance.mContext;
+            ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().getRootView();
+            List<View> listLeafNodes = getLeafNode(root);
+            View targetView = activity.findViewById(tempID);
+
+//            for(int i=0; i<listLeafNodes.size(); i++)
+//            {
+//                View tempView = listLeafNodes.get(i);
+//                if(tempView.equals(targetView))
+//                {
+//                    return targetView.getId();
+//                }
+//            }
+
+            Class classTextView = TextView.class;
+            if(classTextView.isInstance(targetView)){
+                TextView targetTextView = (TextView)targetView;
+                for(int i=0; i<listLeafNodes.size(); i++)
+                {
+                    View tempView = listLeafNodes.get(i);
+                    if(classTextView.isInstance(tempView)){
+                        TextView tempTextView = (TextView)tempView;
+                        if(targetTextView.getText().equals(tempTextView.getText())) {
+                            matchIds.put(tempTextView.getId(), targetTextView.getId());
+                            matchIds.put( targetTextView.getId(), tempTextView.getId());
+                            return tempTextView.getId();
+                        }
+                    }
+                }
+                Log.d(TAG,"Unable to Find Matching TextView");
+            }
+            //image 유사
+            else {
+
+            }
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        return 0;
+    }
+
+    public static List<View> getLeafNode(ViewGroup root) {
+        List<View> Queue = new ArrayList<>();
+        List<View> leafNodes = new ArrayList<>();
+        Queue.add(root);
+        while (!Queue.isEmpty()) {
+            View node = Queue.get(0);
+            Queue.remove(0);
+            Class classViewGroup = ViewGroup.class;
+            if (classViewGroup.isInstance(node)) {
+                ViewGroup parentNode = (ViewGroup) node;
+                int childCount = parentNode.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    Queue.add(parentNode.getChildAt(i));
+                }
+            } else {//leaf node
+                leafNodes.add(node);
+            }
+        }
+        return leafNodes;
+    }
 
     public static FLUIDMain getInstance(Context context) {
         if (instance == null) {
@@ -444,6 +545,42 @@ public class FLUIDMain {
             {
                 parent.setId(View.generateViewId());
             }
+            Widget widgetInfo;
+            if(TextView.class.isInstance(view))
+            {
+                if(view.getForeground() != null || view.getBackground() != null)
+                {
+                    widgetInfo = new Widget(view.getId(),view.getClass().toString(),((TextView)view).getText().toString(),loadBitmapFromView(view));
+
+                }
+                else
+                {
+                    widgetInfo = new Widget(view.getId(),view.getClass().toString(),((TextView)view).getText().toString(),null);
+                }
+            }
+            else
+            {
+                if(view.getClass().toString().contains("ImageView"))
+                {
+                    widgetInfo = new Widget(view.getId(),view.getClass().toString(),null,loadBitmapFromView(view));
+                }
+                else
+                {
+                    widgetInfo = new Widget(view.getId(),view.getClass().toString(),null,null);
+                }
+            }
+            if(instance.mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            {
+                listPortraitWidget.add(widgetInfo);
+            }
+            else
+            {
+                listLandscapeWidget.add(widgetInfo);
+            }
+
+
+
+
             Log.d(TAG, "runDistribute : ID, Type : " + view.getId()+", " +view.getClass().toString());
             Log.d(TAG, "runDistribute : widgetType : "+widgetType);
             byte[] layout = generate_lbyteArray(view);
@@ -453,6 +590,35 @@ public class FLUIDMain {
 //            Log.d(TAG,"runDistribute : "+widgetType);
             bundle.putByteArray("layout", layout);
             bundle.putByteArray("widget", widget);
+
+            //Create Bundle for Service
+            Bundle Widget_Info = new Bundle();
+            Widget_Info.putInt("ID",view.getId());
+            Widget_Info.putString("Type",view.getClass().toString());
+            Class TextViewClass = TextView.class;
+            if(TextViewClass.isInstance(view))
+            {
+                Widget_Info.putString("Text",((TextView)view).getText().toString());
+            }
+            else
+            {
+                Widget_Info.putString("Text",null);
+            }
+
+            if(view.getForeground() != null || view.getBackground() != null || view.getClass().toString().contains("ImageView"))
+            {
+                ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
+                (loadBitmapFromView(view)).compress(Bitmap.CompressFormat.JPEG, 10, bitmapOutputStream);
+                byte[] byteArray = bitmapOutputStream.toByteArray();
+                Widget_Info.putByteArray("Image",byteArray);
+            }
+            else
+            {
+                Widget_Info.putByteArray("Image",null);
+            }
+
+            bundle.putBundle("Compare",Widget_Info);
+
             Log.d(TAG, "runDistribute send to service: " + getTS());
             if(widgetType.contains("TextView") || widgetType.contains("EditText"))
             {
@@ -965,13 +1131,43 @@ class Layout_Tree {
     ArrayList<Widget_Location> Widget_List = new ArrayList<Widget_Location>();
 
 }
-class Widget_Location {
-    int Widget_ID;
-    float Widget_X;
-    float Widget_Y;
-    public Widget_Location(int ID, float X, float Y) {
-        this.Widget_ID = ID;
-        this.Widget_X = X;
-        this.Widget_Y = Y;
+    class Widget_Location {
+        int Widget_ID;
+        float Widget_X;
+        float Widget_Y;
+        public Widget_Location(int ID, float X, float Y) {
+            this.Widget_ID = ID;
+            this.Widget_X = X;
+            this.Widget_Y = Y;
+    }
+
+}
+class Widget {
+    int id=0;
+    String type = "";
+    String Text = "";
+    Bitmap Image = null;
+    public Widget(int id, String type, String Text, Bitmap Image)
+    {
+        this.id = id;
+        this.type = type;
+
+        if(Text == null)
+        {
+            this.Text = null;
+        }
+        else
+        {
+            this.Text = Text;
+        }
+
+        if(Image == null)
+        {
+            this.Image = null;
+        }
+        else
+        {
+            this.Image = Image;
+        }
     }
 }

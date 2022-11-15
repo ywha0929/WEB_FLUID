@@ -5,6 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -57,7 +60,8 @@ public class FLUIDManagerService extends Service {
     Socket socket;
     //
     private ArrayList<Integer> id_list = new ArrayList<>();
-
+//    private ArrayList<Widget> widget_list_portrait = new ArrayList<>();
+//    private ArrayList<Widget> widget_list_Landscape = new ArrayList<>();
     private final IBinder mBinder = new IFLUIDService.Stub() {
         // distribute
 
@@ -359,6 +363,13 @@ public class FLUIDManagerService extends Service {
 
                     try {
                         byte[] widget = bundle.getByteArray("widget");
+//                        Bundle UIData = bundle.getBundle("Compare");
+//                        Widget widgetInfo = new Widget(UIData.getInt("ID"), UIData.getString("Type"), UIData.getString("Text"), BitmapFactory.decodeByteArray(UIData.getByteArray("Image"),0,UIData.getByteArray("Image").length) );
+//                        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+//                            widget_list_portrait.add(widgetInfo);
+//                        else
+//                            widget_list_Landscape.add(widgetInfo);
+                        //widget_list.add(widgetInfo);
                         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(widget);
                         DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
                         int id = dataInputStream.readInt();
@@ -454,8 +465,8 @@ public class FLUIDManagerService extends Service {
 //                        JSONParser jsonParser = new JSONParser();
 //                        JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
 //
-//                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-//                        objectOutputStream.writeObject(jsonObject);
+//                        ObjectOutputStream objectOutputStreaew ObjectOutputStream(socket.getOutputStream());
+//                        objectOutputStream.writeObject(jsonObjem = nct);
 //                        objectOutputStream.flush();
                         //Log.e(TAG, "JsonObject 전송 성공");
                     } catch (Exception e) {
@@ -474,4 +485,6 @@ public class FLUIDManagerService extends Service {
         String ts = tsLong.toString();
         return ts;
     }
+
 }
+

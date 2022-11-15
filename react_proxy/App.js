@@ -167,7 +167,8 @@ class App extends Component {
     //         }
     //     }
         
-    // }
+    // } 
+
     handleData(data) {
         console.log("handle data invocated");
         

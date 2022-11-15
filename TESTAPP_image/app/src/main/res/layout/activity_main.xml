@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-sdsadsadc
+
     <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@ sdsadsadc
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="350dp"
-            android:layout_height="542dp"
+            android:layout_height="540dp"
             app:srcCompat="@drawable/pocketmonball" />
 
     </LinearLayout>
