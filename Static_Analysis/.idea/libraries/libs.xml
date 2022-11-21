@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/okhttp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/annotations.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/legacy-test.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/conscrypt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/framework.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/animal-sniffer-annotations-1.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/core-oj.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/org.apache.http.legacy.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/ext.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/bouncycastle.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/sootclasses-trunk-jar-with-dependencies.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/core-libart.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jsr305.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

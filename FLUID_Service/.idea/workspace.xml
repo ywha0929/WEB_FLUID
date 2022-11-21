@@ -13,20 +13,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51666edf-a32a-4fc2-bc9b-a00a2873453e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/output/com.simplemobiletools.calculator_5.8.2-51_minAPI21(nodpi)_apkmirror.com-dex2jar.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/output/com.simplemobiletools.calculator_5.8.2-51_minAPI21(nodpi)_apkmirror.com.apk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/InstrumentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/InstrumentUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Proxy/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Proxy/.gradle/7.0.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Proxy/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Proxy/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Proxy/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Proxy/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../react_proxy/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/App.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[08191JEC212484]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[13201FDD40024R]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -75,7 +92,7 @@
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="cidr.known.project.marker" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../FLUID_Interface" />
+    <property name="last_opened_file_path" value="$USER_HOME$/SootTutorial/demo/Android/STDemoApp" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />

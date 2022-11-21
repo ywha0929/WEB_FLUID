@@ -529,12 +529,16 @@ public class FLUIDMain {
 
         // method 변수 : method 이름만 들어감(ex.setTextSize)
         // paramter[] : method 다음 괄호 안에 parameter type이 차례로 배열에 들어감.
+        //Log.d(TAG,"RunUpdate : sb is - "+sb.toString());
         StringTokenizer st2 = new StringTokenizer(sb.toString(), "(,)");
         String method = st2.nextToken();
         String[] parameterType = new String[i];
 
         for (int j = 0; j < i; j++) {
-            parameterType[j] = st2.nextToken();
+            if(st2.hasMoreTokens())
+                parameterType[j] = st2.nextToken();
+            else
+                break;
         }
 
         // <???> 다음 괄호 안 파라미터 인수들 처리
@@ -545,8 +549,13 @@ public class FLUIDMain {
         //params[j].getClass() -> Wrapper class 형식
         //params[j] parameter 그대로 잘 나옴.
         for (int j = 0; j < i; j++) {
-            parameter[j] = st3.nextToken();
-            params[j] = setType(parameterType[j], parameter[j]);
+            if(st3.hasMoreTokens())
+            {
+                parameter[j] = st3.nextToken();
+                params[j] = setType(parameterType[j], parameter[j]);
+            }
+            else
+                break;
         }
 
         Bundle bundle = new Bundle();
@@ -581,7 +590,11 @@ public class FLUIDMain {
     }
 
     public static int setTypeFlag(Object param) {
-        String type = param.getClass().toString();
+        String type;
+        if(!(param==null))
+            type = param.getClass().toString();
+        else
+            type = "null";
         //Log.d("TAG",param.getClass().toString());
         if (type.contains("Float")) {
             return 1;
