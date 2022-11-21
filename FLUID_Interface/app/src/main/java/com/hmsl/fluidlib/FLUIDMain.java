@@ -83,9 +83,9 @@ public class FLUIDMain {
     private ArrayList<Layout_Tree> layout_trees = new ArrayList<>();
     private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
     private Map<Integer,Object> listBorder = new HashMap<>();
-    private ArrayList<Widget> listPortraitWidget = new ArrayList<>();
-    private ArrayList<Widget> listLandscapeWidget = new ArrayList<>();
-    private Map<Integer,Integer> matchIds = new HashMap<>();
+    private  ArrayList<Widget> listPortraitWidget = new ArrayList<>();
+    private  ArrayList<Widget> listLandscapeWidget = new ArrayList<>();
+    private  Map<Integer,Integer> matchIds = new HashMap<>();
     private final IBinder mBinder = new IReverseConnection.Stub() {
         @Override
         public void doCheck(String msg) throws RemoteException {
@@ -139,7 +139,10 @@ public class FLUIDMain {
                     int ID = getRealID(ID_temp);
                     MotionEvent motionEvent = bundle.getParcelable("motionevent");
                     View view = (View) activity.findViewById(ID);
-
+                    Log.d(TAG, "////////////////////////////////////////////////////////////////////");
+                    Log.d(TAG,"Before ID : "+ID_temp);
+                    Log.d(TAG,"After ID : "+ID);
+                    Log.d(TAG, "////////////////////////////////////////////////////////////////////");
                     view.dispatchTouchEvent(motionEvent);
 
 //                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getParcelable("motionevent"),
@@ -155,14 +158,15 @@ public class FLUIDMain {
 
     public int getRealID(int tempID)
     {
-
+        Log.d(TAG, "getRealID: listPortrait Size : "+instance.listPortraitWidget.size());
+        Log.d(TAG, "getRealID: listLadscape Size : "+instance.listLandscapeWidget.size());
         if(instance.mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
             for(int i = 0; i< listPortraitWidget.size(); i++)
             {
                 if(listPortraitWidget.get(i).id == tempID)
                 {
-
+                    Log.d(TAG, "getRealID: Vertical to Vertical");
                     return tempID;
                 }
             } //id not found
@@ -173,15 +177,16 @@ public class FLUIDMain {
             {
                 if(listLandscapeWidget.get(i).id == tempID)
                 {
-
+                    Log.d(TAG, "getRealID: Horizontal to Horizontal");
                     return tempID;
                 }
             } //id not found
         }
-        /////////////////////////////////////todo UI match
+        /////////////////////////////////////todo UI match ////////////////////////////////////////////////
         //already match
         if (matchIds.containsKey(tempID))
         {
+            Log.d(TAG, "getRealID: Already Match");
             return matchIds.get(tempID);
         }
         //not match, make new match, save
@@ -191,7 +196,29 @@ public class FLUIDMain {
             Activity activity = (Activity) instance.mContext;
             ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().getRootView();
             List<View> listLeafNodes = getLeafNode(root);
-            View targetView = activity.findViewById(tempID);
+//            View targetView = activity.findViewById(tempID);
+            Widget widget = null;
+            Log.d(TAG, "getRealID: listPortrait sized " + listPortraitWidget.size());
+            for(int i = 0; i< listPortraitWidget.size(); i++)
+            {
+                Log.d(TAG, "getRealID: listPorttrait "+listPortraitWidget.get(i).id);
+                if(listPortraitWidget.get(i).id == tempID)
+                {
+                    Log.d(TAG, "getRealID: Vertical to Vertical");
+                    widget = listPortraitWidget.get(i);
+                }
+            } //id not found
+            for(int i = 0; i< listLandscapeWidget.size();i++)
+            {
+                Log.d(TAG, "getRealID: listLandscape " + listLandscapeWidget.get(i).id);
+                if(listLandscapeWidget.get(i).id == tempID)
+                {
+                    Log.d(TAG, "getRealID: Horizontal to Horizontal");
+                    widget = listLandscapeWidget.get(i);
+                }
+            }
+
+
 
 //            for(int i=0; i<listLeafNodes.size(); i++)
 //            {
@@ -202,17 +229,23 @@ public class FLUIDMain {
 //                }
 //            }
 
-            Class classTextView = TextView.class;
-            if(classTextView.isInstance(targetView)){
-                TextView targetTextView = (TextView)targetView;
+            Class classTextView = Button.class;
+//            Log.d(TAG, "getRealID: "+targetView);
+//            Log.d(TAG, "getRealID: "+ classTextView.isInstance(targetView));
+            if(widget.type.contains("button")){
+                Log.d(TAG, "getRealID: targetView is TextView");
+//                TextView targetTextView = (TextView)targetView;
                 for(int i=0; i<listLeafNodes.size(); i++)
                 {
                     View tempView = listLeafNodes.get(i);
                     if(classTextView.isInstance(tempView)){
+                        Log.d(TAG, "getRealID: tempView is TextView");
                         TextView tempTextView = (TextView)tempView;
-                        if(targetTextView.getText().equals(tempTextView.getText())) {
-                            matchIds.put(tempTextView.getId(), targetTextView.getId());
-                            matchIds.put( targetTextView.getId(), tempTextView.getId());
+                        if(widget.Text.equals(tempTextView.getText().toString())) {
+
+                            matchIds.put(tempTextView.getId(), widget.id);
+                            matchIds.put(widget.id, tempTextView.getId());
+                            Log.d(TAG, "getRealID: found match");
                             return tempTextView.getId();
                         }
                     }
@@ -225,7 +258,7 @@ public class FLUIDMain {
             }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        Log.d(TAG, "getRealID: Unable to find Match");
         return 0;
     }
 
@@ -251,6 +284,7 @@ public class FLUIDMain {
     }
 
     public static FLUIDMain getInstance(Context context) {
+        Log.d(TAG,"********************Instance*************** : " + instance);
         if (instance == null) {
             instance = new FLUIDMain(context);
         }
@@ -571,11 +605,15 @@ public class FLUIDMain {
             }
             if(instance.mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             {
-                listPortraitWidget.add(widgetInfo);
+                Log.d(TAG, "runDistribute: added Portrait " + widgetInfo.id);
+                instance.listPortraitWidget.add(widgetInfo);
+                Log.d(TAG, "runDistribute: Portrait Size " + listPortraitWidget.size());
             }
             else
             {
-                listLandscapeWidget.add(widgetInfo);
+                Log.d(TAG, "runDistribute: added landscape " + widgetInfo.id);
+                instance.listLandscapeWidget.add(widgetInfo);
+                Log.d(TAG, "runDistribute: Landsacpe Size " + listLandscapeWidget.size());
             }
 
 

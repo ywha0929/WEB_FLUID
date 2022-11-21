@@ -227,7 +227,7 @@ public class FLUIDManagerService extends Service {
                     //Log.d(TAG,"motion getX : "+motionEvent.getX());
                     //Log.d(TAG,"motion getY : "+motionEvent.getY());
                     //if (typeEvent == 1)
-                        //mRemoteService.reverseMotionEvent(bundle);
+//                        mRemoteService.reverseMotionEvent(bundle);
                     long down_time=0;
                     if(typeEvent == 1)
                     {
