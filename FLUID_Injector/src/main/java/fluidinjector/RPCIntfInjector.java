@@ -392,7 +392,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			
 		}
 		
-		if (b.getMethod().getName().equals("onCreate")) {
+		if (b.getMethod().getName().equals("onResume")) {
 			System.out.println("==== before ====");
 			System.out.println(b);
 			injectOnCreate((JimpleBody) b);
