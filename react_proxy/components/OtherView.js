@@ -10,16 +10,16 @@ class OtherView extends Component{
         };
     };
     onPressInListener = (e) => {
-        console.log("onPressInListener of OtherView");
+        console.log(Date.now()," : ","onPressInListener of OtherView");
         this.props.onPressInListener(e);
     }
     onPressOutListener = (e) => {
-        console.log("onPressOutListener of OtherView");
+        console.log(Date.now()," : ","onPressOutListener of OtherView");
         this.props.onPressOutListener(e);
     }
     render() {
-        console.log("OtherView Component");
-        if(this.state.position==="cordinate") {
+        console.log(Date.now()," : ","OtherView Component");
+        if(this.state.position=="coordinate") {
             return (
                 <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y,height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
                     <Pressable style={{ height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'red'}}
@@ -36,7 +36,7 @@ class OtherView extends Component{
                 </View>
             )
         }
-        else if(this.state.position==="automatic") {
+        else if(this.state.position=="automatic") {
             return (
                 <View key={this.state.thisData.ID} style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
                     <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'red'}}

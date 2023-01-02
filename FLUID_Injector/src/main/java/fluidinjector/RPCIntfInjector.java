@@ -65,6 +65,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			if(!b.getMethod().toString().contains("init") && !b.getMethod().toString().contains("onCreate"))
 			{
 				performSecondPassbyBaseClass(b,s,map,threadNum,1);
+//				performSecondPassbySignature(b,s,map,threadNum,1);
 			}
 
 			System.out.println("Thread ID end : "+Thread.currentThread().getId());
@@ -263,18 +264,18 @@ public class RPCIntfInjector extends BodyTransformer {
 				injectOnCreate((JimpleBody)onCreateBody,thisClass);
 			}
 
-			SootMethod onResume = thisClass.getMethodByNameUnsafe("onResume");
-			if(onResume == null)
-			{
-				System.err.println("this activity class("+thisClass.toString()+ ") has no onResume method");
-				System.out.println("this activity class("+thisClass.toString()+ ") has no onResume method");
-				addOnResume(thisClass);
-			}
-			else
-			{
-				System.err.println("this activity class("+thisClass.toString()+ ") has onResume method");
-				System.out.println("this activity class("+thisClass.toString()+ ") has onResume method");
-			}
+//			SootMethod onResume = thisClass.getMethodByNameUnsafe("onResume");
+//			if(onResume == null)
+//			{
+//				System.err.println("this activity class("+thisClass.toString()+ ") has no onResume method");
+//				System.out.println("this activity class("+thisClass.toString()+ ") has no onResume method");
+//				addOnResume(thisClass);
+//			}
+//			else
+//			{
+//				System.err.println("this activity class("+thisClass.toString()+ ") has onResume method");
+//				System.out.println("this activity class("+thisClass.toString()+ ") has onResume method");
+//			}
 
 
 
@@ -522,7 +523,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		for (int i = 0; i < unitarray.length; i++) {
 			String targetUnitString = unitarray[i].toString();
 			//find base class
-			if(targetUnitString.contains("virtualinvoke"))
+			if(targetUnitString.contains("virtualinvoke") && !targetUnitString.contains("goto"))
 			{
 				String sig = unitarray[i].toString();
 				System.out.println("sig : " + sig);
@@ -598,9 +599,15 @@ public class RPCIntfInjector extends BodyTransformer {
 						System.out.println("this class has no objFluidInterface");
 						return;
 					}
+
+
+
 					generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,
 							Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
 
+//					generated.addAll(InstrumentUtil.generateLogStmts(body,"Activity",body.getThisLocal()));
+//					generated.addAll(InstrumentUtil.generateLogStmts(body,"objFLUIDInterface",objectFluidInterfaceVar));
+//					//generated.addAll(InstrumentUtil.generateLogStmts(body,"classLoader",classLoaderVar));
 					generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.ClassLoader",
 							"java.lang.Class loadClass(java.lang.String)", dexLoaderVar, classVar,
 							StringConstant.v(FLUID_MAIN_CLASS)));
@@ -812,6 +819,10 @@ public class RPCIntfInjector extends BodyTransformer {
 				}
 				generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,
 						Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
+
+				generated.addAll(InstrumentUtil.generateLogStmts(body,"Activity",body.getThisLocal()));
+				generated.addAll(InstrumentUtil.generateLogStmts(body,"dexclassLoader",dexLoaderVar));
+
 
 				generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.ClassLoader",
 						"java.lang.Class loadClass(java.lang.String)", dexLoaderVar, classVar,
@@ -1365,7 +1376,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		units.addAll(InstrumentUtil.generateVirtualInvokeStmt(newBody, "java.lang.reflect.Method",
 				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
 				objectFluidInterfaceVar, NullConstant.v()));
-		// generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
+		units.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
 		// insert new code
 		units.add(Jimple.v().newReturnVoidStmt());
 		Unit tryEnd = units.getLast();
@@ -1529,7 +1540,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		units.addAll(InstrumentUtil.generateVirtualInvokeStmt(newBody, "java.lang.reflect.Method",
 				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
 				objectFluidInterfaceVar, NullConstant.v()));
-		// generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
+		 units.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
 		// insert new code
 		units.add(Jimple.v().newReturnVoidStmt());
 		Unit tryEnd = units.getLast();
@@ -1674,9 +1685,9 @@ public class RPCIntfInjector extends BodyTransformer {
 				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
 				objectFluidInterfaceVar, NullConstant.v()));
 //		generated.add(Jimple.v().newGotoStmt(units.getLast()));
-		// generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
+		 generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
 		// insert new code
-		units.insertBefore(generated, units.getLast());
+		units.insertAfter(generated, units.getSuccOf( units.getFirst() ));
 		Unit tryEnd = units.getLast();
 		// insert try-catch statement
 		CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();

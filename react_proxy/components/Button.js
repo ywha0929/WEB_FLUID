@@ -10,17 +10,17 @@ class Button extends Component{
         };
     };
     onPressInListener = (e) => {
-        console.log("onPressInListener of Button");
+        console.log(Date.now()," : ","onPressInListener of Button");
         this.props.onPressInListener(e);
     }
     onPressOutListener = (e) => {
-        console.log("onPressOutListener of Button");
+        console.log(Date.now()," : ","onPressOutListener of Button");
         this.props.onPressOutListener(e);
     }
     render() {
-        console.log("Button Component");
+        console.log(Date.now()," : ","Button Component created");
         var image = this.state.thisData.Image;
-        if(this.state.position==="cordinate") {
+        if(this.state.position=="coordinate") {
             return (
                 <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y,height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
                     <Pressable style={{ height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}
@@ -41,7 +41,7 @@ class Button extends Component{
                 </View>
             )
         }
-        else if(this.state.position==="automatic") {
+        else if(this.state.position=="automatic") {
             return (
                 <View key={this.state.thisData.ID} style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
                     <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'skyblue'}}

@@ -18,6 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FLUIDLib" >
+        <activity
+            android:name="com.hmsl.fluidlib.MainActivity"
+            android:exported="false" />
+
         <service
             android:name="com.hmsl.fluidlib.FLUIDReverseService"
             android:enabled="true"

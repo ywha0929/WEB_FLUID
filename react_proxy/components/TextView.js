@@ -11,21 +11,20 @@ class TextView extends Component{
     };
     TextChangeListener = (e) => {
         this.props.TextChangeListener(e);
-        console.log("this is dummy TextChangeListener of TextView");
+        console.log(Date.now()," : ","this is dummy TextChangeListener of TextView");
     }
-
     onPressInListener = (e) => {
-        console.log("onPressInListener of TextView");
+        console.log(Date.now()," : ","onPressInListener of TextView");
         this.props.onPressInListener(e);
     }
     onPressOutListener = (e) => {
-        console.log("onPressOutListener of TextView");
+        console.log(Date.now()," : ","onPressOutListener of TextView");
         this.props.onPressOutListener(e);
     }
     render() {
-        console.log("TextView Component");
+        console.log(Date.now()," : ","TextView Component created");
         var image = this.state.thisData.Image;
-        if(this.state.position==="cordinate")
+        if(this.state.position=="coordinate")
         {
             
             return (
@@ -53,7 +52,7 @@ class TextView extends Component{
                 </View>
             )
         }
-        else if(this.state.position==="automatic")
+        else if(this.state.position=="automatic")
         {
             return (
                 <View key={this.state.thisData.ID} style={{alignItems:'flex-start'}}>

@@ -24,6 +24,10 @@
         "source": "/home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp"
     },
     {
+        "merged": "/home/ywha/WEB_FLUID/FLUID_Interface/app/build/intermediates/merged_res/debug/layout_activity_main.xml.flat",
+        "source": "/home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/res/layout/activity_main.xml"
+    },
+    {
         "merged": "/home/ywha/WEB_FLUID/FLUID_Interface/app/build/intermediates/merged_res/debug/mipmap-xxhdpi_ic_launcher.webp.flat",
         "source": "/home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp"
     },

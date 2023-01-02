@@ -8,24 +8,24 @@ class EditText extends Component{
             thisData : this.props.setEditText,
             position : this.props.position
         };
-        console.log(props);
+        console.log(Date.now()," : ",props);
     };
     TextChangeListener = (e) => {
-        console.log("this is dummy TextChangeListener of EditText");
+        console.log(Date.now()," : ","this is dummy TextChangeListener of EditText");
         this.props.TextChangeListener(e);
         
     }
     onPressInListener = (e) => {
-        console.log("onPressInListener of EditText");
+        console.log(Date.now()," : ","onPressInListener of EditText");
         this.props.onPressInListener(e);
     }
     onPressOutListener = (e) => {
-        console.log("onPressOutListener of EditText");
+        console.log(Date.now()," : ","onPressOutListener of EditText");
         this.props.onPressOutListener(e);
     }
     render() {
-        console.log("EditText Component");
-        if(this.state.position==="cordinate")
+        console.log(Date.now()," : ","EditText Component created");
+        if(this.state.position=="coordinate")
         {
             return (
                 <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y, alignItems:'flex-start', borderBottonWidth : StyleSheet.hairlineWidth}}>
@@ -43,7 +43,7 @@ class EditText extends Component{
                 </View>
             )
         }
-        else if(this.state.position==="automatic")
+        else if(this.state.position=="automatic")
         {
             return (
                 <View key={this.state.thisData.ID} style={{alignItems:'flex-start', borderBottonWidth : StyleSheet.hairlineWidth}}>

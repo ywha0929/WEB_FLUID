@@ -50,7 +50,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.hmsl.fluidmanager.IFLUIDService;
 
@@ -82,7 +81,6 @@ public class FLUIDMain {
     private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
     private Map<Integer,Object> listBorder = new HashMap<>();
     private final IBinder mBinder = new IReverseConnection.Stub() {
-        @Override
         public void doCheck(String msg) throws RemoteException {
             Log.d(TAG, "this is doCheck");
             Activity activity = (Activity) mContext;
@@ -341,6 +339,13 @@ public class FLUIDMain {
                     runDistribute(getViewType(thisView),thisView);
 
                 }
+                try {
+                    mRemoteService.endOfDistribute();
+                } catch(Exception e1)
+                {
+                    e1.printStackTrace();
+                }
+
                 isChooseMode = 0;
                 distributeList.clear();
                 Activity activity = (Activity) mContext;
@@ -564,7 +569,12 @@ public class FLUIDMain {
             if (method.contains("setTextSize")){
                 convertPixelsToDpFloat((float)params[0], instance.mContext);
             }
-            bundle.putByteArray("key", generate_ubyteArray(method, view, params));
+            byte[] msg = generate_ubyteArray(method, view, params);
+            if(msg == null)
+            {
+                return;
+            }
+            bundle.putByteArray("key", msg);
             Log.d(TAG, "runUpdate send : " + getTS());
             mRemoteService.update(bundle);
         } catch (Exception e) {
@@ -595,7 +605,7 @@ public class FLUIDMain {
             type = param.getClass().toString();
         else
             type = "null";
-        //Log.d("TAG",param.getClass().toString());
+//        Log.d("TAG","type : " + param.getClass().toString());
         if (type.contains("Float")) {
             return 1;
         } else if (type.contains("Integer")) {
@@ -653,6 +663,11 @@ public class FLUIDMain {
             for (int i = 0; i < params.length; i++) {
                 Object param = params[i];
                 int flag = setTypeFlag(param);
+                Log.d(TAG, "generate_ubyteArray: typeFlag " + flag);
+                if(flag == 0)
+                {
+                    return null;
+                }
                 dataOutputStream.writeInt(flag);
                 switch (flag) {
                     case 1:
@@ -1098,7 +1113,14 @@ public class FLUIDMain {
             if(!textV.getText().toString().equals(beforeText))
             {
                 try {
-                    bundle.putByteArray("key",generate_ubyteArray("setText",textV,charSequence.toString()));
+                    String changedText = charSequence.toString();
+                    byte[] msg = generate_ubyteArray("setText",textV,changedText);
+                    if(msg == null)
+                    {
+                        return;
+                    }
+                    bundle.putByteArray("key",msg);
+
                     mRemoteService.update(bundle);
                 } catch (Exception e) {
                     e.printStackTrace();

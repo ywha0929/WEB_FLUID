@@ -61,6 +61,14 @@ public class FLUIDManagerService extends Service {
     private final IBinder mBinder = new IFLUIDService.Stub() {
         // distribute
 
+        @Override
+        public void endOfDistribute() throws RemoteException {
+            Log.d(TAG,"endOfDistribute received : "+getTS());
+            Message msg = Message.obtain();
+            msg.obj = "endOfDistribute";
+            distributeHandler.sendMessage(msg);
+        }
+
         public void distribute(Bundle bundle) {
             Log.d(TAG, "test received : " + getTS());
             bundle.setClassLoader(getClass().getClassLoader());
@@ -298,33 +306,21 @@ public class FLUIDManagerService extends Service {
             distributeHandler = new Handler(Looper.myLooper()) {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
-                    Bundle bundle = (Bundle) msg.obj;
+                    Object obj = msg.obj;
+                    if(String.class.isInstance(obj))
+                    {
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+                        try {
+                            dataOutputStream.writeInt(0);
+                            dataOutputStream.writeInt(3);
+                            dataOutputStream.flush();
+                            byte[] msgEndOfDistribute = byteArrayOutputStream.toByteArray();
+                            ByteArrayOutputStream byteArrayOutputStream1 = new ByteArrayOutputStream();
 
-                    //Log.e(TAG, "Message 받음 " + input);
-                    try {
-                        byte[] layout = bundle.getByteArray("layout");
-                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(layout);
-                        DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
-                        int id = dataInputStream.readInt();
-                        Log.d(TAG,"layout ID : "+id);
-                        boolean is_distribute = false;
-                        if (id_list.size() == 0) id_list.add(id);
-                        else {
-                            //ID 중복 검사
-                            for (int i = 0; i < id_list.size(); i++) {
-                                if (id_list.get(i) == id) {
-                                    is_distribute = true;
-                                    break;
-                                }
-                            }
-                        }
-                        //ID 중복 x => Distribute 해야 하므로 socket 통신으로 Json 객체를 보낸다.
-                        if (!is_distribute) {
-                            id_list.add(id);
-                            //Log.e(TAG, "전송하려는 Json Object" + input);
-                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                             byte[] length_byte = new byte[4];
-                            int length_int = layout.length;
+                            int length_int = msgEndOfDistribute.length;
+                            Log.d(TAG, "handleMessage: "+length_int);
                             for(int i = 0; i< 4; i++)
                             {
                                 int quotient = ((int) Math.floor( length_int / (int)Math.pow(256,3-i) ) );
@@ -332,91 +328,141 @@ public class FLUIDManagerService extends Service {
                                 length_int -= quotient * (int) Math.pow(256,3-i);
                                 //Log.d(TAG,""+length_int+" "+(int)Math.pow(16,3-i) + " " + length_int/(int)Math.pow(16,3-i));
                             }
+                            byteArrayOutputStream1.write(length_byte);
+                            byteArrayOutputStream1.write(msgEndOfDistribute);
 
-                            byteArrayOutputStream.write(length_byte);
-                            byteArrayOutputStream.write(layout);
-                            byte[] output = byteArrayOutputStream.toByteArray();
+                            byte[] output = byteArrayOutputStream1.toByteArray();
                             OutputStream outputStream = socket.getOutputStream();
                             outputStream.write(output);
                             outputStream.flush();
-//                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-////                            OutputStream os = socket.getOutputStream();
-//                            dataOutputStream.writeInt(layout.length);
-//                            dataOutputStream.write(layout);
-//
-//                            dataOutputStream.flush();
-                            //os.close();
-                            Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
-                            mRemoteService.doCheck("FLUID Service : distribute layout sent");
-                        } else {
-                            //Log.e(TAG, "이미 Distribute된 UI 입니다.");
+
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
                     }
+                    else
+                    {
+                        Bundle bundle = (Bundle) msg.obj;
 
-
-                    try {
-                        byte[] widget = bundle.getByteArray("widget");
-                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(widget);
-                        DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
-                        int id = dataInputStream.readInt();
-                        Log.d(TAG,"distribute ID : "+id);
-                        //Log.e(TAG, "UI_ID = " + id);
-                        //Log.d(TAG,""+dataInputStream.readBoolean());
-//                        JSONParser jsonParser = new JSONParser();
-//                        JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
-//                        long id = (long)jsonObject.get("Id");
-//                        Log.e(TAG, "UI_ID = "+id);
-
-                        boolean is_distribute = false;
-                        if (id_list.size() == 0) id_list.add(id);
-                        else {
-                            //ID 중복 검사
-                            for (int i = 0; i < id_list.size(); i++) {
-                                if (id_list.get(i) == id) {
-                                    is_distribute = true;
-                                    break;
+                        //Log.e(TAG, "Message 받음 " + input);
+                        try {
+                            byte[] layout = bundle.getByteArray("layout");
+                            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(layout);
+                            DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
+                            int id = dataInputStream.readInt();
+                            Log.d(TAG,"layout ID : "+id);
+                            boolean is_distribute = false;
+                            if (id_list.size() == 0) id_list.add(id);
+                            else {
+                                //ID 중복 검사
+                                for (int i = 0; i < id_list.size(); i++) {
+                                    if (id_list.get(i) == id) {
+                                        is_distribute = true;
+                                        break;
+                                    }
                                 }
                             }
+                            //ID 중복 x => Distribute 해야 하므로 socket 통신으로 Json 객체를 보낸다.
+                            if (!is_distribute) {
+                                id_list.add(id);
+                                //Log.e(TAG, "전송하려는 Json Object" + input);
+                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                byte[] length_byte = new byte[4];
+                                int length_int = layout.length;
+                                for(int i = 0; i< 4; i++)
+                                {
+                                    int quotient = ((int) Math.floor( length_int / (int)Math.pow(256,3-i) ) );
+                                    length_byte[i] = (byte) quotient;
+                                    length_int -= quotient * (int) Math.pow(256,3-i);
+                                    //Log.d(TAG,""+length_int+" "+(int)Math.pow(16,3-i) + " " + length_int/(int)Math.pow(16,3-i));
+                                }
+
+                                byteArrayOutputStream.write(length_byte);
+                                byteArrayOutputStream.write(layout);
+                                byte[] output = byteArrayOutputStream.toByteArray();
+                                OutputStream outputStream = socket.getOutputStream();
+                                outputStream.write(output);
+                                outputStream.flush();
+    //                            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+    ////                            OutputStream os = socket.getOutputStream();
+    //                            dataOutputStream.writeInt(layout.length);
+    //                            dataOutputStream.write(layout);
+    //
+    //                            dataOutputStream.flush();
+                                //os.close();
+                                Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
+                                mRemoteService.doCheck("FLUID Service : distribute layout sent");
+                            } else {
+                                //Log.e(TAG, "이미 Distribute된 UI 입니다.");
+                            }
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
                         }
 
-                        //ID 중복 x => Distribute 해야 하므로 socket 통신으로 Json 객체를 보낸다.
-                        if (!is_distribute) {
-                            id_list.add(id);
-                            //Log.e(TAG, "전송하려는 Json Object" + input);
 
-//                            BufferedOutputStream os = (BufferedOutputStream) socket.getOutputStream();
-                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                            byte[] length_byte = new byte[4];
-                            int length_int = widget.length;
-                            for(int i = 0; i< 4; i++)
-                            {
-                                int quotient = ((int) Math.floor( length_int / (int)Math.pow(256,3-i) ) );
-                                length_byte[i] = (byte) quotient;
-                                length_int -= quotient * (int) Math.pow(256,3-i);
-//                                Log.d(TAG, "handleMessage: convert" +i);
-//                                Log.d(TAG, "handleMessage: quotient : " + quotient);
-//                                Log.d(TAG, "handleMessage: power : " + (int) Math.pow(256,3-i));
-//                                Log.d(TAG, "handleMessage: length_int" + length_int);
+                        try {
+                            byte[] widget = bundle.getByteArray("widget");
+                            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(widget);
+                            DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream);
+                            int id = dataInputStream.readInt();
+                            Log.d(TAG,"distribute ID : "+id);
+                            //Log.e(TAG, "UI_ID = " + id);
+                            //Log.d(TAG,""+dataInputStream.readBoolean());
+    //                        JSONParser jsonParser = new JSONParser();
+    //                        JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
+    //                        long id = (long)jsonObject.get("Id");
+    //                        Log.e(TAG, "UI_ID = "+id);
+
+                            boolean is_distribute = false;
+                            if (id_list.size() == 0) id_list.add(id);
+                            else {
+                                //ID 중복 검사
+                                for (int i = 0; i < id_list.size(); i++) {
+                                    if (id_list.get(i) == id) {
+                                        is_distribute = true;
+                                        break;
+                                    }
+                                }
                             }
 
-                            byteArrayOutputStream.write(length_byte);
-                            byteArrayOutputStream.write(widget);
-                            byte[] output = byteArrayOutputStream.toByteArray();
-                            OutputStream outputStream = socket.getOutputStream();
-                            outputStream.write(output);
-                            outputStream.flush();
+                            //ID 중복 x => Distribute 해야 하므로 socket 통신으로 Json 객체를 보낸다.
+                            if (!is_distribute) {
+                                id_list.add(id);
+                                //Log.e(TAG, "전송하려는 Json Object" + input);
 
-                            Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
-                            mRemoteService.doCheck("FLUID Service : distribute widget sent");
-                        } else {
-                            //Log.e(TAG, "이미 Distribute된 UI 입니다.");
+    //                            BufferedOutputStream os = (BufferedOutputStream) socket.getOutputStream();
+                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                byte[] length_byte = new byte[4];
+                                int length_int = widget.length;
+                                for(int i = 0; i< 4; i++)
+                                {
+                                    int quotient = ((int) Math.floor( length_int / (int)Math.pow(256,3-i) ) );
+                                    length_byte[i] = (byte) quotient;
+                                    length_int -= quotient * (int) Math.pow(256,3-i);
+    //                                Log.d(TAG, "handleMessage: convert" +i);
+    //                                Log.d(TAG, "handleMessage: quotient : " + quotient);
+    //                                Log.d(TAG, "handleMessage: power : " + (int) Math.pow(256,3-i));
+    //                                Log.d(TAG, "handleMessage: length_int" + length_int);
+                                }
+
+                                byteArrayOutputStream.write(length_byte);
+                                byteArrayOutputStream.write(widget);
+                                byte[] output = byteArrayOutputStream.toByteArray();
+                                OutputStream outputStream = socket.getOutputStream();
+                                outputStream.write(output);
+                                outputStream.flush();
+
+                                Log.e(TAG, "UI distribute socket msg 전송 성공 : " + getTS());
+                                mRemoteService.doCheck("FLUID Service : distribute widget sent");
+                            } else {
+                                //Log.e(TAG, "이미 Distribute된 UI 입니다.");
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             };

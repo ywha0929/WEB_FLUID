@@ -13,6 +13,8 @@ var Acc_or_Han;
 var cur_id;
 var buffer;
 var socket_buffer;
+var UI_List_Buffer = new Array();
+
 class App extends Component {
     constructor(props){
         super(props);
@@ -26,14 +28,15 @@ class App extends Component {
         LayoutList : new Array()
     };
     _Connect_to_Server = (bufer) => {
-        client = TcpSocket.createConnection({host: "192.168.0.19", port: 5673}, ()=>{
+        client = TcpSocket.createConnection({host: "192.168.0.2", port: 5673}, ()=>{
             console.log("connection established");
         });
         client.on('data', (data) => this.checkData(data));
         
     };
+
     accumulatedata(data) {
-        console.log("this is accumulatedata");
+        console.log(Date.now()," : ","this is accumulatedata");
         let tempArr = this.state.UIList;
         tempArr.forEach(function (targetUI){
             if(cur_id == targetUI.ID){
@@ -58,15 +61,16 @@ class App extends Component {
         }
     }
     checkData(data) {
-        console.log("this is checkData",data.length);
+        console.log(Date.now()," : ","this is checkData",data.length);
+
         if(socket_buffer == null)
         {
-            console.log("checkData : socket_buffer empty");
+            //console.log(Date.now()," : ","checkData : socket_buffer empty");
             socket_buffer = Buffer.from(data);
         }
         else
         {
-            console.log("checkData : socket_buffer not empty");
+            //console.log(Date.now()," : ","checkData : socket_buffer not empty");
             //console.log("socket_buffer length : ",socket_buffer.length);
             var temp_buffer = Buffer.concat([socket_buffer,data]);
             //console.log("socket_buffer length : ",socket_buffer.length);
@@ -76,18 +80,18 @@ class App extends Component {
 
         if(socket_buffer.length < 4)
         {
-            console.log("checkData : data length below 4 byte");
+            // console.log(Date.now()," : ","checkData : data length below 4 byte");
             return;
         }
         else
         {
             var target_length = socket_buffer.readUInt32BE(0);
             var rest_length = socket_buffer.length - 4;
-            console.log("checkData : target_length : ", target_length);
-            console.log("checkData : rest_length : ", rest_length);
+            console.log(Date.now()," : ","checkData : target_length : ", target_length);
+            // console.log(Date.now()," : ","checkData : rest_length : ", rest_length);
             if(target_length == rest_length)
             {
-                console.log("checkData : target_length met");
+                // console.log(Date.now()," : ","checkData : target_length met");
                 target_Data = socket_buffer.subarray(4,4+target_length);
                 this.handleData(target_Data);
                 socket_buffer = null;
@@ -95,13 +99,13 @@ class App extends Component {
             }
             else if(target_length > rest_length)
             {
-                console.log("checkData : target_length unmet");
+                // console.log(Date.now()," : ","checkData : target_length unmet");
 
                 return;
             }
             else //target_length > rest_length
             {
-                console.log("checkData : target_length exceed");
+                // console.log(Date.now()," : ","checkData : target_length exceed");
                 var target_Data = socket_buffer.subarray(4,4+target_length);
                 var rest_Data = socket_buffer.subarray(4+target_length,socket_buffer.length);
                 this.handleData(target_Data);
@@ -169,18 +173,18 @@ class App extends Component {
         
     // }
     handleData(data) {
-        console.log("handle data invocated");
+        console.log(Date.now()," : ","handle data invocated");
         
-        console.log("data length : ",data.length);
+        // console.log(Date.now()," : ","data length : ",data.length);
         //var this_data = data;
         var offset = 0;
     
         //console.log('message received',data);
-        console.log('id : ',offset, data.readUInt32BE(offset));
+        console.log(Date.now()," : ",'id : ',offset, data.readUInt32BE(offset));
         var id = data.readUInt32BE(offset);
         offset += 4;
         var isUpdate = data.readUInt32BE(offset);
-        console.log('isUpdate : ',isUpdate);
+        // console.log(Date.now()," : ",'isUpdate : ',isUpdate);
         offset +=4;
         if(isUpdate == 0) //distribute mode
         {
@@ -229,16 +233,20 @@ class App extends Component {
                     "Height": height,
                     "Width": width,
                 };
-                let tempArr = this.state.UIList;
-                tempArr.push(UIdata);
-                console.log("UIdata : ",UIdata);
-                this.setState({
-                    UIList: tempArr
-                });
+
+                UI_List_Buffer.push(UIdata);
+                // let tempArr = this.state.UIList;
+                // tempArr.push(UIdata);
+                // console.log("UIdata : ",UIdata);
+
+                // UI_List_Buffer = tempArr;
+                // this.setState({
+                //     UIList: tempArr
+                // });
             }
             else if (widgetType.includes("TextView"))
             {
-                console.log("handleData : creating TextView data");
+                console.log(Date.now()," : ","handleData : creating TextView data");
                 // console.log('String Length',offset,data.readUInt32BE(offset));
                 stringSize = data.readUInt32BE(offset)+2;
                 offset += 4;
@@ -280,17 +288,21 @@ class App extends Component {
                     "Width": width,
                     "Image": image,
                 };
-                let tempArr = this.state.UIList;
-                tempArr.push(UIdata);
-                console.log("UIdata : ",UIdata);
-                this.setState({
-                    UIList: tempArr
-                });
+
+                UI_List_Buffer.push(UIdata);
+                // let tempArr = this.state.UIList;
+                // tempArr.push(UIdata);
+                // // console.log(Date.now()," : ","UIdata : ",UIdata);
+                
+                // UI_List_Buffer = tempArr
+                // this.setState({
+                //     UIList: tempArr
+                // });
             }
             else if(widgetType.includes("ImageView"))
             {
 
-                console.log("handleData : creating ImageView data");
+                console.log(Date.now()," : ","handleData : creating ImageView data");
                 //buffer 합치기
                 //bitmap data 받아오기 및 저장
                 
@@ -331,18 +343,19 @@ class App extends Component {
                 //console.log('client , ',client);
                 cur_id = id;
                 //console.log("UIList ",this.state.UIList[0]);
-                let tempArr = this.state.UIList;
-                tempArr.push(UIdata);
-                console.log("UIdata : ",UIdata);
-                //console.log("UIList ",this.state.UIList[0]);
-                this.setState({
-                    UIList: tempArr
-                });
+                UI_List_Buffer.push(UIdata);
+                // let tempArr = this.state.UIList;
+                // tempArr.push(UIdata);
+                // // console.log("UIdata : ",UIdata);
+                // //console.log("UIList ",this.state.UIList[0]);
+                // this.setState({
+                //     UIList: tempArr
+                // });
                 //Acc_or_Han = 1;
             }
             else if(widgetType.includes("Button"))
             {
-                console.log("handleData : creating Button data");
+                console.log(Date.now()," : ","handleData : creating Button data");
                 // console.log('String Length',offset,data.readUInt32BE(offset));
                 stringSize = data.readUInt32BE(offset)+2;
                 offset += 4;
@@ -366,17 +379,17 @@ class App extends Component {
                     "X": X,
                     "Y": Y,
                 };
-
-                let tempArr = this.state.UIList;
-                tempArr.push(UIdata);
-                console.log("UIdata : ",UIdata);
-                this.setState({
-                    UIList: tempArr
-                });
+                UI_List_Buffer.push(UIdata);
+                // let tempArr = this.state.UIList;
+                // tempArr.push(UIdata);
+                // // console.log(Date.now()," : ","UIdata : ",UIdata);
+                // this.setState({
+                //     UIList: tempArr
+                // });
             }
             else if(widgetType.includes("OtherView"))
             {
-                console.log("handleData : creating OtherView data");
+                console.log(Date.now()," : ","handleData : creating OtherView data");
                 var height = data.readUInt32BE(offset)*0.728;
                 offset +=4;
                 var width = data.readUInt32BE(offset)*0.728;
@@ -391,12 +404,13 @@ class App extends Component {
                     "X": X,
                     "Y": Y,
                 };
-                let tempArr = this.state.UIList;
-                tempArr.push(UIdata);
-                console.log("UIdata : ",UIdata);
-                this.setState({
-                    UIList: tempArr
-                });
+                UI_List_Buffer.push(UIdata);
+                // let tempArr = this.state.UIList;
+                // tempArr.push(UIdata);
+                // // console.log(Date.now()," : ","UIdata : ",UIdata);
+                // this.setState({
+                //     UIList: tempArr
+                // });
             }
             
             
@@ -407,13 +421,14 @@ class App extends Component {
             tempArr.forEach(function (targetUI){
                 if(id == targetUI.ID){
                     let stringSize = data.readUInt32BE(offset)+2;
-                    console.log("stringSize: ",offset, stringSize);
+                    // console.log(Date.now()," : ","stringSize: ",offset, stringSize);
                     offset += 4;
                     let method = data.toString('utf8',offset,offset+stringSize);
                     offset +=stringSize;
                     let typeFlag = data.readUInt32BE(offset);
                     offset += 4;
                     //get parameters
+                    console.log("typeFlag : " + typeFlag);
                     if(typeFlag == 1){
                         var param = data.readFloatBE(offset);
                         offset+=4;
@@ -428,11 +443,12 @@ class App extends Component {
                         let param_temp = data.toString('utf8',offset,offset+stringSize);
                         var param = (''+param_temp).slice(1);
                         offset +=stringSize;
+                        console.log("string : ", param);
                     }
 
                     //UI update
                     if(method.includes("setTextColor")){
-                        console.log("color : ",param);
+                        // console.log(Date.now()," : ","color : ",param);
                         let bb = param & 0x000000FF;
                         let gg = param & 0x0000FF00;
                         let rr = param & 0x00FF0000;
@@ -441,7 +457,7 @@ class App extends Component {
                         bb = bb<<8;
                         gg = gg<<8;
                         aa = aa>>>24;
-                        console.log(rr,bb,gg,aa)
+                        // console.log(Date.now()," : ",rr,bb,gg,aa)
                         var newColor = rr|bb|gg|aa; //android native in aarrggbb react-native in rrggbbaa
                         if(param == 4278190335)
                         {
@@ -461,18 +477,20 @@ class App extends Component {
                         targetUI.Text = param;
                     }
                 }
+                console.log(targetUI);
             });
-            console.log("UIList ",this.state.UIList[0]);
+            // console.log(Date.now()," : ","UIList ",this.state.UIList[0]);
             this.setState({
                 UIList: tempArr
             });
-            console.log("UIList", this.state.UIList[0]);
+            // console.log(Date.now()," : ","UIList", this.state.UIList[0]);
         }
         else if(isUpdate ==2) {//distribute layout
-            console.log("distribute layout");
+            
             var layout_type = data.readUInt32BE(offset);
             offset+=4;
             if(layout_type == 0){
+                console.log(Date.now()," : ","handleData : creating LinearLayout data");
                 //Linear layout
                 var orientation = data.readUInt32BE(offset);
                 offset+=4;
@@ -489,6 +507,7 @@ class App extends Component {
 
             }
             else if(layout_type == 1) { //other layout
+                console.log(Date.now()," : ","handleData : creating OtherLayout data");
                 var width = data.readUInt32BE(offset)* 0.728;
                 offset +=4;
                 var height = data.readUInt32BE(offset)* 0.728;
@@ -511,8 +530,20 @@ class App extends Component {
             this.setState({
                 LayoutList: tempArr
             });
-            console.log(layout_Data);
+            console.log(Date.now()," : ",layout_Data);
             
+        }
+        else if(isUpdate == 3)
+        {
+            console.log(Date.now()," : ", "handleData : endOf Distribution");
+            let tempArr = this.state.UIList;
+            UI_List_Buffer.forEach( function(item) {
+                tempArr.push(item);
+            } )
+            UI_List_Buffer = new Array();
+            this.setState({
+                    UIList: tempArr
+                });
         }
     
         
