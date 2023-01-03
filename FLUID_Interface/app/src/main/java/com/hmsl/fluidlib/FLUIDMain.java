@@ -153,7 +153,8 @@ public class FLUIDMain {
         return instance;
     }
 
-    public FLUIDMain(Context context) {
+    private FLUIDMain(Context context) {
+        instance = this;
         Log.d(TAG, "FluidMain");
         distributeList.clear();
         mContext = context;
@@ -291,7 +292,9 @@ public class FLUIDMain {
     public int runTouchCheck(MotionEvent e) {
         //if return true, mainActivity will pass the event to view
         //if return false, mainActivity will not pass the event to view
-        Log.d(TAG,"This is runTouchCheck"+e.getDownTime());
+        Log.d(TAG,"runTouchCheck isChooseMode : "+isChooseMode);
+        Log.d(TAG, "runTouchCheck isChooseModeWait: " + isChooseModeWait);
+        Log.d(TAG, "runTouchCheck instance hash value: " + instance);
         Log.d(TAG,"This is motionEvent.getPointerCount, Action : "+e.getPointerCount()+", "+e.getAction());
         long Action = e.getAction();
         long filtered_Action = Action & 111;
@@ -319,6 +322,8 @@ public class FLUIDMain {
             }
             else { //normal mode
                 Log.d(TAG,"normal mode");
+                isChooseMode = 0;
+//                isChooseModeWait = 0;
                 return 1;
             }
         }
@@ -339,12 +344,7 @@ public class FLUIDMain {
                     runDistribute(getViewType(thisView),thisView);
 
                 }
-                try {
-                    mRemoteService.endOfDistribute();
-                } catch(Exception e1)
-                {
-                    e1.printStackTrace();
-                }
+
 
                 isChooseMode = 0;
                 distributeList.clear();
@@ -352,10 +352,16 @@ public class FLUIDMain {
                 activity.runOnUiThread(new Runnable(){
                     @Override
                     public void run() {
-                        Toast toast = Toast.makeText(mContext.getApplicationContext(), "Normal Mode", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(mContext.getApplicationContext(), "Normal Mode " + isChooseMode, Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 });
+                try {
+                    mRemoteService.endOfDistribute();
+                } catch(Exception e1)
+                {
+                    e1.printStackTrace();
+                }
                 return 0;
             }
             else if(e.getAction() == MotionEvent.ACTION_UP) { //choose
