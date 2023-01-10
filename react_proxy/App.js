@@ -6,6 +6,7 @@ import {Buffer} from 'buffer';
 import LinearLayout from "./components/LinearLayout"
 import OtherLayout from "./components/OtherLayout"
 
+
 var client;
 var length_bitmap;
 var buffer_cur;
@@ -467,9 +468,9 @@ class App extends Component {
                             targetUI.Color = newColor>>>0; //shift operator to make it unsigned
                         }
                     }
-                    else if(method.includes("setTextSize")){
-                        targetUI.TextSize = param;
-                    }
+                    // else if(method.includes("setTextSize")){
+                    //     targetUI.TextSize = param;
+                    // }
                     else if(method.includes("setImage")){
                         targetUI.Bitmap = param;
                     }

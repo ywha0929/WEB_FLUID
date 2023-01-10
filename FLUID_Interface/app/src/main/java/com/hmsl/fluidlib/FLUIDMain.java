@@ -1073,7 +1073,7 @@ public class FLUIDMain {
     }
 
     public static String getTS() {
-        Long tsLong = System.nanoTime();
+        Long tsLong = System.currentTimeMillis();
         String ts = tsLong.toString();
         return ts;
     }

@@ -6,6 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="FLUID" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="AutoImportSettings">
@@ -13,15 +14,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51666edf-a32a-4fc2-bc9b-a00a2873453e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/src/main/java/org/example/AndroidUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/output/FalseNegativeTestApp-dex2jar.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.bin" afterDir="false" />
@@ -42,22 +45,86 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/dex/debug/mergeProjectDexDebug/8/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/dex/debug/mergeProjectDexDebug/8/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread$1.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread$1.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread$2.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread$2.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/hmsl/fluidmanager/FLUIDManagerService$ServerThread.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/classes/com/hmsl/fluidmanager/FLUIDManagerService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/hmsl/fluidmanager/FLUIDManagerService.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/debug/out/com/hmsl/fluidmanager/FLUIDManagerService.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/FLUIDManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/FLUIDManagerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/auto.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/error_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/install.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/META-INF/maven/de.tud.sse/soot-infoflow-android/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/META-INF/maven/de.tud.sse/soot-infoflow-android/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/schema/FlowDroidConfiguration.xsd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/schema/SourcesAndSinks.xsd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/soot-infoflow-android-classes.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/soot-infoflow-classes.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/soot-infoflow-cmd-classes.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/libs/soot-infoflow-summaries-classes.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/log_FLUID_test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/logs/TESTAPP_image.err" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/logs/com.simplemobiletools.notes.err" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/logs/com.todoist_v10514-10514_minAPI23(nodpi)_apkmirror.com.err" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/logs/notion.id_0.6.753-6753_minAPI24(arm64-v8a,armeabi-v7a,x86,x86_64)(nodpi)_apkmirror.com.err" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/sign.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/src/main/java/StaticAnalysis/AndroidUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/src/main/java/StaticAnalysis/InstrumentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/src/main/java/StaticAnalysis/RPCIntfInjector.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/src/main/java/StaticAnalysis/StaticAnalysis.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/text-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/text.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MyStatic_Analysis/text_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/.idea/libraries/com_simplemobiletools_calculator_5_8_2_51_minAPI21_nodpi__apkmirror_com_dex2jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/.idea/libraries/libs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/analysis.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/com.simplemobiletools.notes-dex2jar.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/compile.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/execute.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/animal-sniffer-annotations-1.5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/annotations.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/bouncycastle.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/conscrypt.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/core-libart.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/core-oj.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/ext.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/framework.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/jsr305.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/legacy-test.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/okhttp.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/org.apache.http.legacy.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/libs/sootclasses-trunk-jar-with-dependencies.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/src/DuiCHATool.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Static_Analysis/src/FakeMainClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../log" beforeDir="false" afterPath="$PROJECT_DIR$/../log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[13201FDD40024R]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[08191JEC212484]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
