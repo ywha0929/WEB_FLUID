@@ -518,7 +518,7 @@ public class FLUIDMain {
     }
     public void runUpdate(String unit, View view) {
         StringTokenizer st = new StringTokenizer(unit, "<>");
-        Log.d(TAG,"RunUpdate invoked : "+unit);
+        Log.d(TAG,"RunUpdate invoked : "+unit+"="+getTS());
         st.nextToken();                     // 앞에 virtualinvoke 부분 -> 필요없으므로 삭제
         String first = st.nextToken();      // <> 내부 -> method가 있는 부분
         String second = st.nextToken();     // parameter 부분
@@ -1073,7 +1073,7 @@ public class FLUIDMain {
     }
 
     public static String getTS() {
-        Long tsLong = System.currentTimeMillis();
+        Long tsLong = System.nanoTime();
         String ts = tsLong.toString();
         return ts;
     }

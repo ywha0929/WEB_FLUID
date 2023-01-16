@@ -1,0 +1,2 @@
+gcc getPixel5RunUpdateTimestamp.c -o getPixel5RunUpdateTimestamp
+./getPixel5RunUpdateTimestamp

@@ -20,8 +20,9 @@ public class Main {
     static String androidAPKPath = System.getProperty("user.dir") + File.separator + "apks";
     //    static String apkPath = androidDemoPath + File.separator + "/st_demo.apk";
 //    static String apkPath = androidDemoPath + File.separator + "/com.simplemobiletools.notes.apk";
-   static String apkPath = androidAPKPath + File.separator + "com.simplemobiletools.calculator_5.8.2-51_minAPI21(nodpi)_apkmirror.com.apk";
-    // static String apkPath = androidAPKPath + File.separator + "FalseNegativeTestApp.apk";
+//   static String apkPath = androidAPKPath + File.separator + "com.simplemobiletools.calculator_5.8.2-51_minAPI21(nodpi)_apkmirror.com.apk";
+// static String apkPath = androidAPKPath + File.separator + "FalseNegativeTestApp.apk";
+    static String apkPath = androidAPKPath + File.separator + "StaticAnalysisTestApp.apk";
 //    static String apkPath = androidAPKPath + File.separator + "calculator.apk";
     static String outputPath = USER_HOME + File.separator + "output";
     static List<SootMethod> listTargetMethod = new ArrayList<>();
