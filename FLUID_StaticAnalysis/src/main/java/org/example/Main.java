@@ -1,5 +1,7 @@
 package org.example;
 
+
+import scala.util.control.TailCalls;
 import soot.G;
 import soot.Scene;
 import soot.SootClass;
@@ -7,6 +9,7 @@ import soot.SootMethod;
 import soot.jimple.infoflow.InfoflowConfiguration;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.android.SetupApplication;
+import soot.jimple.toolkits.callgraph.CHATransformer;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
@@ -28,6 +31,10 @@ public class Main {
     static List<SootMethod> listTargetMethod = new ArrayList<>();
     static List<SootClass> listTargetClass = new ArrayList<>();
     static Map<SootMethod,SootMethod> foundUIUpdateMethods = new HashMap<>();
+    static List<SootMethod> listCallSources = new ArrayList<>();
+    static List<SootMethod> listCallTargets = new ArrayList<>();
+//    static List<CallEdge> listCallEdges = new ArrayList<>();
+
 
     private static void fillListTargetMethod()
     {
@@ -134,6 +141,7 @@ public class Main {
         Options.v().set_process_multiple_dex(true);
         Options.v().set_output_dir(outputPath);
 
+
         //new options
 //        Options.v().set_oaat(true);
         Scene.v().addBasicClass("java.lang.Class",SootClass.HIERARCHY);
@@ -158,6 +166,7 @@ public class Main {
         fillListTargetMethod();
         fillListTargetClass();
         InfoflowConfiguration.CallgraphAlgorithm cgAlgorithm = InfoflowConfiguration.CallgraphAlgorithm.CHA;
+
         // Parse arguments
 //        InfoflowConfiguration.CallgraphAlgorithm cgAlgorithm = InfoflowConfiguration.CallgraphAlgorithm.SPARK;
 //        if (args.length > 0 && args[0].equals("CHA"))
@@ -167,169 +176,35 @@ public class Main {
             drawGraph = true;
         // Setup FlowDroid
         final InfoflowAndroidConfiguration config = AndroidUtil.getFlowDroidConfig(apkPath, androidJar, cgAlgorithm);
+        config.setFlowSensitiveAliasing(false);
         config.setCodeEliminationMode(InfoflowConfiguration.CodeEliminationMode.NoCodeElimination);
         SetupApplication app = new SetupApplication(config);
         // Create the Callgraph without executing taint analysis
         app.constructCallgraph();
 
-        CallGraph callGraph = Scene.v().getCallGraph();
-
-
-        Object[] classApplication = Scene.v().getApplicationClasses().toArray();
-        SootMethod methodOnCreate = null;
-        for(Object thisObject : classApplication)
+        for(SootClass thisClass : listTargetClass)
         {
-            SootClass thisClass = (SootClass) thisObject;
-
-            if(thisClass.getName().equals("com.example.falsenegativetestapp.MainActivity"))
+            List<SootMethod> listMethods = thisClass.getMethods();
+            for(SootMethod thisMethod : listMethods)
             {
-                methodOnCreate = thisClass.getMethodByName("onCreate");
-//                Object[] methodMainActivity = thisClass.getMethods().toArray();
-//                for(Object obj : methodMainActivity)
-//                {
-//                    SootMethod thisMethod = (SootMethod) obj;
-//                    System.out.println(thisMethod.getName());
-//                }
+                List<CallEdge> listCallEdges = getAllReachableMethodsToList(thisMethod);
+                for(int i = 0; i< listCallEdges.size(); i++)
+                {
+                    System.out.println("thisMethod : " + thisMethod);
+                    printAllEdges(listCallEdges);
+                    System.out.println("---------------------------------------------------------------------\n");
+                    if(listTargetMethod.contains( listCallEdges.get(i).targetMethod ) == true)
+                    {
+                        System.out.println( thisMethod + " to " + listCallEdges.get(i).targetMethod );
+                    }
+                }
             }
         }
+        List<CallEdge> listCallEdges = getAllReachableMethodsToList(app.getDummyMainMethod());
+        printAllEdges(listCallEdges);
 
-        Map<SootMethod,SootMethod> reachableMethods = getAllReachableMethods(app.getDummyMainMethod());
-
-        for(int i = 0; i<reachableMethods.size(); i++)
-        {
-            Set<SootMethod> keylist = reachableMethods.keySet();
-
-            Object[] keylistArry = keylist.toArray();
-            System.out.println(((SootMethod)keylistArry[i]) + " from "+reachableMethods.get((SootMethod)keylistArry[i]));
-        }
-        System.out.println("---------------------------------------------------------------------\ntargetMethod");
-        
-        Object[] keylistArray = reachableMethods.keySet().toArray();
-        System.out.println(listTargetMethod.get(0));
-        for(int i = 0; i<reachableMethods.size(); i++)
-        {
-            SootMethod thisMethod = (SootMethod) keylistArray[i];
-            System.out.println(listTargetMethod.get(0).equals(thisMethod));
-            if(listTargetMethod.contains(thisMethod))
-            {
-                System.out.println(thisMethod.toString() + " invoked from : " +reachableMethods.get(thisMethod).toString());
-            }
-            
-            
-        }
-
-
-//        for(SootClass thisClass: listTargetClass)
-//        {
-//            for(SootMethod thisMethod : thisClass.getMethods())
-//            {
-//                System.out.println("thisMethod : "+thisMethod.getName());
-//
-//
-//                int outgoingEdge = 0;
-//                for(Iterator<Edge> it = callGraph.edgesOutOf(thisMethod); it.hasNext();outgoingEdge++,it.next());
-//                System.out.println(thisMethod.getName() + "outEdge number : "+outgoingEdge);
-//                System.out.println(reachableMethods.containsValue(listTargetMethod.get(0)));
-//                System.out.println(reachableMethods.containsKey(listTargetMethod.get(0)));
-////                for(int i = 0; i<reachableMethods.size(); i++)
-////                {
-////                    Set<SootMethod> keylist = reachableMethods.keySet();
-////
-////                    Object[] keylistArry = keylist.toArray();
-////                    System.out.println(((SootMethod)keylistArry[i]).getName() + " to "+reachableMethods.get((SootMethod)keylistArry[i]));
-////                }
-//
-//                for(SootMethod targetMethod : listTargetMethod)
-//                {
-//
-//                    if(reachableMethods.containsValue(targetMethod))
-//                    {
-//                        System.out.println(thisMethod.getName()+" reaches "+targetMethod.getName());
-//                        foundUIUpdateMethods.put(thisMethod,targetMethod);
-//                    }
-//                }
-//            }
-//        }
-
-
-
-//        int classIndex = 0;
-        // Print some general information of the generated callgraph. Note that although usually the nodes in callgraph
-        // are assumed to be methods, the edges in Soot's callgraph is from Unit to SootMethod.
-//        AndroidCallGraphFilter androidCallGraphFilter = new AndroidCallGraphFilter(AndroidUtil.getPackageName(apkPath));
-//        for(SootClass sootClass: Scene.v().getApplicationClasses())
-//        {
-//            System.out.println(String.format("Class %d: %s",++classIndex, sootClass.getName()));
-//            for(SootMethod sootMethod : sootClass.getMethods()){
-//                for(Iterator<Edge> it = callGraph.edgesOutOf(sootMethod); it.hasNext();)
-//                {
-//                    Edge edge = it.next();
-//                    System.out.println(((SootMethod)edge.getSrc()).toString() + " to " + edge.getTgt().toString());
-//                    SootMethod method = (SootMethod) edge.getTgt();
-//                }
-//                int incomingEdge = 0;
-//                for(Iterator<Edge> it = callGraph.edgesInto(sootMethod); it.hasNext();incomingEdge++,it.next());
-//                int outgoingEdge = 0;
-//                for(Iterator<Edge> it = callGraph.edgesOutOf(sootMethod); it.hasNext();outgoingEdge++,it.next());
-//                System.out.println(String.format("\tMethod %s, #IncomeEdges: %d, #OutgoingEdges: %d", sootMethod.getName(), incomingEdge, outgoingEdge));
-//            }
-//        }
-
-
-        //for Valid Classes
-//        for(SootClass sootClass: androidCallGraphFilter.getValidClasses()){
-//            System.out.println(String.format("Class %d: %s", ++classIndex, sootClass.getName()));
-//            for(SootMethod sootMethod : sootClass.getMethods()){
-//                for(Iterator<Edge> it = callGraph.edgesOutOf(sootMethod); it.hasNext();)
-//                {
-//                    Edge edge = it.next();
-//                    System.out.println(((SootMethod)edge.getSrc()).toString() + " to " + edge.getTgt().toString());
-//                }
-//                int incomingEdge = 0;
-//                for(Iterator<Edge> it = callGraph.edgesInto(sootMethod); it.hasNext();incomingEdge++,it.next());
-//                int outgoingEdge = 0;
-//                for(Iterator<Edge> it = callGraph.edgesOutOf(sootMethod); it.hasNext();outgoingEdge++,it.next());
-//                System.out.println(String.format("\tMethod %s, #IncomeEdges: %d, #OutgoingEdges: %d", sootMethod.getName(), incomingEdge, outgoingEdge));
-//            }
-//        }
         System.out.println("---------------------------------------------------------------------\n");
-        // Retrieve some methods to demonstrate reachability in callgraph
-//        SootMethod childMethod = Scene.v().getMethod(childMethodSignature);
-//        SootMethod parentMethod = Scene.v().getMethod(parentMethodSignature);
-//        SootMethod unreachableMehthod = Scene.v().getMethod(unreachableMethodSignature);
-//        SootMethod mainActivityEntryMethod = Scene.v().getMethod(mainActivityEntryPointSignature);
-//        // A better way to find MainActivity's entry method (generated by FlowDroid)
-//        for(SootMethod sootMethod : app.getDummyMainMethod().getDeclaringClass().getMethods()) {
-//            if (sootMethod.getReturnType().toString().equals(mainActivityClassName)) {
-//                System.out.println("MainActivity's entrypoint is " + sootMethod.getName()
-//                        + " and it's equal to mainActivityEntryMethod: " + sootMethod.equals(mainActivityEntryMethod));
-//            }
-//        }
-//        // Perform BFS from the main entrypoint to see if "unreachableMehthod" is reachable at all or not
-//        Map<SootMethod, SootMethod> reachableParentMapFromEntryPoint = getAllReachableMethods(app.getDummyMainMethod());
-//        if(reachableParentMapFromEntryPoint.containsKey(unreachableMehthod))
-//            System.out.println("unreachableMehthod is reachable, a possible path from the entry point: " + getPossiblePath(reachableParentMapFromEntryPoint, unreachableMehthod));
-//        else
-//            System.out.println("unreachableMehthod is not reachable from the entrypoint.");
-//        // Perform BFS to get all reachable methods from MainActivity's entry point
-//        Map<SootMethod, SootMethod> reachableParentMapFromMainActivity = getAllReachableMethods(mainActivityEntryMethod);
-//        if(reachableParentMapFromMainActivity.containsKey(childMethod))
-//            System.out.println("childMethod is reachable from MainActivity, a possible path: " + getPossiblePath(reachableParentMapFromMainActivity, childMethod));
-//        else
-//            System.out.println("childMethod is not reachable from MainActivity.");
-//        if(reachableParentMapFromMainActivity.containsKey(parentMethod))
-//            System.out.println("parentMethod is reachable from MainActivity, a possible path: " + getPossiblePath(reachableParentMapFromMainActivity, parentMethod));
-//        else
-//            System.out.println("parentMethod is not reachable from MainActivity.");
 
-
-//        // Draw a subset of call graph
-//        if (drawGraph) {
-//            Visualizer.v().addCallGraph(callGraph,
-//                    androidCallGraphFilter,
-//                    new Visualizer.AndroidNodeAttributeConfig(true));
-//            Visualizer.v().draw();
-//        }
     }
 
     // A Breadth-First Search algorithm to get all reachable methods from initialMethod in the callgraph
@@ -354,6 +229,43 @@ public class Main {
         return parentMap;
     }
 
+    public static void printAllEdges(List<CallEdge> listCallEdges) {
+        for(int i = 0; i< listCallEdges.size(); i++)
+        {
+            System.out.println(listCallEdges.get(i).toString());
+        }
+    }
+    public static List<CallEdge> getAllReachableMethodsToList(SootMethod initialMethod){
+        CallGraph callgraph = Scene.v().getCallGraph();
+        List<SootMethod> queue = new ArrayList<>();
+        queue.add(initialMethod);
+        List<CallEdge> listCallEdges = new ArrayList<>();
+//        listCallSources.add(null);
+//        listCallTargets.add(initialMethod);
+        listCallEdges.add(new CallEdge(null,initialMethod));
+//        System.out.println("NULL to " +initialMethod);
+//        listCallEdges.add(new CallEdge(null,initialMethod));
+        for(int i=0; i< queue.size(); i++){
+            SootMethod method = queue.get(i);
+            for (Iterator<Edge> it = callgraph.edgesOutOf(method); it.hasNext(); ) {
+                Edge edge = it.next();
+                SootMethod childMethod = edge.tgt();
+                CallEdge callEdge = new CallEdge(method,childMethod);
+                if(listCallEdges.contains(callEdge))
+                {
+                    continue;
+                }
+                listCallEdges.add(callEdge);
+//                System.out.println(method +" to "+childMethod);
+//                listCallSources.add(method);
+//                listCallTargets.add(childMethod);
+//                listCallEdges.add(new CallEdge(method,childMethod));
+
+                queue.add(childMethod);
+            }
+        }
+        return listCallEdges;
+    }
     public static Boolean getPossiblePath(Map<SootMethod,SootMethod> reachableMap,SootMethod from, SootMethod to)
     {
         return false;
@@ -370,4 +282,5 @@ public class Main {
 //            it = reachableParentMap.get(it);
 //        } return possiblePath;
 //    }
+
 }

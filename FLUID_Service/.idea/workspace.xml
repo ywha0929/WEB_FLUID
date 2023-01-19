@@ -14,30 +14,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51666edf-a32a-4fc2-bc9b-a00a2873453e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/7.0.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/.gradle/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/app-release.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/release/fluidlib.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Interface/app/src/main/java/com/hmsl/fluidlib/FLUIDMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.0.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_StaticAnalysis/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/src/main/java/org/example/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../testWebServer/src/main/java/com/testserver/springboot/Application.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
