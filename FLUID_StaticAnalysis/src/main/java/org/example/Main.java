@@ -12,7 +12,7 @@ import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,8 +26,10 @@ public class Main {
 //   static String apkPath = androidAPKPath + File.separator + "com.simplemobiletools.calculator_5.8.2-51_minAPI21(nodpi)_apkmirror.com.apk";
 // static String apkPath = androidAPKPath + File.separator + "FalseNegativeTestApp.apk";
 //    static String apkPath = androidAPKPath + File.separator + "StaticAnalysisTestApp.apk";
-    static String apkPath = androidAPKPath + File.separator + "calculator.apk";
+//    static String apkPath = androidAPKPath + File.separator + "calculator.apk";
+
     static String outputPath = USER_HOME + File.separator + "output";
+    static File outputFile ;
     static List<SootMethod> listTargetMethod = new ArrayList<>();
     static List<SootClass> listTargetClass = new ArrayList<>();
     static Map<SootMethod,SootMethod> foundUIUpdateMethods = new HashMap<>();
@@ -38,7 +40,7 @@ public class Main {
     static List<String> output = new ArrayList<>();
     static Lock lock = new Lock();
     static AtomicInteger threadNum = new AtomicInteger(0);
-
+    static String outputFilePath = outputPath+File.separator+ "StaticAnalysisResult.log";
 
     private static void fillListTargetMethod()
     {
@@ -164,7 +166,7 @@ public class Main {
         Scene.v().loadNecessaryClasses();
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
 
         if(System.getenv().containsKey("ANDROID_HOME"))
             androidJar = System.getenv("ANDROID_HOME")+ File.separator+"platforms";
@@ -172,8 +174,7 @@ public class Main {
         setupSoot(androidJar,apkPath,outputPath);
 
         fillListTargetMethod();
-
-
+        outputFile = new File(outputFilePath);
 
 
 
@@ -244,19 +245,39 @@ public class Main {
                         System.err.println(thisMethod.toString());
                         printAllEdges(subList);
 //                        System.out.println("\nUI update?");
+                        FileOutputStream fileOutputStream;
                         output.add("UI update?");
+                        try {
+                            fileOutputStream= new FileOutputStream(outputFile);
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                        DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
                         for (CallEdge thisEdge : subList) {
                             for (int k = 0; k < listTargetMethod.size(); k++) {
                                 if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
                                     output.add(thisMethod + " to " + thisEdge.getTgtMethod() + "true");
+                                    try {
+                                        dataOutputStream.writeUTF(thisMethod + " to " + thisEdge.getTgtMethod());
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
 //                                    System.out.println(thisEdge.getTgtMethod() + " true");
                                 }
                             }
 
                         }
+                        try {
+                            dataOutputStream.close();
+                            fileOutputStream.close();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+
                         threadNum.decrementAndGet();
                         lock.release();
-
+                        System.out.println("Thread done");
                         return;
                     }
                 });
