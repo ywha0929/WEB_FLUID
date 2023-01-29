@@ -4,12 +4,13 @@ import soot.SootMethod;
 
 public class CallEdge {
     private SootMethod srcMethod;
-    private SootMethod tgtMethod;
+	private SootMethod tgtMethod;
     public CallEdge(SootMethod srcMethod, SootMethod targetMethod)
     {
         this.srcMethod = srcMethod;
         this.tgtMethod = targetMethod;
     }
+
     @Override
     public String toString()
     {
@@ -21,25 +22,26 @@ public class CallEdge {
     @Override
     public boolean equals(Object obj) {
         CallEdge edge = (CallEdge) obj;
-        if(this.getSrcMethodSignature().equals(edge.getSrcMethodSignature()) && this.getTgtMethodSignature().equals(edge.getTgtMethodSignature()))
+        if(this.getSrcMethodString().equals(edge.getSrcMethodString()) && this.getTgtMethodString().equals(edge.getTgtMethodString()))
             return true;
         else
             return false;
     }
-    public SootMethod getSrcMethod()
+    public String getSrcMethodString()
     {
-        return srcMethod;
-    }
-    public SootMethod getTgtMethod()
-    {
-        return tgtMethod;
-    }
-    public String getSrcMethodSignature() {
         if(srcMethod == null)
             return "null";
         return srcMethod.toString();
     }
-    public String getTgtMethodSignature() {
+    public String getTgtMethodString()
+    {
         return tgtMethod.toString();
+    }
+    public SootMethod getSrcMethod() {
+        return srcMethod;
+    }
+
+    public SootMethod getTgtMethod() {
+        return tgtMethod;
     }
 }

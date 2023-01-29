@@ -1,6 +1,7 @@
 package org.example;
 
 
+import scala.concurrent.Lock;
 import scala.util.control.TailCalls;
 import soot.*;
 import soot.jimple.infoflow.InfoflowConfiguration;
@@ -13,17 +14,19 @@ import soot.options.Options;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
     private final static String USER_HOME = System.getProperty("user.home");
     private static String androidJar = USER_HOME + "/Library/Android/sdk/platforms";
     static String androidAPKPath = System.getProperty("user.dir") + File.separator + "apks";
     //    static String apkPath = androidDemoPath + File.separator + "/st_demo.apk";
-//    static String apkPath = androidDemoPath + File.separator + "/com.simplemobiletools.notes.apk";
+//    static String apkPath = androidAPKPath + File.separator + "/com.simplemobiletools.notes.apk";
 //   static String apkPath = androidAPKPath + File.separator + "com.simplemobiletools.calculator_5.8.2-51_minAPI21(nodpi)_apkmirror.com.apk";
 // static String apkPath = androidAPKPath + File.separator + "FalseNegativeTestApp.apk";
-    static String apkPath = androidAPKPath + File.separator + "StaticAnalysisTestApp.apk";
-//    static String apkPath = androidAPKPath + File.separator + "calculator.apk";
+//    static String apkPath = androidAPKPath + File.separator + "StaticAnalysisTestApp.apk";
+    static String apkPath = androidAPKPath + File.separator + "calculator.apk";
     static String outputPath = USER_HOME + File.separator + "output";
     static List<SootMethod> listTargetMethod = new ArrayList<>();
     static List<SootClass> listTargetClass = new ArrayList<>();
@@ -31,6 +34,10 @@ public class Main {
     static List<SootMethod> listCallSources = new ArrayList<>();
     static List<SootMethod> listCallTargets = new ArrayList<>();
 //    static List<CallEdge> listCallEdges = new ArrayList<>();
+    static AtomicBoolean lockStdout = new AtomicBoolean();
+    static List<String> output = new ArrayList<>();
+    static Lock lock = new Lock();
+    static AtomicInteger threadNum = new AtomicInteger(0);
 
 
     private static void fillListTargetMethod()
@@ -83,12 +90,15 @@ public class Main {
         for(int i= 0; i< classApplication.length; i++)
         {
             SootClass thisClass = (SootClass) classApplication[i];
-            if( thisClass.getPackageName().contains("androidx") ||
-                thisClass.getPackageName().contains("android.widget") ||
-                thisClass.getPackageName().contains("com.google.android"))
-            {
-                continue;
-            }
+
+            //exclude android native UIs
+//            if( thisClass.getPackageName().contains("androidx") ||
+//                thisClass.getPackageName().contains("android.widget") ||
+//                thisClass.getPackageName().contains("com.google.android"))
+//            {
+//                continue;
+//            }
+
 //            listVistedClass.add(thisClass);
             SootClass superClass;
             if(thisClass.hasSuperclass())
@@ -154,7 +164,7 @@ public class Main {
         Scene.v().loadNecessaryClasses();
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException {
 
         if(System.getenv().containsKey("ANDROID_HOME"))
             androidJar = System.getenv("ANDROID_HOME")+ File.separator+"platforms";
@@ -162,7 +172,14 @@ public class Main {
         setupSoot(androidJar,apkPath,outputPath);
 
         fillListTargetMethod();
+
+
+
+
+
+
         fillListTargetClass();
+        lockStdout.set(false);
         InfoflowConfiguration.CallgraphAlgorithm cgAlgorithm = InfoflowConfiguration.CallgraphAlgorithm.CHA;
 
         // Parse arguments
@@ -179,45 +196,103 @@ public class Main {
         SetupApplication app = new SetupApplication(config);
         // Create the Callgraph without executing taint analysis
         app.constructCallgraph();
-//		SootClass thisClass = listTargetClass.get(0);
-//		List<SootMethod> listMethodsOf = thisClass.getMethods();
-//		SootMethod thisMethod = listMethodsOf.get(1);
-//		SootClass thisClass1 = Scene.v().getSootClass("com.example.staticanalysistestapp.methodInvocation3");
-//		for(SootMethod thisMethod : thisClass1.getMethods())
-//		{
-//			List<CallEdge> listCallEdges = getAllReachableMethodsToList(thisMethod);
-//			printAllEdges(listCallEdges);
 //
-//		}
-//		thisClass1 = Scene.v().getSootClass("com.example.staticanalysistestapp.UIUpdate");
-//        SootClass thisClass2 = null;
+		System.out.println("CallGraph constructed \n-------------------------");
+//        List<CallEdge> listCallEdges = getAllReachableMethodsToList(app.getDummyMainMethod());
+//        System.out.println("listCallEdges constructed");
+////
+//        SootClass sootClass1 = Scene.v().getSootClass("com.example.staticanalysistestapp.UIUpdate");
+//        Object[] sootClasses = Scene.v().getApplicationClasses().toArray();
+//        SootClass sootClass2 = null;
+//        for(Object thisObject : sootClasses)
+//        {
+//            SootClass thisClass = (SootClass) thisObject;
+//            if(thisClass.toString().contains("com.example.staticanalysistestapp.UIUpdate")) {
+//                sootClass2 = thisClass;
+//                break;
+//            }
+//        }
 		System.out.println("-------------------------");
-        List<CallEdge> listCallEdges = getAllReachableMethodsToList(app.getDummyMainMethod());
-        System.out.println("listCallEdges constructed");
-//        SootMethod method1 = null;
-//        SootMethod method2 = null;
-//		for(SootMethod thisMethod : thisClass1.getMethods())
-//		{
-////            method1 = thisMethod;
-//			List<CallEdge> listCallEdges = getAllReachableMethodsToList(thisMethod);
-//			printAllEdges(listCallEdges);
-//
-//		}
-		System.out.println("-------------------------");
-        for(SootClass thisClass : listTargetClass)
+        List<Thread> threads = new ArrayList<>();
+        for(int i = 0; i< listTargetClass.size(); i++)
         {
+            System.err.println(listTargetClass.get(i).toString());
+            output.add(listTargetClass.get(i).toString());
+            SootClass thisClass = Scene.v().getSootClass( listTargetClass.get(i).toString());
+//            System.out.println("class : "+thisClass.toString());
+//            System.out.println("class1 : "+sootClass1.toString());
+//            System.out.println("class2 : " + sootClass2.toString());
+//            System.out.println("class equal? " + sootClass1.equals(thisClass));
+//            System.out.println("class equal? " + sootClass2.equals(thisClass));
+            List<SootMethod> listMethod = thisClass.getMethods();
 //            thisClass2 = thisClass;
 ////            List<SootMethod> listMethods = thisClass.getMethods();
-            for(SootMethod thisMethod : thisClass.getMethods())
+            for(int j = 0; j< listMethod.size(); j++)
             {
-                List<CallEdge> subList = getReachableMethodsSubList(listCallEdges,thisMethod);
-                printAllEdges(subList);
+                SootMethod thisMethod = listMethod.get(j);
 
-//
+
+                Thread workerThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        List<CallEdge> subList = getAllReachableMethodsToList(thisMethod);
+
+                        lock.acquire();
+                        threadNum.incrementAndGet();
+                        output.add("\n" + thisMethod.toString());
+                        System.err.println(thisMethod.toString());
+                        printAllEdges(subList);
+//                        System.out.println("\nUI update?");
+                        output.add("UI update?");
+                        for (CallEdge thisEdge : subList) {
+                            for (int k = 0; k < listTargetMethod.size(); k++) {
+                                if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
+                                    output.add(thisMethod + " to " + thisEdge.getTgtMethod() + "true");
+//                                    System.out.println(thisEdge.getTgtMethod() + " true");
+                                }
+                            }
+
+                        }
+                        threadNum.decrementAndGet();
+                        lock.release();
+
+                        return;
+                    }
+                });
+//                if (i == listTargetMethod.size() - 1 && j == listMethod.size() - 1)
+//                    System.out.println("last Thread : " + thisMethod);
+                threads.add(workerThread);
+                workerThread.start();
+
+
             }
+            output.add("------------------------------------------------------");
+			System.err.println("------------------------------------------------------");
         }
+        lock.acquire();
+        while(threadNum.get() != 0)
+        {
+            System.err.println("thread not ending"+ threadNum.get());
+        }
+        System.out.println("thread Execution complete");
+//        lock.acquire();
+        for(String thisOutput : output)
+        {
+            System.out.println(thisOutput);
+        }
+        System.out.println("StaticAnalysis Complete!!");
+        lock.release();
+//        System.out.println("class1 : "+sootClass1.toString());
+//        System.out.println("class2 : " + sootClass2.toString());
+//        System.out.println("class equal? " + sootClass1.equals(sootClass2));
 //        System.out.println("-------------------------");
 //
+//        SootMethod sootMethod1 = sootClass1.getMethodByName("uiUpdate");
+//        SootMethod sootMethod2 = sootClass2.getMethods().get(1);
+//        System.out.println("method1 : "+sootMethod1.toString());
+//        System.out.println("method2 : " + sootMethod2.toString());
+//        System.out.println("method equals? : " +sootMethod1.equals(sootMethod2));
 //
 //        System.out.println("class 1 : " + thisClass1);
 //        System.out.println("class 2 : " + thisClass2);
@@ -277,7 +352,8 @@ public class Main {
     public static void printAllEdges(List<CallEdge> listCallEdges) {
         for(int i = 0; i< listCallEdges.size(); i++)
         {
-            System.out.println(listCallEdges.get(i).toString());
+//            System.out.println(listCallEdges.get(i).toString());
+            output.add(listCallEdges.get(i).toString());
         }
     }
     public static List<CallEdge> getAllReachableMethodsToList(SootMethod initialMethod){
@@ -322,15 +398,22 @@ public class Main {
             SootMethod thisMethod = queue.get(i);
             for(int j = 0; i < callEdges.size(); j++)
             {
-                if(callEdges.get(i).getSrcMethodSignature().equals(thisMethod.toString()))
-                {
-                    subList.add(new CallEdge(thisMethod,callEdges.get(i).getTgtMethod()));
+                if(callEdges.get(i).getSrcMethodString().equals(thisMethod))
+                {	
+
+					CallEdge thisEdge = new CallEdge(thisMethod,callEdges.get(i).getTgtMethod());
+					if(subList.contains(thisEdge))
+					{
+						continue;
+					}
+                    subList.add(thisEdge);
                     queue.add(callEdges.get(i).getTgtMethod());
                 }
             }
         }
         return subList;
     }
+
     public static Boolean getPossiblePath(Map<SootMethod,SootMethod> reachableMap,SootMethod from, SootMethod to)
     {
         return false;
