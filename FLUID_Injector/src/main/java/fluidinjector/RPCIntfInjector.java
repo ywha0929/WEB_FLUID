@@ -28,9 +28,31 @@ public class RPCIntfInjector extends BodyTransformer {
 	static String MAINACTIVITY_CLASS_NAME;
 	static String MAIN_PACKAGE_NAME;
 	static List<SootClass> injectedClasses = new ArrayList<>();
+	static List<String> listUIUpdateSignature = new ArrayList();
+	static String StaticAnalysisFileName = System.getProperty("user.home")+ "/WEB_FLUID/FLUID_Injector/"+"StaticAnlysisResult/Calculator.result"
+
+	void loadStaticAnalysisResult()
+	{
+		public static void main(String[] args) {
+		try {
+			Scanner scanner = new Scanner(new File(StaticAnalysisFileName));
+
+			while (scanner.hasNextLine()) {
+				String buffer = scanner.nextLine();
+				System.out.println(buffer);
+				listUIUpdateSignature.add(buffer);
+			}
+
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	}
 	public RPCIntfInjector() {
 
 		super();
+		loadStaticAnalysisResult();
 //		MAIN_PACKAGE_NAME = namePackage;
 //		String classname = namePackage+".MainActivity";
 //		MAINACTIVITY_CLASS_NAME = classname;
