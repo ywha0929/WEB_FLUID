@@ -1,0 +1,17 @@
+<androidx.appcompat.view.menu.ListMenuItemView: void h(boolean,char)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.view.menu.ListMenuItemView: void setTitle(java.lang.CharSequence)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.widget.a0: void c()> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.widget.a0: java.lang.CharSequence getText()> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.widget.a0: void setAutoSizeTextTypeUniformWithConfiguration(int,int,int,int)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.widget.a0: void setAutoSizeTextTypeUniformWithPresetSizes(int[],int)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<com.google.android.material.internal.NavigationMenuItemView: void setTitle(java.lang.CharSequence)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.widget.ActionMenuView: int L(android.view.View,int,int,int,int)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<com.google.android.material.textfield.TextInputLayout: void J()> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<com.google.android.material.textfield.TextInputLayout: void i0()> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<com.google.android.material.textfield.TextInputLayout: void y0()> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<com.google.android.material.textfield.TextInputLayout: void y0()> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<com.google.android.material.textfield.TextInputLayout: void z0(int)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<com.google.android.material.textfield.TextInputLayout: void z0(int)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.widget.f: void setAutoSizeTextTypeUniformWithConfiguration(int,int,int,int)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.widget.f: void setAutoSizeTextTypeUniformWithPresetSizes(int[],int)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<androidx.appcompat.view.menu.ActionMenuItemView: boolean f()> to <android.widget.TextView: void setText(java.lang.CharSequence)>

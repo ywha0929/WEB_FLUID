@@ -13,6 +13,7 @@ import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,7 +27,7 @@ public class Main {
 //   static String apkPath = androidAPKPath + File.separator + "com.simplemobiletools.calculator_5.8.2-51_minAPI21(nodpi)_apkmirror.com.apk";
 // static String apkPath = androidAPKPath + File.separator + "FalseNegativeTestApp.apk";
 //    static String apkPath = androidAPKPath + File.separator + "StaticAnalysisTestApp.apk";
-//    static String apkPath = androidAPKPath + File.separator + "calculator.apk";
+    static String apkPath = androidAPKPath + File.separator + "calculator.apk";
 
     static String outputPath = USER_HOME + File.separator + "output";
     static File outputFile ;
@@ -40,8 +41,8 @@ public class Main {
     static List<String> output = new ArrayList<>();
     static Lock lock = new Lock();
     static AtomicInteger threadNum = new AtomicInteger(0);
-    static String outputFilePath = outputPath+File.separator+ "StaticAnalysisResult.log";
-
+    static String outputFilePath = "/home/ywha/WEB_FLUID/FLUID_StaticAnalysis/output/StaticAnalysisResult.log";
+    static List<byte[]> outputBuffer = new ArrayList<>();
     private static void fillListTargetMethod()
     {
         System.out.println("preparing listTargetMethod ... ");
@@ -245,23 +246,18 @@ public class Main {
                         System.err.println(thisMethod.toString());
                         printAllEdges(subList);
 //                        System.out.println("\nUI update?");
-                        FileOutputStream fileOutputStream;
+
                         output.add("UI update?");
-                        try {
-                            fileOutputStream= new FileOutputStream(outputFile);
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-                        DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
+
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
                         for (CallEdge thisEdge : subList) {
                             for (int k = 0; k < listTargetMethod.size(); k++) {
                                 if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
                                     output.add(thisMethod + " to " + thisEdge.getTgtMethod() + "true");
-                                    try {
-                                        dataOutputStream.writeUTF(thisMethod + " to " + thisEdge.getTgtMethod());
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
+                                    String output = thisMethod + " to " + thisEdge.getTgtMethod() + "\n";
+                                    outputBuffer.add(output.getBytes(StandardCharsets.UTF_8));
+
 //                                    System.out.println(thisEdge.getTgtMethod() + " true");
                                 }
                             }
@@ -269,7 +265,6 @@ public class Main {
                         }
                         try {
                             dataOutputStream.close();
-                            fileOutputStream.close();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -298,10 +293,22 @@ public class Main {
         }
         System.out.println("thread Execution complete");
 //        lock.acquire();
+        FileOutputStream fileOutputStream;
+        try {
+            fileOutputStream= new FileOutputStream(outputFile);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         for(String thisOutput : output)
         {
             System.out.println(thisOutput);
         }
+        for(byte[] buffer : outputBuffer)
+        {
+            fileOutputStream.write(buffer);
+        }
+        fileOutputStream.flush();
+        fileOutputStream.close();
         System.out.println("StaticAnalysis Complete!!");
         lock.release();
 //        System.out.println("class1 : "+sootClass1.toString());
