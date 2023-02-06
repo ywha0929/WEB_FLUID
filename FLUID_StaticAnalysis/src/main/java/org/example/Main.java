@@ -13,6 +13,7 @@ import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,8 +41,8 @@ public class Main {
     static List<String> output = new ArrayList<>();
     static Lock lock = new Lock();
     static AtomicInteger threadNum = new AtomicInteger(0);
-    static String outputFilePath = outputPath+File.separator+ "StaticAnalysisResult.log";
-
+    static String outputFilePath = "/home/ywha/WEB_FLUID/FLUID_StaticAnalysis/output/StaticAnalysisResult.log";
+    static List<byte[]> outputBuffer = new ArrayList<>();
     private static void fillListTargetMethod()
     {
         System.out.println("preparing listTargetMethod ... ");
@@ -82,6 +83,90 @@ public class Main {
         System.out.println("---------------------------------------------------------------------\n");
     }
 
+    private static void fillListTargetActivityClass()
+    {
+        System.out.println("preparing listTargetClass ... ");
+        Object[] arrClasses = Scene.v().getApplicationClasses().toArray();
+        List<SootClass> listNodes = new ArrayList<>();
+        for(int i = 0; i< arrClasses.length; i++)
+        {
+            SootClass thisClass = (SootClass)arrClasses[i];
+            if(listNodes.contains(thisClass))
+            {
+                continue;
+            }
+            listNodes.add(thisClass);
+//			System.err.println("["+i+"]th class : "+thisClass.toString());
+//			System.out.println("["+i+"]th class : "+thisClass.toString());
+            SootClass superClass = thisClass.getSuperclass();
+
+            while(true)
+            {
+                listNodes.add(superClass);
+                if(listTargetClass.contains(superClass)) //if ancestor in list -> switch
+                {
+                    System.err.println("switching Class "+superClass.toString()+" -> "+thisClass.toString());
+                    System.out.println("switching Class "+superClass.toString()+" -> "+thisClass.toString());
+                    listTargetClass.remove(superClass);
+                    listTargetClass.add(thisClass);
+                    break;
+                }
+                if(superClass.toString().equals("androidx.appcompat.app.AppCompatActivity")|| superClass.toString().equals("android.app.Activity"))
+                {
+                    System.err.println("found activity class : "+thisClass.toString());
+                    System.out.println("found activity class : "+thisClass.toString());
+                    if(!listTargetClass.contains(thisClass))
+                    {
+                        listTargetClass.add(thisClass);
+                        break;
+
+                    }
+                    else
+                    {
+                        System.out.println("thisClass is already injected");
+                        break;
+
+                    }
+
+                }
+                else
+                {
+                    if(superClass.hasSuperclass())
+                    {
+                        superClass = superClass.getSuperclass();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+
+        }
+        for(int i = 0; i< listTargetClass.size(); i++)
+        {
+            if(listTargetClass.get(i).toString().contains("androidx"))
+            {
+                listTargetClass.remove(listTargetClass.get(i));
+            }
+        }
+
+        //add inner classes
+        for(int i = 0; i< arrClasses.length; i++)
+        {
+            SootClass thisClass = (SootClass) arrClasses[i];
+            if(thisClass.hasOuterClass() && listTargetClass.contains(thisClass.getOuterClass()))
+            {
+                System.err.println("found inner class : "+thisClass.toString());
+                System.out.println("found inner class : "+thisClass.toString());
+                listTargetClass.add(thisClass);
+            }
+        }
+        System.out.println("preparing listTargetClass ... done");
+        System.out.println("---------------------------------------------------------------------\n");
+    }
+
     private static void fillListTargetClass() //find custom UI classes
     {
         System.out.println("preparing listTargetClass ... ");
@@ -92,6 +177,7 @@ public class Main {
         for(int i= 0; i< classApplication.length; i++)
         {
             SootClass thisClass = (SootClass) classApplication[i];
+
 
             //exclude android native UIs
 //            if( thisClass.getPackageName().contains("androidx") ||
@@ -133,6 +219,7 @@ public class Main {
 
             }
         }
+
         System.out.println("preparing listTargetClass ... done");
         System.out.println("---------------------------------------------------------------------\n");
     }
@@ -171,17 +258,26 @@ public class Main {
         if(System.getenv().containsKey("ANDROID_HOME"))
             androidJar = System.getenv("ANDROID_HOME")+ File.separator+"platforms";
 
+
+        if(args.length != 1)
+        {
+            System.out.println("Usage : gradlew run [apk file]");
+        }
+        apkPath = args[0];
+//        System.out.println(apkPath);
+
         setupSoot(androidJar,apkPath,outputPath);
 
         fillListTargetMethod();
+        outputFilePath = apkPath+".result";
         outputFile = new File(outputFilePath);
 
 
-
-
-        fillListTargetClass();
+//        fillListTargetClass();
+        fillListTargetActivityClass();
         lockStdout.set(false);
         InfoflowConfiguration.CallgraphAlgorithm cgAlgorithm = InfoflowConfiguration.CallgraphAlgorithm.CHA;
+
 
         // Parse arguments
 //        InfoflowConfiguration.CallgraphAlgorithm cgAlgorithm = InfoflowConfiguration.CallgraphAlgorithm.SPARK;
@@ -199,6 +295,15 @@ public class Main {
         app.constructCallgraph();
 //
 		System.out.println("CallGraph constructed \n-------------------------");
+
+
+        for(SootClass sootClass : listTargetClass) {
+            System.out.println(sootClass.toString());
+            SootClass thatClass = Scene.v().getSootClass(sootClass.toString());
+            for (SootMethod sootMethod : thatClass.getMethods()) {
+                System.out.println(sootMethod);
+            }
+        }
 //        List<CallEdge> listCallEdges = getAllReachableMethodsToList(app.getDummyMainMethod());
 //        System.out.println("listCallEdges constructed");
 ////
@@ -231,79 +336,115 @@ public class Main {
             for(int j = 0; j< listMethod.size(); j++)
             {
                 SootMethod thisMethod = listMethod.get(j);
+                List<CallEdge> subList = getAllReachableMethodsToList(thisMethod);
 
-
-                Thread workerThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        List<CallEdge> subList = getAllReachableMethodsToList(thisMethod);
-
-                        lock.acquire();
-                        threadNum.incrementAndGet();
-                        output.add("\n" + thisMethod.toString());
-                        System.err.println(thisMethod.toString());
-                        printAllEdges(subList);
+//                        lock.acquire();
+                threadNum.incrementAndGet();
+                output.add("\n" + thisMethod.toString());
+                System.err.println(thisMethod.toString());
+                printAllEdges(subList);
 //                        System.out.println("\nUI update?");
-                        FileOutputStream fileOutputStream;
-                        output.add("UI update?");
-                        try {
-                            fileOutputStream= new FileOutputStream(outputFile);
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-                        DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
-                        for (CallEdge thisEdge : subList) {
-                            for (int k = 0; k < listTargetMethod.size(); k++) {
-                                if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
-                                    output.add(thisMethod + " to " + thisEdge.getTgtMethod() + "true");
-                                    try {
-                                        dataOutputStream.writeUTF(thisMethod + " to " + thisEdge.getTgtMethod());
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
+
+                output.add("UI update?");
+
+                for (CallEdge thisEdge : subList) {
+                    for (int k = 0; k < listTargetMethod.size(); k++) {
+                        if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
+                            output.add(thisMethod + " to " + thisEdge.getTgtMethod() + "true");
+                            String output = thisMethod + " to " + thisEdge.getTgtMethod() + "\n";
+                            outputBuffer.add(output.getBytes(StandardCharsets.UTF_8));
+                            System.out.println(output);
 //                                    System.out.println(thisEdge.getTgtMethod() + " true");
-                                }
-                            }
-
                         }
-                        try {
-                            dataOutputStream.close();
-                            fileOutputStream.close();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
-
-                        threadNum.decrementAndGet();
-                        lock.release();
-                        System.out.println("Thread done");
-                        return;
                     }
-                });
-//                if (i == listTargetMethod.size() - 1 && j == listMethod.size() - 1)
-//                    System.out.println("last Thread : " + thisMethod);
-                threads.add(workerThread);
-                workerThread.start();
+
+                }
+
+
+
+                threadNum.decrementAndGet();
+//                        lock.release();
+                System.out.println("Thread done");
+
+//                Thread workerThread = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                        List<CallEdge> subList = getAllReachableMethodsToList(thisMethod);
+//
+////                        lock.acquire();
+//                        threadNum.incrementAndGet();
+//                        output.add("\n" + thisMethod.toString());
+//                        System.err.println(thisMethod.toString());
+//                        printAllEdges(subList);
+////                        System.out.println("\nUI update?");
+//
+//                        output.add("UI update?");
+//
+//                        for (CallEdge thisEdge : subList) {
+//                            for (int k = 0; k < listTargetMethod.size(); k++) {
+//                                if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
+//                                    output.add(thisMethod + " to " + thisEdge.getTgtMethod() + "true");
+//                                    String output = thisMethod + " to " + thisEdge.getTgtMethod() + "\n";
+//                                    outputBuffer.add(output.getBytes(StandardCharsets.UTF_8));
+//                                    System.out.println(output);
+////                                    System.out.println(thisEdge.getTgtMethod() + " true");
+//                                }
+//                            }
+//
+//                        }
+//
+//
+//
+//                        threadNum.decrementAndGet();
+////                        lock.release();
+//                        System.out.println("Thread done");
+//                        return;
+//                    }
+//                });
+////                if (i == listTargetMethod.size() - 1 && j == listMethod.size() - 1)
+////                    System.out.println("last Thread : " + thisMethod);
+//                threads.add(workerThread);
+//                workerThread.start();
 
 
             }
             output.add("------------------------------------------------------");
 			System.err.println("------------------------------------------------------");
         }
-        lock.acquire();
+//        lock.acquire();
         while(threadNum.get() != 0)
         {
             System.err.println("thread not ending"+ threadNum.get());
+            for(int i = 0; i< 10000;i++);
         }
+        for(int i = 0; i< 10000;i++);
         System.out.println("thread Execution complete");
 //        lock.acquire();
+        FileOutputStream fileOutputStream;
+        try {
+            fileOutputStream= new FileOutputStream(outputFile);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         for(String thisOutput : output)
         {
             System.out.println(thisOutput);
         }
+        for(byte[] buffer : outputBuffer)
+        {
+            fileOutputStream.write(buffer);
+        }
+        for(SootMethod targetMethod : listTargetMethod)
+        {
+            String string = targetMethod.toString() + " to " + targetMethod.toString()+"\n";
+            fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
+        }
+        fileOutputStream.flush();
+        fileOutputStream.close();
         System.out.println("StaticAnalysis Complete!!");
-        lock.release();
+//        lock.release();
+//        System.exit(0);
 //        System.out.println("class1 : "+sootClass1.toString());
 //        System.out.println("class2 : " + sootClass2.toString());
 //        System.out.println("class equal? " + sootClass1.equals(sootClass2));

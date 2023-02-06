@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.io.File;
+import java.util.StringTokenizer;
 
 public class RPCIntfInjector extends BodyTransformer {
 	boolean isInsert = true;
@@ -29,29 +32,35 @@ public class RPCIntfInjector extends BodyTransformer {
 	static String MAIN_PACKAGE_NAME;
 	static List<SootClass> injectedClasses = new ArrayList<>();
 	static List<String> listUIUpdateSignature = new ArrayList();
-	static String StaticAnalysisFileName = System.getProperty("user.home")+ "/WEB_FLUID/FLUID_Injector/"+"StaticAnlysisResult/Calculator.result"
-
-	void loadStaticAnalysisResult()
+	static List<String> listUIUpdateTargetSignature = new ArrayList();
+//	static String StaticAnalysisFileName = System.getProperty("user.home")+ "/WEB_FLUID/FLUID_Injector/"+"StaticAnlysisResult/Calculator.result"
+	static String apkPath;
+	static String staticAnalysisPath;
+	public void loadStaticAnalysisResult()
 	{
-		public static void main(String[] args) {
 		try {
-			Scanner scanner = new Scanner(new File(StaticAnalysisFileName));
+			Scanner scanner = new Scanner(new File(staticAnalysisPath));
 
 			while (scanner.hasNextLine()) {
 				String buffer = scanner.nextLine();
-				System.out.println(buffer);
-				listUIUpdateSignature.add(buffer);
+//				System.out.println(buffer);
+				StringTokenizer stk = new StringTokenizer(buffer,"<>");
+				listUIUpdateSignature.add(stk.nextToken());
+				stk.nextToken();
+				listUIUpdateTargetSignature.add(stk.nextToken());
 			}
 
 			scanner.close();
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	}
-	public RPCIntfInjector() {
+
+	public RPCIntfInjector(String apkPath) {
 
 		super();
+		this.apkPath = apkPath;
+		this.staticAnalysisPath = apkPath+".result";
 		loadStaticAnalysisResult();
 //		MAIN_PACKAGE_NAME = namePackage;
 //		String classname = namePackage+".MainActivity";
@@ -552,7 +561,10 @@ public class RPCIntfInjector extends BodyTransformer {
 
 		Object[] unitarray = units.toArray();
 		for (int i = 0; i < unitarray.length; i++) {
+
 			String targetUnitString = unitarray[i].toString();
+			Unit targetUnit = (Unit)unitarray[i];
+
 			//find base class
 			if(targetUnitString.contains("virtualinvoke") && !targetUnitString.contains("goto"))
 			{
@@ -606,8 +618,30 @@ public class RPCIntfInjector extends BodyTransformer {
 
 
 				if (isView(baseSootClass))  {
-					System.out.println("found update code : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
-					System.err.println("found update code : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
+
+					System.out.println("found base : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
+					System.err.println("found base : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
+
+					StringTokenizer stk = new StringTokenizer(targetUnitString,"<>");
+					int indexSignature = 0;
+					String token = null;
+					if(stk.countTokens() >= 2)
+					{
+						stk.nextToken();
+						token = stk.nextToken();
+						if(listUIUpdateSignature.contains(token))
+						{
+
+						}
+						else
+						{
+							System.out.println("not in UIUpdate Signature List");
+							System.err.println("not in UIUpdate Signature List");
+							continue;
+
+						}
+					}
+					indexSignature = listUIUpdateSignature.indexOf(token);
 					hasUpdateCode = true;
 					List<Unit> generated = new ArrayList<>();
 					List<Unit> generated_catch = new ArrayList<>();
@@ -678,7 +712,8 @@ public class RPCIntfInjector extends BodyTransformer {
 					generated.add(Jimple.v().newAssignStmt(viewVar, Base));
 
 					// generated.add(Jimple.v().newAssignStmt(viewVar, (Local)locals[0]));
-					generated.add(Jimple.v().newAssignStmt(signatureVar, StringConstant.v(sig)));
+//					generated.add(Jimple.v().newAssignStmt(signatureVar, StringConstant.v(sig)));
+					generated.add(Jimple.v().newAssignStmt(signatureVar,StringConstant.v(listUIUpdateTargetSignature.get(indexSignature))));
 
 					generated.add(Jimple.v().newAssignStmt(objectArrayVar,
 							Jimple.v().newNewArrayExpr(cls2.getType(), IntConstant.v(2))));

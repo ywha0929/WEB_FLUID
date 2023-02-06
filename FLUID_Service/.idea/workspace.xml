@@ -14,6 +14,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51666edf-a32a-4fc2-bc9b-a00a2873453e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../FLUID_Injector/apks/StaticAnalysisTestApp.apk.result" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_Injector/ext_apks/calculator.apk.result" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_Injector/output/StaticAnalysisTestApp-dex2jar.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/apks/StaticAnalysisTestApp.apk.result" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/FLUIDInjector.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/FLUIDInjector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/classes/java/main/fluidinjector/RPCIntfInjector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/FLUIDInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/FLUIDInjector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/src/main/java/fluidinjector/RPCIntfInjector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLUID_StaticAnalysis/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_StaticAnalysis/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

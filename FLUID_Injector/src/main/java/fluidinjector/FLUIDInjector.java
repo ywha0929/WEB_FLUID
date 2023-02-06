@@ -30,7 +30,7 @@ public class FLUIDInjector {
         InstrumentUtil.setupSoot(androidJar, apkPath, outputPath);
 
         PackManager.v().getPack("jtp").add(
-                new Transform("jtp.RPCIntfInjector", new RPCIntfInjector()));
+                new Transform("jtp.RPCIntfInjector", new RPCIntfInjector(apkPath)));
         System.out.println("execute runPacks() ...");
         System.err.println("execute runPacks() ...");
         PackManager.v().runPacks();
