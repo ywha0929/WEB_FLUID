@@ -150,6 +150,9 @@ public class FLUIDMain {
         if (instance == null) {
             instance = new FLUIDMain(context);
         }
+        else {
+            instance.mContext = context;
+        }
         return instance;
     }
 
@@ -517,65 +520,72 @@ public class FLUIDMain {
         }
     }
     public void runUpdate(String unit, View view) {
-        StringTokenizer st = new StringTokenizer(unit, "<>");
+//        StringTokenizer st = new StringTokenizer(unit, "<>");
         Log.d(TAG,"RunUpdate invoked : "+unit+"="+getTS());
-        st.nextToken();                     // 앞에 virtualinvoke 부분 -> 필요없으므로 삭제
-        String first = st.nextToken();      // <> 내부 -> method가 있는 부분
-        String second = st.nextToken();     // parameter 부분
-
-        // todo : <> 내부에 method만 짤라내야한다.
-        StringTokenizer st1 = new StringTokenizer(first, " ");
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        while (st1.hasMoreTokens()) {
-            String str = st1.nextToken();
-            if (str.contains("(")) {
-                sb.append(str);
-                i++;
-            } else if (str.contains(",") || str.contains(")")) {
-                sb.append(str);
-                i++;
-            }
-        }
-
-        // method 변수 : method 이름만 들어감(ex.setTextSize)
-        // paramter[] : method 다음 괄호 안에 parameter type이 차례로 배열에 들어감.
-        //Log.d(TAG,"RunUpdate : sb is - "+sb.toString());
-        StringTokenizer st2 = new StringTokenizer(sb.toString(), "(,)");
-        String method = st2.nextToken();
-        String[] parameterType = new String[i];
-
-        for (int j = 0; j < i; j++) {
-            if(st2.hasMoreTokens())
-                parameterType[j] = st2.nextToken();
-            else
-                break;
-        }
-
-        // <???> 다음 괄호 안 파라미터 인수들 처리
-        StringTokenizer st3 = new StringTokenizer(second, " (,)");
-        String[] parameter = new String[i];
-        Object[] params = new Object[i];
-
-        //params[j].getClass() -> Wrapper class 형식
-        //params[j] parameter 그대로 잘 나옴.
-        for (int j = 0; j < i; j++) {
-            if(st3.hasMoreTokens())
-            {
-                parameter[j] = st3.nextToken();
-                params[j] = setType(parameterType[j], parameter[j]);
-            }
-            else
-                break;
-        }
+//        st.nextToken();                     // 앞에 virtualinvoke 부분 -> 필요없으므로 삭제
+//        String first = st.nextToken();      // <> 내부 -> method가 있는 부분
+//        String second = st.nextToken();     // parameter 부분
+//
+//        // todo : <> 내부에 method만 짤라내야한다.
+//        StringTokenizer st1 = new StringTokenizer(first, " ");
+//        StringBuilder sb = new StringBuilder();
+//        int i = 0;
+//        while (st1.hasMoreTokens()) {
+//            String str = st1.nextToken();
+//            if (str.contains("(")) {
+//                sb.append(str);
+//                i++;
+//            } else if (str.contains(",") || str.contains(")")) {
+//                sb.append(str);
+//                i++;
+//            }
+//        }
+//
+//        // method 변수 : method 이름만 들어감(ex.setTextSize)
+//        // paramter[] : method 다음 괄호 안에 parameter type이 차례로 배열에 들어감.
+//        //Log.d(TAG,"RunUpdate : sb is - "+sb.toString());
+//        StringTokenizer st2 = new StringTokenizer(sb.toString(), "(,)");
+//        String method = st2.nextToken();
+//        String[] parameterType = new String[i];
+//
+//        for (int j = 0; j < i; j++) {
+//            if(st2.hasMoreTokens())
+//                parameterType[j] = st2.nextToken();
+//            else
+//                break;
+//        }
+//
+//        // <???> 다음 괄호 안 파라미터 인수들 처리
+//        StringTokenizer st3 = new StringTokenizer(second, " (,)");
+//        String[] parameter = new String[i];
+//        Object[] params = new Object[i];
+//
+//        //params[j].getClass() -> Wrapper class 형식
+//        //params[j] parameter 그대로 잘 나옴.
+//        for (int j = 0; j < i; j++) {
+//            if(st3.hasMoreTokens())
+//            {
+//                parameter[j] = st3.nextToken();
+//                params[j] = setType(parameterType[j], parameter[j]);
+//            }
+//            else
+//                break;
+//        }
+        String method = unit;
 
         Bundle bundle = new Bundle();
         try {
-            Log.d(TAG,"method : "+method);
-            if (method.contains("setTextSize")){
-                convertPixelsToDpFloat((float)params[0], instance.mContext);
+            Object param = null;
+            if(method.contains("setText"))
+            {
+                TextView text = (TextView) view;
+                param = text.getText().toString();
             }
-            byte[] msg = generate_ubyteArray(method, view, params);
+            Log.d(TAG,"method : "+method);
+//            if (method.contains("setTextSize")){
+//                convertPixelsToDpFloat((float)params[0], instance.mContext);
+//            }
+            byte[] msg = generate_ubyteArray(method, view, param);
             if(msg == null)
             {
                 return;
@@ -630,7 +640,7 @@ public class FLUIDMain {
             return 0;
     }
 
-    public static byte[] generate_ubyteArray(String method, View view, Object... params) throws IOException {
+    public static byte[] generate_ubyteArray(String method, View view, Object params) throws IOException {
         byte[] utoByteArray = null;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
@@ -666,8 +676,8 @@ public class FLUIDMain {
         }
         else
         {
-            for (int i = 0; i < params.length; i++) {
-                Object param = params[i];
+            for (int i = 0; i < 1; i++) {
+                Object param = params;
                 int flag = setTypeFlag(param);
                 Log.d(TAG, "generate_ubyteArray: typeFlag " + flag);
                 if(flag == 0)

@@ -1,4 +1,4 @@
-<com.example.staticanalysistestapp.MainActivity$1: void onClick(android.view.View)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<com.example.staticanalysistestapp.UIUpdate: void uiUpdate(android.widget.TextView)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
 <android.widget.TextView: void setText(java.lang.CharSequence)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
 <android.widget.TextView: void setText(java.lang.CharSequence,android.widget.TextView$BufferType)> to <android.widget.TextView: void setText(java.lang.CharSequence,android.widget.TextView$BufferType)>
 <android.widget.TextView: void setText(char[],int,int)> to <android.widget.TextView: void setText(char[],int,int)>

@@ -1,12 +1,20 @@
 package org.example;
 
 
+import com.sun.mail.iap.ByteArray;
 import scala.concurrent.Lock;
 import scala.util.control.TailCalls;
 import soot.*;
+import soot.jimple.FieldRef;
+import soot.jimple.StaticFieldRef;
+import soot.jimple.Stmt;
 import soot.jimple.infoflow.InfoflowConfiguration;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.android.SetupApplication;
+import soot.jimple.internal.JArrayRef;
+import soot.jimple.internal.JAssignStmt;
+import soot.jimple.internal.JInstanceFieldRef;
+import soot.jimple.internal.JimpleLocal;
 import soot.jimple.toolkits.callgraph.CHATransformer;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
@@ -40,9 +48,11 @@ public class Main {
     static AtomicBoolean lockStdout = new AtomicBoolean();
     static List<String> output = new ArrayList<>();
     static Lock lock = new Lock();
-    static AtomicInteger threadNum = new AtomicInteger(0);
+    static AtomicInteger threadStartNum = new AtomicInteger(0);
+    static AtomicInteger threadEndNum = new AtomicInteger(0);
     static String outputFilePath = "/home/ywha/WEB_FLUID/FLUID_StaticAnalysis/output/StaticAnalysisResult.log";
     static List<byte[]> outputBuffer = new ArrayList<>();
+    static HashMap<String, HashSet<String>> result = new HashMap<String, HashSet<String>>();
     private static void fillListTargetMethod()
     {
         System.out.println("preparing listTargetMethod ... ");
@@ -167,6 +177,145 @@ public class Main {
         System.out.println("---------------------------------------------------------------------\n");
     }
 
+    private static void fillFieldMap()
+    {
+
+        for(SootMethod thisMethod : listTargetMethod)
+        {
+            List<SootMethod> queue = new ArrayList<>();
+            queue.add(thisMethod);
+//            for(SootClass thisClass : Scene.v().getApplicationClasses())
+//            {
+//                for(SootMethod thatMethod : thisClass.getMethods())
+//                {
+//                    if(thatMethod.toString().equals(thisMethod.toString()))
+//                    {
+//                        queue.add(thatMethod);
+//                        List<CallEdge> callGraph = getAllReachableMethodsToList( Scene.v().getSootClass(thisMethod.getDeclaringClass().toString()).getMethod(thisMethod.getSubSignature()) );
+//                        printAllEdges(callGraph,1);
+//                        for(CallEdge edge : callGraph)
+//                        {
+//                            queue.add(edge.getTgtMethod());
+//                        }
+//                    }
+//                }
+//            }
+
+
+
+            for(int i = 0; i< queue.size(); i++)
+            {
+                SootMethod nextMethod = queue.get(i);
+                HashSet<Value> localForField = new HashSet<Value>();
+                Body body = thisMethod.retrieveActiveBody();
+
+                System.out.println(body.toString());
+
+
+                Local thisLocal = null;
+                try {
+                    thisLocal = body.getThisLocal();
+                    localForField.add(thisLocal);
+                } catch (Exception e) {
+                    System.out.println(body);
+                }
+
+                List<Local> params = null;
+                try {
+                    params = body.getParameterLocals();
+                    for (Local param : params)
+                        localForField.add(param);
+                } catch (Exception e) {}
+                Iterator iter = thisMethod.getActiveBody().getUnits().iterator();
+
+                while(iter.hasNext())
+                {
+//                System.out.println("inside loop");
+                    Stmt stmt = (Stmt) iter.next();
+                    showStmtForDebug(thisMethod, stmt, "setState");
+
+                    if (stmt instanceof JAssignStmt) {
+
+                        JAssignStmt aStmt = (JAssignStmt)stmt;
+                        boolean shouldPeek = false;
+
+                        if (aStmt.containsFieldRef()) {
+
+                            // Direct assignment case.
+                            // We should peek the member field that is
+                            // 1) a member filed of thisLocal, 2) a static field,
+                            // or 3) a member field of thisLocal's member field (direct access)
+                            FieldRef fieldRef = aStmt.getFieldRef();
+                            if ((fieldRef instanceof JInstanceFieldRef
+                                    && ((JInstanceFieldRef)fieldRef).getBase() == thisLocal)) {
+                                shouldPeek = true;
+                            }
+                            else if (fieldRef instanceof StaticFieldRef) {
+                                shouldPeek = true;
+                            }
+                            else if (fieldRef instanceof JInstanceFieldRef) {
+                                // In method src, base has been already assigned to Local
+                                Value base = ((JInstanceFieldRef)fieldRef).getBase();
+                                if (localForField.contains(base))
+                                    shouldPeek = true;
+                            }
+
+                            if (shouldPeek) {
+
+                                SootField field = fieldRef.getField();
+
+                                System.out.println("	" + field.getSignature());
+                                Value left = aStmt.getLeftOp();
+                                assert left instanceof JimpleLocal;
+                                localForField.add(left);
+
+                                // Store result
+                                String clazzName = field.getDeclaringClass().getName();
+                                HashSet<String> fieldSet = result.get(clazzName);
+                                fieldSet = result.get(clazzName);
+                                if (fieldSet == null) {
+                                    fieldSet = new HashSet<String>();
+                                    result.put(clazzName, fieldSet);
+                                }
+                                fieldSet.add(field.getName());
+
+                            }
+                        }
+                        else {
+                            // Transitive assignment case
+                            Value right = aStmt.getRightOp();
+                            if (right instanceof JArrayRef) {
+                                // Transitively access to an element of th array-typed member field
+                                Value base = ((JArrayRef)right).getBase();
+                                if (localForField.contains(base))
+                                    shouldPeek = true;
+                            }
+                            else if (right instanceof JimpleLocal && localForField.contains(right))
+                                shouldPeek = true;
+
+                            if (shouldPeek) {
+                                Value left = aStmt.getLeftOp();
+                                assert left instanceof JimpleLocal;
+                                localForField.add(left);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+    }
+    public static void showStmtForDebug(SootMethod method, Stmt stmt, String methodName) {
+        if (method.getName().equals(methodName)) {
+            System.out.println(stmt);
+            if (stmt instanceof JAssignStmt) {
+                Value left = ((JAssignStmt)stmt).getLeftOp();
+                Value right = ((JAssignStmt)stmt).getRightOp();
+                System.out.println(left.getClass() + "		" + right.getClass());
+            }
+        }
+    }
     private static void fillListTargetClass() //find custom UI classes
     {
         System.out.println("preparing listTargetClass ... ");
@@ -180,12 +329,14 @@ public class Main {
 
 
             //exclude android native UIs
-//            if( thisClass.getPackageName().contains("androidx") ||
-//                thisClass.getPackageName().contains("android.widget") ||
-//                thisClass.getPackageName().contains("com.google.android"))
-//            {
-//                continue;
-//            }
+            if(thisClass.getPackageName().contains("androidx") ||
+//                    thisClass.getPackageName().contains("android.widget")
+//
+                thisClass.getPackageName().contains("com.google.android")
+                )
+            {
+                continue;
+            }
 
 //            listVistedClass.add(thisClass);
             SootClass superClass;
@@ -222,6 +373,11 @@ public class Main {
 
         System.out.println("preparing listTargetClass ... done");
         System.out.println("---------------------------------------------------------------------\n");
+//        for(SootClass thisClass : Scene.v().getApplicationClasses())
+//        {
+//            if(thisClass.toString().contains("MainActivity"))
+//                listTargetClass.add(thisClass);
+//        }
     }
 
     public static void setupSoot(String androidJar, String apkPath, String outputPath) {
@@ -253,6 +409,61 @@ public class Main {
         Scene.v().loadNecessaryClasses();
     }
 
+    public static boolean skipField(SootField field) {
+        Type type = field.getType();
+        if (type instanceof PrimType)
+            return true;
+        if (type instanceof ArrayType
+                && ((ArrayType)type).getElementType() instanceof PrimType)
+            return true;
+        if (type instanceof ArrayType
+                && ((ArrayType)type).getElementType().toString().equals("java.lang.String"))
+            return true;
+        if (field.getDeclaringClass().getName().equals("android.view.ViewGroup")
+                && field.getName().equals("mChildren"))
+            return true;
+        if (type.toString().equals("java.lang.String")
+                || type.toString().equals("java.lang.Byte")
+                || type.toString().equals("java.lang.Short")
+                || type.toString().equals("java.lang.Integer")
+                || type.toString().equals("java.lang.Long")
+                || type.toString().equals("java.lang.Float")
+                || type.toString().equals("java.lang.Double")
+                || type.toString().equals("java.lang.Character")
+                || type.toString().equals("java.lang.Boolean")
+                || type.toString().equals("android.fluid.FLUIDManager")
+                || type.toString().equals("android.view.RenderNode")
+                || type.toString().equals("android.view.View$AttachInfo")
+                || type.toString().equals("android.view.View")
+                || type.toString().equals("android.view.ViewGroup")
+                || type.toString().equals("android.view.ViewParent")
+                || type.toString().equals("android.os.IBinder")
+                || type.toString().equals("android.os.Binder")
+                || type.toString().equals("android.os.BinderProxy")
+                || type.toString().equals("android.app.ActivityThread")
+                || type.toString().equals("android.app.Activity")
+                || type.toString().equals("android.fluid.kryo.Kryo")
+                || type.toString().equals("android.content.Context")
+                || type.toString().equals("android.app.ContextImpl")
+        )
+            return true;
+        return false;
+    }
+
+    static void printFieldMap()
+    {
+        System.out.println("============RESULT============");
+        System.out.println();
+        for (String clazz : result.keySet()) {
+            HashSet<String> fields = result.get(clazz);
+            System.out.println("[" + clazz + "]");
+            for (String field : fields)
+                System.out.println("	" + field);
+            System.out.println();
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) throws InterruptedException, IOException {
 
         if(System.getenv().containsKey("ANDROID_HOME"))
@@ -273,8 +484,9 @@ public class Main {
         outputFile = new File(outputFilePath);
 
 
-//        fillListTargetClass();
-        fillListTargetActivityClass();
+        fillListTargetClass();
+
+//        fillListTargetActivityClass();
         lockStdout.set(false);
         InfoflowConfiguration.CallgraphAlgorithm cgAlgorithm = InfoflowConfiguration.CallgraphAlgorithm.CHA;
 
@@ -292,10 +504,25 @@ public class Main {
         config.setCodeEliminationMode(InfoflowConfiguration.CodeEliminationMode.NoCodeElimination);
         SetupApplication app = new SetupApplication(config);
         // Create the Callgraph without executing taint analysis
+
+
+
         app.constructCallgraph();
+
 //
 		System.out.println("CallGraph constructed \n-------------------------");
-
+//        for(SootClass thisClass : Scene.v().getApplicationClasses())
+//        {
+//            if(thisClass.toString().equals("com.simplemobiletools.commons.views.MyEditText"))
+//                for(SootMethod thisMethod : thisClass.getMethods())
+//                {
+//                    List<CallEdge> subGraph = getAllReachableMethodsToList(thisMethod);
+//                    printAllEdges(subGraph,1);
+//                }
+//        }
+//
+//        fillFieldMap();
+//        printFieldMap();
 
         for(SootClass sootClass : listTargetClass) {
             System.out.println(sootClass.toString());
@@ -336,76 +563,59 @@ public class Main {
             for(int j = 0; j< listMethod.size(); j++)
             {
                 SootMethod thisMethod = listMethod.get(j);
-                List<CallEdge> subList = getAllReachableMethodsToList(thisMethod);
+                if(thisMethod.getName().contains("init")
+                    || thisMethod.getName().contains("clinit")
+                )
+                    continue;
+
+                Thread workerThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lock.acquire();
+                        threadStartNum.incrementAndGet();
+                        System.out.println(threadStartNum.get()+" start");
+                        lock.release();
+                        List<CallEdge> subList = getAllReachableMethodsToList(thisMethod);
 
 //                        lock.acquire();
-                threadNum.incrementAndGet();
-                output.add("\n" + thisMethod.toString());
-                System.err.println(thisMethod.toString());
-                printAllEdges(subList);
+
+                        output.add("\n" + thisMethod.toString());
+                        System.err.println(thisMethod.toString());
+//                        printAllEdges(subList);
 //                        System.out.println("\nUI update?");
 
-                output.add("UI update?");
+                        output.add("UI update?");
 
-                for (CallEdge thisEdge : subList) {
-                    for (int k = 0; k < listTargetMethod.size(); k++) {
-                        if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
-                            output.add(thisMethod + " to " + thisEdge.getTgtMethod() + "true");
-                            String output = thisMethod + " to " + thisEdge.getTgtMethod() + "\n";
-                            outputBuffer.add(output.getBytes(StandardCharsets.UTF_8));
-                            System.out.println(output);
+                        for (CallEdge thisEdge : subList) {
+                            for (int k = 0; k < listTargetMethod.size(); k++) {
+                                if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
+                                    output.add(thisMethod + " to " + thisEdge.getTgtMethod() + " true");
+                                    String output = thisMethod + " to " + thisEdge.getTgtMethod() + "\n";
+                                    byte[] outputs = output.getBytes(StandardCharsets.UTF_8);
+                                    if( listBytesContains(outputBuffer,outputs) )
+                                        continue;
+                                    outputBuffer.add( outputs );
+                                    System.out.println(output);
 //                                    System.out.println(thisEdge.getTgtMethod() + " true");
+                                }
+                            }
+
                         }
-                    }
-
-                }
 
 
-
-                threadNum.decrementAndGet();
+                        lock.acquire();
+                        System.out.println("thread + "+ threadEndNum.get());
+                        threadEndNum.getAndIncrement();
 //                        lock.release();
-                System.out.println("Thread done");
-
-//                Thread workerThread = new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                        List<CallEdge> subList = getAllReachableMethodsToList(thisMethod);
-//
-////                        lock.acquire();
-//                        threadNum.incrementAndGet();
-//                        output.add("\n" + thisMethod.toString());
-//                        System.err.println(thisMethod.toString());
-//                        printAllEdges(subList);
-////                        System.out.println("\nUI update?");
-//
-//                        output.add("UI update?");
-//
-//                        for (CallEdge thisEdge : subList) {
-//                            for (int k = 0; k < listTargetMethod.size(); k++) {
-//                                if (listTargetMethod.get(k).toString().equals(thisEdge.getTgtMethodString())) {
-//                                    output.add(thisMethod + " to " + thisEdge.getTgtMethod() + "true");
-//                                    String output = thisMethod + " to " + thisEdge.getTgtMethod() + "\n";
-//                                    outputBuffer.add(output.getBytes(StandardCharsets.UTF_8));
-//                                    System.out.println(output);
-////                                    System.out.println(thisEdge.getTgtMethod() + " true");
-//                                }
-//                            }
-//
-//                        }
-//
-//
-//
-//                        threadNum.decrementAndGet();
-////                        lock.release();
-//                        System.out.println("Thread done");
-//                        return;
-//                    }
-//                });
-////                if (i == listTargetMethod.size() - 1 && j == listMethod.size() - 1)
-////                    System.out.println("last Thread : " + thisMethod);
-//                threads.add(workerThread);
-//                workerThread.start();
+                        System.out.println("Thread done"+ threadEndNum.get());
+                        lock.release();
+                        return;
+                    }
+                });
+//                if (i == listTargetMethod.size() - 1 && j == listMethod.size() - 1)
+//                    System.out.println("last Thread : " + thisMethod);
+                threads.add(workerThread);
+                workerThread.start();
 
 
             }
@@ -413,11 +623,16 @@ public class Main {
 			System.err.println("------------------------------------------------------");
         }
 //        lock.acquire();
-        while(threadNum.get() != 0)
+        System.out.println("main Thread : "+ threadEndNum.get());
+        lock.acquire();
+        while(threadEndNum.get() != threadStartNum.get())
         {
-            System.err.println("thread not ending"+ threadNum.get());
-            for(int i = 0; i< 10000;i++);
+            lock.release();
+//            System.err.println("thread not ending"+ (threadEndNum.get()-threadStartNum.get()));
+            for(int i = 0; i< 100000;i++);
+            lock.acquire();
         }
+        lock.release();
         for(int i = 0; i< 10000;i++);
         System.out.println("thread Execution complete");
 //        lock.acquire();
@@ -427,10 +642,10 @@ public class Main {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        for(String thisOutput : output)
-        {
-            System.out.println(thisOutput);
-        }
+//        for(String thisOutput : output)
+//        {
+//            System.out.println(thisOutput);
+//        }
         for(byte[] buffer : outputBuffer)
         {
             fileOutputStream.write(buffer);
@@ -487,6 +702,8 @@ public class Main {
 //        System.out.println("class 2 : " + thisClass2);
 //        System.out.println("equal? : " + thisClass1.equals(thisClass2));
 
+
+
     }
 
     // A Breadth-First Search algorithm to get all reachable methods from initialMethod in the callgraph
@@ -511,11 +728,18 @@ public class Main {
         return parentMap;
     }
 
-    public static void printAllEdges(List<CallEdge> listCallEdges) {
+    public static void printAllEdges(List<CallEdge> listCallEdges,int flag) {
         for(int i = 0; i< listCallEdges.size(); i++)
         {
-//            System.out.println(listCallEdges.get(i).toString());
-            output.add(listCallEdges.get(i).toString());
+            if((flag & 1) == 1)
+            {
+                System.out.println(listCallEdges.get(i).toString());
+            }
+            if((flag &  2) == 2)
+            {
+                output.add(listCallEdges.get(i).toString());
+            }
+
         }
     }
     public static List<CallEdge> getAllReachableMethodsToList(SootMethod initialMethod){
@@ -535,16 +759,28 @@ public class Main {
                 SootMethod childMethod = edge.tgt();
                 CallEdge callEdge = new CallEdge(method,childMethod);
                 if(listCallEdges.contains(callEdge))
-                {
                     continue;
-                }
+//                boolean isDone= false;
+//                for(CallEdge thisEdge : listCallEdges)
+//                {
+//                    System.out.println(callEdge.toString() + "\n" + thisEdge.toString() + "\n" + thisEdge.equals(callEdge) + "\n");
+//                    if(thisEdge.equals(callEdge))
+//                        isDone = true;
+//
+//                }
+//                if(isDone)
+//                {
+//                    continue;
+//                }
                 listCallEdges.add(callEdge);
-//                System.out.println(method +" to "+childMethod);
+//                System.out.println("getAllReachableMethodsToList working... for "+initialMethod.getName() + " -> " + childMethod);
 //                listCallSources.add(method);
 //                listCallTargets.add(childMethod);
 //                listCallEdges.add(new CallEdge(method,childMethod));
-
-                queue.add(childMethod);
+                if( skipMethod(childMethod) )
+                    continue;
+                else
+                    queue.add(childMethod);
             }
         }
         return listCallEdges;
@@ -580,7 +816,76 @@ public class Main {
     {
         return false;
     }
+    public static boolean skipMethod(SootMethod method) {
+        SootClass clazz = method.getDeclaringClass();
+        String methodName = method.getName();
+        if (clazz.getName().equals("java.lang.Object")
+                || clazz.getName().equals("java.lang.Class")
+                || clazz.getName().startsWith("android.view.LayoutInflater")
+                || clazz.getName().startsWith("android.view.ViewRootImpl")
+                || clazz.getName().startsWith("android.view.Choreographer")
+                || clazz.getName().startsWith("android.app.ActivityThread")
+                || clazz.getName().startsWith("com.android.internal.policy")
+                || clazz.getName().equals("android.app.Activity")
+                || clazz.getName().equals("android.app.ContextImpl")
+                || clazz.getName().equals("android.content.Context")
+                || clazz.getName().equals("android.content.res.Resources")
+                || clazz.getName().equals("android.os.IBinder")
+                || clazz.getName().equals("android.os.Binder")
+                || clazz.getName().equals("android.os.BinderProxy")
+                || clazz.getName().equals("java.lang.StringBuilder")
+                || clazz.getName().equals("java.lang.Byte")
+                || clazz.getName().equals("java.lang.Short")
+                || clazz.getName().equals("java.lang.Integer")
+                || clazz.getName().equals("java.lang.Long")
+                || clazz.getName().equals("java.lang.Float")
+                || clazz.getName().equals("java.lang.Double")
+                || clazz.getName().equals("java.lang.Character")
+                || clazz.getName().equals("java.lang.Boolean")
+                || clazz.getName().equals("java.lang.String")
+                || (clazz.getPackageName().startsWith("com.android") && !clazz.getPackageName().startsWith("com.android.internal"))
+                || clazz.getPackageName().startsWith("sun")
+                || clazz.getPackageName().startsWith("android.fluid")
+                || clazz.getPackageName().startsWith("org.")
+                || clazz.getPackageName().startsWith("android.net")
+                || clazz.getPackageName().startsWith("android.media.session")
+                || clazz.getPackageName().startsWith("android.telecom")
+                || clazz.getPackageName().startsWith("sun.nio.ch")
+                || clazz.getPackageName().startsWith("jdk.net")
+                || clazz.getPackageName().startsWith("android.icu")
+                || clazz.getPackageName().startsWith("java.net")
+                || clazz.getPackageName().startsWith("java.nio")
+                || clazz.getPackageName().startsWith("java.time")
+        )
+            return true;
+        if (methodName.equals("<init>")
+                || methodName.equals("<clinit>")
+                || methodName.equals("addView")
+                || methodName.equals("addViewInLayout")
+                || methodName.equals("addViewInner")
+                || methodName.equals("removeView")
+                || methodName.equals("removeAllViews")
+                || methodName.equals("removeDetachedView")
+                || methodName.equals("removeAllViewsInLayout")
+                || methodName.equals("removeViewInternal")
+                || methodName.equals("finishAnimatingView")
+                || methodName.equals("run")
+                || methodName.equals("post")
+                || methodName.equals("postDelayed")
+                || methodName.equals("toString")
+                || methodName.equals("equals")
+                || methodName.equals("clone")
+        )
+            return true;
 
+        return false;
+    }
+    public static boolean listBytesContains(List<byte[]> list, byte[] target)
+    {
+        for (byte[] b : list)
+            if (Arrays.equals(b, target)) return true;
+        return false;
+    }
 //    public static String getPossiblePath(Map<SootMethod, SootMethod> reachableParentMap, SootMethod it) {
 //        String possiblePath = null;
 //        while(it != null){
