@@ -66,7 +66,9 @@ public class Main {
                 thisMethod.toString().equals("<android.widget.TextView: void setText(int)>") ||
                 thisMethod.toString().equals("<android.widget.TextView: void setText(java.lang.CharSequence,android.widget.TextView$BufferType)>") ||
                 thisMethod.toString().equals("<android.widget.TextView: void setText(char[],int,int)>") ||
-                thisMethod.toString().equals("<android.widget.TextView: void setText(int,android.widget.TextView$BufferType)>") )
+                thisMethod.toString().equals("<android.widget.TextView: void setText(int,android.widget.TextView$BufferType)>") ||
+                thisMethod.toString().equals("<android.widget.TextView: void setTextColor(int)>")
+                )
             {
                 System.out.println("adding method to listTargetMethod : "+thisMethod.toString());
                 listTargetMethod.add(thisMethod);
@@ -604,7 +606,7 @@ public class Main {
 
 
                         lock.acquire();
-                        System.out.println("thread + "+ threadEndNum.get());
+//                        System.out.println("thread + "+ threadEndNum.get());
                         threadEndNum.getAndIncrement();
 //                        lock.release();
                         System.out.println("Thread done"+ threadEndNum.get());
@@ -623,7 +625,7 @@ public class Main {
 			System.err.println("------------------------------------------------------");
         }
 //        lock.acquire();
-        System.out.println("main Thread : "+ threadEndNum.get());
+        System.out.println("main Thread waiting : "+ threadEndNum.get());
         lock.acquire();
         while(threadEndNum.get() != threadStartNum.get())
         {

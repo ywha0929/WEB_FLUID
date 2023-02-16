@@ -55,14 +55,23 @@ public class RPCIntfInjector extends BodyTransformer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("listUIUpdateSignature");
+		for(String string : listUIUpdateSignature)
+		{
+			System.out.println(string);
+		}
+		for(String string : listUIUpdateTargetSignature)
+		{
+			System.out.println(string);
+		}
 	}
 
 	public RPCIntfInjector(String apkPath) {
 
 		super();
 		this.apkPath = apkPath;
-//		this.staticAnalysisPath = apkPath+".result";
-		this.staticAnalysisPath = StaticAnalysisFileName;
+		this.staticAnalysisPath = apkPath+".result";
+//		this.staticAnalysisPath = StaticAnalysisFileName;
 		loadStaticAnalysisResult();
 
 //		MAIN_PACKAGE_NAME = namePackage;
@@ -620,7 +629,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			if(targetUnitString.contains("virtualinvoke") && !targetUnitString.contains("goto"))
 			{
 				String sig = unitarray[i].toString();
-				System.out.println("sig : " + sig);
+				System.out.println(body.getMethod() + "- sig : " + sig);
 
 				// get base for ui_update method unit
 				Object[] locals = body.getLocals().toArray();
@@ -649,7 +658,7 @@ public class RPCIntfInjector extends BodyTransformer {
 						break;
 				}
 				Local Base = null;
-				System.out.println("local : " + local);
+				System.out.println(body.getMethod() + "- local : " + local);
 				for (int j = 0; j < locals.length; j++) {
 					if (locals[j].toString().equals(local))
 						Base = (Local)locals[j];
@@ -664,14 +673,24 @@ public class RPCIntfInjector extends BodyTransformer {
 
 				Type baseType = Base.getType();
 				String baseClassString = baseType.toString();
-				SootClass baseSootClass = Scene.v().getSootClass(baseClassString);
+				SootClass baseSootClass = Scene.v().getSootClassUnsafe(baseClassString);
+				if(baseSootClass == null)
+				{
+					System.out.println("this is primitive");
+					System.err.println("this is primitive");
+					continue;
+				}
 
+				if(isView(baseSootClass))
+				{
+					System.out.println("this is View's Child class");
+					System.err.println("this is View's Child class");
+					continue;
+				}
+				if (!isView(baseSootClass))  {
 
-
-				if (isView(baseSootClass))  {
-
-					System.out.println("found base : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
-					System.err.println("found base : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
+					System.out.println(body.getMethod() + "- found base : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
+					System.err.println(body.getMethod() + "- found base : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
 
 					StringTokenizer stk = new StringTokenizer(targetUnitString,"<>");
 					int indexSignature = 0;
@@ -680,23 +699,24 @@ public class RPCIntfInjector extends BodyTransformer {
 					{
 						stk.nextToken();
 						token = stk.nextToken();
-						if(listUIUpdateSignature.contains(token))
-						{
 
-						}
-						else
-						{
-							System.out.println("not in UIUpdate Signature List");
-							System.err.println("not in UIUpdate Signature List");
-							continue;
-
-						}
 					}
-					indexSignature = listUIUpdateSignature.indexOf(token);
+					if(listUIUpdateSignature.contains(token))
+					{
+
+					}
+					else
+					{
+						System.out.println(token+" not in UIUpdate Signature List");
+						System.err.println(token+" not in UIUpdate Signature List");
+						continue;
+
+					}
+
 					hasUpdateCode = true;
 					List<Unit> generated = new ArrayList<>();
 					List<Unit> generated_catch = new ArrayList<>();
-
+					generated.addAll(InstrumentUtil.generateLogStmts(body,"UI update signature : ",StringConstant.v(targetUnitString)));
 					//generated.add(Jimple.v().newAssignStmt(viewVar, body.getParameterLocal(0)));
 
 					SootClass thisActivity = Scene.v().getSootClass(MAIN_ACTIVITY_CLASS);
@@ -764,19 +784,31 @@ public class RPCIntfInjector extends BodyTransformer {
 
 					// generated.add(Jimple.v().newAssignStmt(viewVar, (Local)locals[0]));
 //					generated.add(Jimple.v().newAssignStmt(signatureVar, StringConstant.v(sig)));
-					generated.add(Jimple.v().newAssignStmt(signatureVar,StringConstant.v(listUIUpdateTargetSignature.get(indexSignature))));
+					System.out.println(body.getMethod()+"  token : " + token);
+					for(int k = 0; k< listUIUpdateSignature.size(); k++)
+					{
+						String signature = listUIUpdateSignature.get(k);
+						System.out.println(body.getMethod()+"      signature : "+signature);
+						if(signature.equals(token))
+						{
+							System.out.println(body.getMethod()+"     "+token + "\n"+ signature+"\ntrue");
+							indexSignature = k;
+							generated.add(Jimple.v().newAssignStmt(signatureVar,StringConstant.v(listUIUpdateTargetSignature.get(indexSignature))));
 
-					generated.add(Jimple.v().newAssignStmt(objectArrayVar,
-							Jimple.v().newNewArrayExpr(cls2.getType(), IntConstant.v(2))));
-					generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(0)),
-							signatureVar));
-					generated.add(
-							Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(1)), viewVar));
+							generated.add(Jimple.v().newAssignStmt(objectArrayVar,
+									Jimple.v().newNewArrayExpr(cls2.getType(), IntConstant.v(2))));
+							generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(0)),
+									signatureVar));
+							generated.add(
+									Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(1)), viewVar));
 
-					// invoke runupdate
-					generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method",
-							"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
-							objectFluidInterfaceVar, objectArrayVar));
+							// invoke runupdate
+							generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method",
+									"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
+									objectFluidInterfaceVar, objectArrayVar));
+						}
+					}
+
 //					if(unitarray[i+1].toString().contains("return"))
 //					generated.add(Jimple.v().newGotoStmt((Unit)unitarray[i+1]));
 //					Unit tryEnd = generated.get(generated.size() - 1);

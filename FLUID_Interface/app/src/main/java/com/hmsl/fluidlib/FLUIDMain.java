@@ -576,11 +576,17 @@ public class FLUIDMain {
         Bundle bundle = new Bundle();
         try {
             Object param = null;
+            if(method.contains("setTextColor"))
+            {
+                TextView text = (TextView) view;
+                param = text.getCurrentTextColor();
+            }
             if(method.contains("setText"))
             {
                 TextView text = (TextView) view;
                 param = text.getText().toString();
             }
+
             Log.d(TAG,"method : "+method);
 //            if (method.contains("setTextSize")){
 //                convertPixelsToDpFloat((float)params[0], instance.mContext);
@@ -1136,6 +1142,7 @@ public class FLUIDMain {
                         return;
                     }
                     bundle.putByteArray("key",msg);
+
 
                     mRemoteService.update(bundle);
                 } catch (Exception e) {

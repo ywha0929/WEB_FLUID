@@ -460,13 +460,14 @@ class App extends Component {
                         aa = aa>>>24;
                         // console.log(Date.now()," : ",rr,bb,gg,aa)
                         var newColor = rr|bb|gg|aa; //android native in aarrggbb react-native in rrggbbaa
-                        if(param == 4278190335)
-                        {
-                            targetUI.Color= newColor>>>0;
-                        }
-                        else if(param == 4294901760){
-                            targetUI.Color = newColor>>>0; //shift operator to make it unsigned
-                        }
+                        targetUI.Color = newColor>>>0;
+                        // if(param == 4278190335)
+                        // {
+                        //     targetUI.Color= newColor>>>0;
+                        // }
+                        // else if(param == 4294901760){
+                        //     targetUI.Color = newColor>>>0; //shift operator to make it unsigned
+                        // }
                     }
                     // else if(method.includes("setTextSize")){
                     //     targetUI.TextSize = param;
