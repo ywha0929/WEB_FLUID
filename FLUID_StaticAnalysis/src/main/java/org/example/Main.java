@@ -49,7 +49,7 @@ public class Main {
     static List<String> output = new ArrayList<>();
     static Lock lock = new Lock();
     static AtomicInteger threadStartNum = new AtomicInteger(0);
-    static AtomicInteger threadEndNum = new AtomicInteger(0);
+//    static AtomicInteger threadEndNum = new AtomicInteger(0);
     static String outputFilePath = "/home/ywha/WEB_FLUID/FLUID_StaticAnalysis/output/StaticAnalysisResult.log";
     static List<byte[]> outputBuffer = new ArrayList<>();
     static HashMap<String, HashSet<String>> result = new HashMap<String, HashSet<String>>();
@@ -607,15 +607,16 @@ public class Main {
 
                         lock.acquire();
 //                        System.out.println("thread + "+ threadEndNum.get());
-                        threadEndNum.getAndIncrement();
+                        threadStartNum.getAndDecrement();
 //                        lock.release();
-                        System.out.println("Thread done"+ threadEndNum.get());
+                        System.out.println("Thread done"+ threadStartNum.get());
                         lock.release();
                         return;
                     }
                 });
 //                if (i == listTargetMethod.size() - 1 && j == listMethod.size() - 1)
 //                    System.out.println("last Thread : " + thisMethod);
+                while(threadStartNum.get() > 10);
                 threads.add(workerThread);
                 workerThread.start();
 
@@ -625,9 +626,9 @@ public class Main {
 			System.err.println("------------------------------------------------------");
         }
 //        lock.acquire();
-        System.out.println("main Thread waiting : "+ threadEndNum.get());
+        System.out.println("main Thread waiting : "+ threadStartNum.get());
         lock.acquire();
-        while(threadEndNum.get() != threadStartNum.get())
+        while(threadStartNum.get()!=0)
         {
             lock.release();
 //            System.err.println("thread not ending"+ (threadEndNum.get()-threadStartNum.get()));

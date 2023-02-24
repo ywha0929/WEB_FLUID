@@ -522,6 +522,7 @@ public class FLUIDMain {
     public void runUpdate(String unit, View view) {
 //        StringTokenizer st = new StringTokenizer(unit, "<>");
         Log.d(TAG,"RunUpdate invoked : "+unit+"="+getTS());
+        Log.d(TAG, "runUpdate: Id : " + view.getId());
 //        st.nextToken();                     // 앞에 virtualinvoke 부분 -> 필요없으므로 삭제
 //        String first = st.nextToken();      // <> 내부 -> method가 있는 부분
 //        String second = st.nextToken();     // parameter 부분
@@ -578,8 +579,16 @@ public class FLUIDMain {
             Object param = null;
             if(method.contains("setTextColor"))
             {
-                TextView text = (TextView) view;
-                param = text.getCurrentTextColor();
+                if(view.getForeground()!= null || view.getBackground()!=null)
+                {
+                    method = "setImage";
+                }
+                else
+                {
+                    TextView text = (TextView) view;
+                    param = text.getCurrentTextColor();
+                }
+
             }
             if(method.contains("setText"))
             {
@@ -658,14 +667,14 @@ public class FLUIDMain {
         dataOutputStream.writeInt(size);
         dataOutputStream.writeUTF(method);
         if(method.contains("setImage")){
-            ImageView imview = (ImageView) view;
+//            ImageView imview = (ImageView) view;
             //typrflag 3으로
             //stringsize
             //bitmap
             //convert ImageView to bitmap
 //            BitmapDrawable drawable = (BitmapDrawable) imview.getDrawable();
 //            Bitmap bitmap = drawable.getBitmap();
-            Bitmap bitmap = loadBitmapFromView(imview);
+            Bitmap bitmap = loadBitmapFromView(view);
 
             //bitmap to byte
             ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();

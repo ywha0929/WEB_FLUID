@@ -36,31 +36,31 @@ class App extends Component {
         
     };
 
-    accumulatedata(data) {
-        console.log(Date.now()," : ","this is accumulatedata");
-        let tempArr = this.state.UIList;
-        tempArr.forEach(function (targetUI){
-            if(cur_id == targetUI.ID){
-                let cur_bitmap = data.toString('utf8',0,data.length);
-                //console.log(targetUI.Bitmap.length);
-                //console.log("cur bitmap = ",cur_bitmap);
-                var temp = targetUI.Bitmap.concat(cur_bitmap);
-                targetUI.Bitmap = temp;
-                //targetUI.Bitmap += cur_bitmap;
-                //console.log(targetUI.Bitmap.length);
-                buffer_cur += data.length;
-            }
-        });
-        // console.log("UIList ",this.state.UIList[0]);
-        this.setState({
-            UIList: tempArr
-        });
-        // console.log("UIList", this.state.UIList[0]);
-        if(buffer_cur == length_bitmap)
-        {
-            Acc_or_Han = 0;
-        }
-    }
+    // accumulatedata(data) {
+    //     console.log(Date.now()," : ","this is accumulatedata");
+    //     let tempArr = this.state.UIList;
+    //     tempArr.forEach(function (targetUI){
+    //         if(cur_id == targetUI.ID){
+    //             let cur_bitmap = data.toString('utf8',0,data.length);
+    //             //console.log(targetUI.Bitmap.length);
+    //             //console.log("cur bitmap = ",cur_bitmap);
+    //             var temp = targetUI.Bitmap.concat(cur_bitmap);
+    //             targetUI.Bitmap = temp;
+    //             //targetUI.Bitmap += cur_bitmap;
+    //             //console.log(targetUI.Bitmap.length);
+    //             buffer_cur += data.length;
+    //         }
+    //     });
+    //     // console.log("UIList ",this.state.UIList[0]);
+    //     this.setState({
+    //         UIList: tempArr
+    //     });
+    //     // console.log("UIList", this.state.UIList[0]);
+    //     if(buffer_cur == length_bitmap)
+    //     {
+    //         Acc_or_Han = 0;
+    //     }
+    // }
     checkData(data) {
         console.log(Date.now()," : ","this is checkData",data.length);
 
@@ -473,7 +473,7 @@ class App extends Component {
                     //     targetUI.TextSize = param;
                     // }
                     else if(method.includes("setImage")){
-                        targetUI.Bitmap = param;
+                        targetUI.Image = param;
                     }
                     else if(method.includes("setText")){
                         targetUI.Text = param;
