@@ -73,7 +73,12 @@ public class RPCIntfInjector extends BodyTransformer {
 		this.staticAnalysisPath = apkPath+".result";
 //		this.staticAnalysisPath = StaticAnalysisFileName;
 		loadStaticAnalysisResult();
-
+		System.out.println("starting first pass");
+		System.err.println("starting first pass");
+		findLeafActivities(Scene.v().getApplicationClasses().toArray());
+		performFirstPass();
+		System.out.println("finishing first pass");
+		System.err.println("finishing first pass");
 //		MAIN_PACKAGE_NAME = namePackage;
 //		String classname = namePackage+".MainActivity";
 //		MAINACTIVITY_CLASS_NAME = classname;
@@ -82,38 +87,42 @@ public class RPCIntfInjector extends BodyTransformer {
 	@Override
 	protected void internalTransform(Body b, String s, Map<String, String> map) {
 
-		int threadNum = this.threadNum.getAndIncrement();
-		if(threadNum ==0)
-		{
-			System.out.println("Thread ID start: "+Thread.currentThread().getId());
-			System.out.println("starting first pass");
-			System.err.println("starting first pass");
-			findLeafActivities(Scene.v().getApplicationClasses().toArray());
-			performFirstPass(b,s,map);
+//		int threadNum = this.threadNum.getAndIncrement();
+//		if(threadNum ==0)
+//		{
+//			System.out.println("Thread ID start: "+Thread.currentThread().getId());
+//			System.out.println("starting first pass");
+//			System.err.println("starting first pass");
+//			findLeafActivities(Scene.v().getApplicationClasses().toArray());
+//			performFirstPass();
+//
+//			System.out.println("finishing first pass");
+//			System.err.println("finishing first pass");
+//			System.out.println("Thread ID end : "+Thread.currentThread().getId());
+//			isFirstDone = true;
+//		}
+//		else
+//		{
+//			System.out.println("Thread ID created : "+Thread.currentThread().getId());
+//			while(!isFirstDone)
+//			{
+//				System.out.println("Thread ID : "+Thread.currentThread().getId() + "waiting");
+//			}
+//			System.out.println("Thread ID start : "+Thread.currentThread().getId());
+////			performSecondPassbySignature(b,s,map,threadNum,1);
+//			if(!b.getMethod().toString().contains("init") && !b.getMethod().toString().contains("onCreate"))
+//			{
+				performSecondPassbyBaseClass(b,s,map,0);
 
-			System.out.println("finishing first pass");
-			System.err.println("finishing first pass");
-			System.out.println("Thread ID end : "+Thread.currentThread().getId());
-			isFirstDone = true;
-		}
-		else
-		{
-			System.out.println("Thread ID created : "+Thread.currentThread().getId());
-			while(!isFirstDone)
-			{
-				System.out.println("Thread ID : "+Thread.currentThread().getId() + "waiting");
-			}
-			System.out.println("Thread ID start : "+Thread.currentThread().getId());
-//			performSecondPassbySignature(b,s,map,threadNum,1);
-			if(!b.getMethod().toString().contains("init") && !b.getMethod().toString().contains("onCreate"))
-			{
-				performSecondPassbyBaseClass(b,s,map,threadNum,0);
+////				performSecondPassbySignature(b,s,map,threadNum,1);
+//			}
+//
+//			System.out.println("Thread ID end : "+Thread.currentThread().getId());
+//
+//		}
 
-//				performSecondPassbySignature(b,s,map,threadNum,1);
-			}
+		System.out.println("just print\n");
 
-			System.out.println("Thread ID end : "+Thread.currentThread().getId());
-		}
 //		InjectOnActivity(b,s,map);
 //		SecondPass(b,s,map);
 
@@ -129,7 +138,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		//System.out.println(body);
 		if (isAnalize) {
 			isAnalize = false;
-			printClasses(body);
+//			printClasses(body);
 		}
 
 		if (isInsert) {
@@ -293,11 +302,11 @@ public class RPCIntfInjector extends BodyTransformer {
 			System.out.println(thisClass.toString());
 		}
 	}
-	void performFirstPass(Body b, String s, Map<String, String> map) //inject fields and edit onCreate
+	void performFirstPass() //inject fields and edit onCreate
 	{
 		if (isAnalize) {
 			isAnalize = false;
-			printClasses((JimpleBody)b);
+			printClasses();
 		}
 		SootClass classMainActivity = null;
 		for(SootClass thatClass : injectedClasses)
@@ -477,7 +486,6 @@ public class RPCIntfInjector extends BodyTransformer {
 //			}
 //		}
 		System.out.println("First Pass Done");
-		b.validate();
 		isFirstDone = true;
 	}
 	void performSecondPassbySignature(Body b, String s, Map<String, String> map,int threadNum,int onlyInjectedClass)
@@ -506,7 +514,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			System.err.println("injecting Update code to "+b.getMethod().getDeclaringClass().toString()+" : "+b.getMethod().toString()+"...done");
 		}
 	}
-	void performSecondPassbyBaseClass(Body b, String s, Map<String, String> map,int threadNum,int onlyInjectedClass)
+	void performSecondPassbyBaseClass(Body b, String s, Map<String, String> map,int onlyInjectedClass)
 	{
 		SootClass declaringClass = b.getMethod().getDeclaringClass();
 		if(declaringClass.isLibraryClass()|| declaringClass.toString().contains("androidx"))
@@ -538,7 +546,7 @@ public class RPCIntfInjector extends BodyTransformer {
 	}
 
 
-	void printClasses(JimpleBody body) {
+	void printClasses() {
 		Object[] arr = Scene.v().getApplicationClasses().toArray();
 		for (int i = 0; i < arr.length; i++) {
 			System.out.println("Class [" + i + "] : " + arr[i].toString());
