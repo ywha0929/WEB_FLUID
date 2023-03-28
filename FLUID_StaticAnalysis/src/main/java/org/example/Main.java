@@ -36,7 +36,7 @@ public class Main {
 // static String apkPath = androidAPKPath + File.separator + "FalseNegativeTestApp.apk";
 //    static String apkPath = androidAPKPath + File.separator + "StaticAnalysisTestApp.apk";
     static String apkPath = androidAPKPath + File.separator + "calculator.apk";
-
+    static final Integer MAX_THREAD_NUM = 10;
     static String outputPath = USER_HOME + File.separator + "output";
     static File outputFile ;
     static List<SootMethod> listTargetMethod = new ArrayList<>();
@@ -616,7 +616,10 @@ public class Main {
                 });
 //                if (i == listTargetMethod.size() - 1 && j == listMethod.size() - 1)
 //                    System.out.println("last Thread : " + thisMethod);
-                while(threadStartNum.get() > 10);
+                while(threadStartNum.get() > MAX_THREAD_NUM)
+                {
+                    System.out.println("thread list full, waiting ...");
+                }
                 threads.add(workerThread);
                 workerThread.start();
 
