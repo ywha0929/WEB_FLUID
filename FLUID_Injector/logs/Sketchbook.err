@@ -1,0 +1,39 @@
+execute runPacks() ...
+starting first pass
+found activity class : com.adsk.sketchbook.RecoveryInterstitial
+found activity class : com.adsk.sketchbook.share.CustomShareActivity
+found activity class : com.adsk.sketchbook.RecoverySorry
+found activity class : com.adsk.sketchbook.gallery.grid.GridGallery
+found activity class : com.adsk.sketchbook.RecoveryFromPrefs
+found activity class : com.adsk.sketchbook.gallery.fullscreen.FullScreenGallery
+found activity class : c.c.a.g.a
+found activity class : com.adsk.sketchbook.SketchBook
+found activity class : com.adsk.sketchbook.SketchBookStatement
+found activity class : com.adsk.sketchbook.gallery.slide.SlideGallery
+this activity class(com.adsk.sketchbook.RecoveryInterstitial) has onCreate method
+Exception in thread "Thread-20" Exception in thread "main" java.lang.NullPointerException
+	at fluidinjector.RPCIntfInjector.injectOnCreateTypeB(RPCIntfInjector.java:1932)
+	at fluidinjector.RPCIntfInjector.performFirstPass(RPCIntfInjector.java:366)
+	at fluidinjector.RPCIntfInjector.internalTransform(RPCIntfInjector.java:99)
+	at soot.BodyTransformer.transform(BodyTransformer.java:47)
+	at soot.Transform.apply(Transform.java:126)
+	at soot.BodyPack.internalApply(BodyPack.java:49)
+	at soot.Pack.apply(Pack.java:126)
+	at soot.PackManager.runBodyPacks(PackManager.java:991)
+	at soot.PackManager.lambda$runBodyPacks$0(PackManager.java:667)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+java.lang.NullPointerException
+	at fluidinjector.RPCIntfInjector.injectOnCreateTypeB(RPCIntfInjector.java:1932)
+	at fluidinjector.RPCIntfInjector.performFirstPass(RPCIntfInjector.java:366)
+	at fluidinjector.RPCIntfInjector.internalTransform(RPCIntfInjector.java:99)
+	at soot.BodyTransformer.transform(BodyTransformer.java:47)
+	at soot.Transform.apply(Transform.java:126)
+	at soot.BodyPack.internalApply(BodyPack.java:49)
+	at soot.Pack.apply(Pack.java:126)
+	at soot.PackManager.runBodyPacks(PackManager.java:991)
+	at soot.PackManager.lambda$runBodyPacks$0(PackManager.java:667)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:829)

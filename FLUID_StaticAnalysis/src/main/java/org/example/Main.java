@@ -618,7 +618,7 @@ public class Main {
 //                    System.out.println("last Thread : " + thisMethod);
                 while(threadStartNum.get() > MAX_THREAD_NUM)
                 {
-                    System.out.println("thread list full, waiting ...");
+                    System.err.println("thread list full, waiting ...");
                 }
                 threads.add(workerThread);
                 workerThread.start();
