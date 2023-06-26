@@ -11,6 +11,8 @@ class OtherView extends Component{
     };
     onPressInListener = (e) => {
         console.log(Date.now()," : ","onPressInListener of OtherView");
+        // console.log(e.nativeEvent.locationX);
+        // console.log(e.nativeEvent.locationY);
         this.props.onPressInListener(e);
     }
     onPressOutListener = (e) => {

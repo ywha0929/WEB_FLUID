@@ -65,6 +65,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class FLUIDMain {
@@ -77,10 +78,12 @@ public class FLUIDMain {
     static int isChooseMode = 0;
     static int isChooseModeWait = 0;
     private ArrayList<View> distributeList = new ArrayList<>();
+    private ArrayList<Integer> switchViewList = new ArrayList<>();
+    private Map<Integer,Integer> switchViewCount = new HashMap<Integer,Integer>();
     private ArrayList<Layout_Tree> layout_trees = new ArrayList<>();
     private Map<Integer,Object> listTextListener = new HashMap<Integer,Object>();
     private Map<Integer,Object> listBorder = new HashMap<>();
-    private final IBinder mBinder = new IReverseConnection.Stub() {
+    private final IBinder       mBinder = new IReverseConnection.Stub() {
         public void doCheck(String msg) throws RemoteException {
             Log.d(TAG, "this is doCheck");
             Activity activity = (Activity) mContext;
@@ -198,25 +201,44 @@ public class FLUIDMain {
 
     }
 
-    private View findViewAt(ViewGroup viewGroup, float x, float y) {
-        for(int i = 0; i < viewGroup.getChildCount(); i++) {
-            View child = viewGroup.getChildAt(i);
-            if (child instanceof ViewGroup) {
-                View foundView = findViewAt((ViewGroup) child, x, y);
-                if (foundView != null && foundView.isShown()) {
-                    return foundView;
-                }
-            } else {
-                int[] location = new int[2];
-                child.getLocationOnScreen(location);
-                Rect rect = new Rect(location[0], location[1], location[0] + child.getWidth(), location[1] + child.getHeight());
-                if (rect.contains((int)x, (int)y)) {
-                    return child;
+    private List<View> findViewAt(ViewGroup viewGroup, float x, float y) {
+        List<View> foundViews = new ArrayList<>();
+        List<View> searchQ = new ArrayList<>();
+        searchQ.add(viewGroup);
+        while(searchQ.isEmpty() == false)
+        {
+            View thisView = searchQ.get(0);
+            searchQ.remove(0);
+            if(thisView instanceof ViewGroup)
+            {
+                ViewGroup thisViewGroup = (ViewGroup) thisView;
+                for(int i = 0; i < thisViewGroup.getChildCount(); i++) {
+                    View child = thisViewGroup.getChildAt(i);
+                    if (child instanceof ViewGroup) {
+                        searchQ.add(child);
+//                    View foundView = findViewAt((ViewGroup) child, x, y);
+//                    if (foundView != null && foundView.isShown()) {
+//                        return foundView;
+//                    }
+                    } else {
+                        int[] location = new int[2];
+                        child.getLocationOnScreen(location);
+                        Rect rect = new Rect(location[0], location[1], location[0] + child.getWidth(), location[1] + child.getHeight());
+                        if (rect.contains((int)x, (int)y)) {
+                            foundViews.add(child);
+//                        return child;
+                        }
+                    }
                 }
             }
-        }
 
-        return null;
+
+
+        }
+        return foundViews;
+
+
+//        return null;
     }
     private String getViewType(View view)
     {
@@ -372,7 +394,35 @@ public class FLUIDMain {
                 Log.d(TAG,"choose mode");
                 Activity activity = (Activity) mContext;
                 ViewGroup rootLayout = (ViewGroup) activity.getWindow().getDecorView().getRootView();
-                View targetView = findViewAt(rootLayout,e.getX(),e.getY());
+                List<View> targetViews = findViewAt(rootLayout,e.getX(),e.getY());
+                Log.d(TAG, "runTouchCheck: findViewAt done : "+targetViews.size());
+                View firstView = targetViews.get(0);
+                View targetView = firstView;
+                if(distributeList.contains(firstView) || switchViewList.contains(firstView.getId()))
+                {
+
+                    if(switchViewList.contains(firstView.getId()))
+                    {
+                        int beforeCount = switchViewCount.get(firstView.getId());
+                        switchViewCount.remove(firstView.getId());
+                        switchViewCount.put(firstView.getId(),beforeCount+1);
+                    }
+                    else
+                    {
+                        switchViewList.add(firstView.getId());
+                        switchViewCount.put(firstView.getId(),1);
+                    }
+
+                    firstView.setForeground((Drawable) listBorder.get(firstView.getId()));
+                    if(switchViewCount.get(firstView.getId()) > targetViews.size())
+                    {
+                        switchViewCount.remove(firstView.getId());
+                        switchViewCount.put(firstView.getId(),0);
+                    }
+                    distributeList.remove(firstView);
+                    targetView = targetViews.get(switchViewCount.get(firstView.getId()));
+                }
+//                View targetView = findViewAt(rootLayout,e.getX(),e.getY());
 
                 if(targetView != null)
                 {

@@ -239,7 +239,7 @@ public class FLUIDManagerService extends Service {
                         if(up_down == 0){
 //                            down_time = System.
 //                            Log.i(TAG,"down Time : "+down_time);
-                            MotionEvent motiondown = MotionEvent.obtain(0,0,MotionEvent.ACTION_DOWN,0,0,0);
+                            MotionEvent motiondown = MotionEvent.obtain(0,0,MotionEvent.ACTION_DOWN,dataInputStream.readFloat(),dataInputStream.readFloat(),0);
                             Bundle bundledown = new Bundle();
                             bundledown.putParcelable("motionevent",motiondown);
                             bundledown.putInt("ID",ID);
@@ -247,7 +247,7 @@ public class FLUIDManagerService extends Service {
 
                         }
                         else{
-                            MotionEvent motionup = MotionEvent.obtain(0,0,MotionEvent.ACTION_UP,0,0,0);
+                            MotionEvent motionup = MotionEvent.obtain(0,0,MotionEvent.ACTION_UP,dataInputStream.readFloat(),dataInputStream.readFloat(),0);
                             Bundle bundleup = new Bundle();
                             bundleup.putInt("ID",ID);
                             bundleup.putParcelable("motionevent",motionup);

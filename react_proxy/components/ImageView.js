@@ -13,7 +13,12 @@ class ImageView extends Component{
         this.props.TextChangeListener(e);
         console.log(Date.now()," : ","this is dummy TextChangeListener of EditText");
     }
+    onPressListener = (e) => {
+        console.log("onPressListener of ImageView");
+    }
     onPressInListener = (e) => {
+        console.log(e.nativeEvent.locationX);
+        console.log(e.nativeEvent.locationY);
         console.log(Date.now()," : ","onPressInListener of ImageView");
         this.props.onPressInListener(e);
     }
@@ -30,6 +35,7 @@ class ImageView extends Component{
                 <View key={this.state.thisData.ID} style={{position: "absolute",height: this.state.thisData.Height, width: this.state.thisData.Width,left: this.state.thisData.X, top: this.state.thisData.Y, alignItems:'flex-start', borderBottonWidth : StyleSheet.hairlineWidth}}>
                     <Pressable style={{alignContent: 'center',   justifyContent: 'center', alignItems: "center", }}
                         id={this.state.thisData.ID}
+                        onPress={this.onPressListener}
                         onPressIn={this.onPressInListener}
                         onPressOut={this.onPressOutListener}>
                         <Image
@@ -47,6 +53,7 @@ class ImageView extends Component{
                 <View key={this.state.thisData.ID} style={{alignItems:'flex-start',height: this.state.thisData.Height, width: this.state.thisData.Width, borderBottonWidth : StyleSheet.hairlineWidth}}>
                     <Pressable style={{alignContent: 'center',   justifyContent: 'center', alignItems: "center", }}
                         id={this.state.thisData.ID}
+                        onPress={this.onPressListener}
                         onPressIn={this.onPressInListener}
                         onPressOut={this.onPressOutListener}>
                         <Image

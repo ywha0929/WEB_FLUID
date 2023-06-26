@@ -10,6 +10,7 @@ class Button extends Component{
         };
     };
     onPressInListener = (e) => {
+        console.log(e);
         console.log(Date.now()," : ","onPressInListener of Button");
         this.props.onPressInListener(e);
     }

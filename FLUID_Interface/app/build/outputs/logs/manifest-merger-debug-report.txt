@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
-INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
-INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
-INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
+ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
 MERGED from [com.google.android.material:material:1.4.0] /home/ywha/.gradle/caches/transforms-3/1508bc0f4d67cb1fb46dec23183d0585/transformed/material-1.4.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /home/ywha/.gradle/caches/transforms-3/21cb78b6b83d95329c2432a162d45553/transformed/constraintlayout-2.1.4/AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat:1.4.0] /home/ywha/.gradle/caches/transforms-3/46d15f5c58a469270eeba15db4463d05/transformed/appcompat-1.4.0/AndroidManifest.xml:17:1-24:12
@@ -43,25 +43,25 @@ MERGED from [androidx.documentfile:documentfile:1.0.0] /home/ywha/.gradle/caches
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/ywha/.gradle/caches/transforms-3/30559646bdc9f3290097ba378eb99203/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] /home/ywha/.gradle/caches/transforms-3/b618f929228947d1fd03b4a852d85b00/transformed/print-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.annotation:annotation-experimental:1.1.0] /home/ywha/.gradle/caches/transforms-3/b521f32a8ca2115704fce9eaa65230c1/transformed/jetified-annotation-experimental-1.1.0/AndroidManifest.xml:17:1-24:12
-INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
-INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
-INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
+INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
 	package
 		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:3:5-32
 		INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml
 		INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml
 	android:versionName
 		INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
+		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
 		INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml
 	android:versionCode
 		INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-28:12
+		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:1-25:12
 		INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:2:11-69
 application
-ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:5:5-26:19
+ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:5:5-23:19
 MERGED from [com.google.android.material:material:1.4.0] /home/ywha/.gradle/caches/transforms-3/1508bc0f4d67cb1fb46dec23183d0585/transformed/material-1.4.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.4.0] /home/ywha/.gradle/caches/transforms-3/1508bc0f4d67cb1fb46dec23183d0585/transformed/material-1.4.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /home/ywha/.gradle/caches/transforms-3/21cb78b6b83d95329c2432a162d45553/transformed/constraintlayout-2.1.4/AndroidManifest.xml:9:5-20
@@ -90,30 +90,24 @@ MERGED from [androidx.startup:startup-runtime:1.0.0] /home/ywha/.gradle/caches/t
 		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:6:9-35
 	android:theme
 		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:11:9-46
-activity#com.hmsl.fluidlib.MainActivity
-ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:12:9-14:40
-	android:exported
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:14:13-37
-	android:name
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:13:13-41
 service#com.hmsl.fluidlib.FLUIDReverseService
-ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:16:9-25:19
+ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:13:9-22:19
 	android:enabled
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:18:13-35
+		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:15:13-35
 	android:exported
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:19:13-36
+		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:16:13-36
 	android:name
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:17:13-48
+		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:14:13-48
 intent-filter#action:name:com.hmsl.fluidmanager.MY_Service+category:name:android.intent.category.DEFAULT
-ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:20:13-24:29
+ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:17:13-21:29
 action#com.hmsl.fluidmanager.MY_Service
-ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:21:17-75
+ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:18:17-75
 	android:name
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:21:25-72
+		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:18:25-72
 category#android.intent.category.DEFAULT
-ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:23:17-76
+ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:20:17-76
 	android:name
-		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:23:27-73
+		ADDED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml:20:27-73
 uses-sdk
 INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/ywha/WEB_FLUID/FLUID_Interface/app/src/main/AndroidManifest.xml

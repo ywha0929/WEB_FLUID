@@ -73,13 +73,15 @@ public class RPCIntfInjector extends BodyTransformer {
 		this.apkPath = apkPath;
 		this.staticAnalysisPath = apkPath+".result";
 //		this.staticAnalysisPath = StaticAnalysisFileName;
-//		loadStaticAnalysisResult();
+		loadStaticAnalysisResult();
 //		System.out.println("starting first pass");
 //		System.err.println("starting first pass");
 //		findLeafActivities(Scene.v().getApplicationClasses().toArray());
 //		performFirstPass();
 //		System.out.println("finishing first pass");
 //		System.err.println("finishing first pass");
+
+
 //		MAIN_PACKAGE_NAME = namePackage;
 //		String classname = namePackage+".MainActivity";
 //		MAINACTIVITY_CLASS_NAME = classname;
@@ -88,40 +90,40 @@ public class RPCIntfInjector extends BodyTransformer {
 	@Override
 	protected void internalTransform(Body b, String s, Map<String, String> map) {
 		System.out.println("start");
-//		int threadNum = this.threadNum.getAndIncrement();
-//
-//		if(threadNum ==0)
-//		{
-//			System.out.println("Thread ID start: "+Thread.currentThread().getId());
-//			System.out.println("starting first pass");
-//			System.err.println("starting first pass");
-//			findLeafActivities(Scene.v().getApplicationClasses().toArray());
-//			performFirstPass();
-//
-//			System.out.println("finishing first pass");
-//			System.err.println("finishing first pass");
-//			System.out.println("Thread ID end : "+Thread.currentThread().getId());
-//			isFirstDone.set(true);
-//		}
-//		else
-//		{
-//			System.out.println("Thread ID created : "+Thread.currentThread().getId());
-//			while(!isFirstDone.get())
-//			{
-//				System.out.println("Thread ID : "+Thread.currentThread().getId() + "waiting");
-//			}
-//			System.out.println("Thread ID start : "+Thread.currentThread().getId());
-////			performSecondPassbySignature(b,s,map,threadNum,1);
-//			if(!b.getMethod().toString().contains("init") && !b.getMethod().toString().contains("onCreate"))
-//			{
-//				performSecondPassbyBaseClass(b,s,map,0);
-//
-////				performSecondPassbySignature(b,s,map,threadNum,1);
-//			}
-//
-//			System.out.println("Thread ID end : "+Thread.currentThread().getId());
-//
-//		}
+		int threadNum = this.threadNum.getAndIncrement();
+
+		if(threadNum ==0)
+		{
+			System.out.println("Thread ID start: "+Thread.currentThread().getId());
+			System.out.println("starting first pass");
+			System.err.println("starting first pass");
+			findLeafActivities(Scene.v().getApplicationClasses().toArray());
+			performFirstPass();
+
+			System.out.println("finishing first pass");
+			System.err.println("finishing first pass");
+			System.out.println("Thread ID end : "+Thread.currentThread().getId());
+			isFirstDone.set(true);
+		}
+		else
+		{
+			System.out.println("Thread ID created : "+Thread.currentThread().getId());
+			while(!isFirstDone.get())
+			{
+				System.out.println("Thread ID : "+Thread.currentThread().getId() + "waiting");
+			}
+			System.out.println("Thread ID start : "+Thread.currentThread().getId());
+//			performSecondPassbySignature(b,s,map,threadNum,1);
+			if(!b.getMethod().toString().contains("init") && !b.getMethod().toString().contains("onCreate"))
+			{
+				performSecondPassbyBaseClass(b,s,map,0);
+
+//				performSecondPassbySignature(b,s,map,threadNum,1);
+			}
+
+			System.out.println("Thread ID end : "+Thread.currentThread().getId());
+
+		}
 
 		System.out.println("just print\n");
 
@@ -304,6 +306,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			System.out.println(thisClass.toString());
 		}
 	}
+
 	void performFirstPass() //inject fields and edit onCreate
 	{
 		if (isAnalize) {
@@ -313,7 +316,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		SootClass classMainActivity = null;
 		for(SootClass thatClass : injectedClasses)
 		{
-			if(thatClass.toString().contains("MainActivity")) {
+			if(thatClass.toString().equals(MAIN_ACTIVITY_CLASS)) {
 
 				classMainActivity = thatClass;
 				injectedClasses.remove(classMainActivity);
@@ -356,6 +359,8 @@ public class RPCIntfInjector extends BodyTransformer {
 			{
 				System.err.println("this activity class("+thisClass.toString()+ ") has onCreate method");
 				System.out.println("this activity class("+thisClass.toString()+ ") has onCreate method");
+//				onCreate = Scene.v().getMethod(onCreate.toString());
+//				System.out.println(onCreate.toString());
 				Body onCreateBody = onCreate.getActiveBody();
 				if(thisClass.toString().contains("MainActivity")) {
 					System.out.println("this is MainActivity");

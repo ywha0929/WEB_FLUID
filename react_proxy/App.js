@@ -29,7 +29,7 @@ class App extends Component {
         LayoutList : new Array()
     };
     _Connect_to_Server = (bufer) => {
-        client = TcpSocket.createConnection({host: "192.168.0.2", port: 5673}, ()=>{
+        client = TcpSocket.createConnection({host: "192.168.0.11", port: 5673}, ()=>{
             console.log("connection established");
         });
         client.on('data', (data) => this.checkData(data));
@@ -565,10 +565,14 @@ class App extends Component {
             offset +=4;
             buffer.writeUInt32BE(0,offset); //down
             offset +=4;
+            buffer.writeFloatBE(e.nativeEvent.locationX/0.728,offset);
+            offset +=4;
+            buffer.writeFloatBE(e.nativeEvent.locationY/0.728,offset);
+            offset +=4;
             client.write(buffer); 
 
     }
-    onPressOutListener = (e) => {
+    onPressOutListener = (e,H,W) => {
         var target_id = e.target._internalFiberInstanceHandleDEV.memoizedProps.id;
         let tempArr = this.state.UIList;
         
@@ -580,6 +584,10 @@ class App extends Component {
             buffer.writeUInt32BE(1,offset); //typeEvent
             offset +=4;
             buffer.writeUInt32BE(1,offset); //down
+            offset +=4;
+            buffer.writeFloatBE(e.nativeEvent.locationX/0.728,offset);
+            offset +=4;
+            buffer.writeFloatBE(e.nativeEvent.locationY/0.728,offset);
             offset +=4;
             client.write(buffer);
 

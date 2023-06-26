@@ -1,5 +1,3 @@
-com/hmsl/fluidlib/MainActivity.java
- com.hmsl.fluidlib.MainActivity
 com/hmsl/fluidlib/IReverseConnection.java
  com.hmsl.fluidlib.IReverseConnection
  com.hmsl.fluidlib.IReverseConnection$Default
