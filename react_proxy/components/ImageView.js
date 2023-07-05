@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet,View, Image, Pressable} from 'react-native';
-
+var previousPressIn;
+var touchMode;
 class ImageView extends Component{
     constructor(props){
         super(props);
@@ -13,18 +14,37 @@ class ImageView extends Component{
         this.props.TextChangeListener(e);
         console.log(Date.now()," : ","this is dummy TextChangeListener of EditText");
     }
-    onPressListener = (e) => {
-        console.log("onPressListener of ImageView");
-    }
+    // onPressListener = (e) => {
+    //     console.log("onPressListener of ImageView");
+    // }
     onPressInListener = (e) => {
         console.log(e.nativeEvent.locationX);
         console.log(e.nativeEvent.locationY);
         console.log(Date.now()," : ","onPressInListener of ImageView");
-        this.props.onPressInListener(e);
+        previousPressIn = e;
+        touchMode = 0;
+        // this.props.onPressInListener(e);
     }
+    onLongPressListener = (e) => {
+        console.log(Date.now()," : ","onLongPressListener of ImageView");
+        touchMode = 1;
+    }
+
     onPressOutListener = (e) => {
         console.log(Date.now()," : ","onPressOutListener of ImageView");
-        this.props.onPressOutListener(e);
+
+        console.log("out: ",e.nativeEvent.locationX);
+        console.log("out: ",e.nativeEvent.locationY);
+        if(touchMode == 0)
+        {
+            this.props.onPressInListener(e);
+            this.props.onPressOutListener(e);
+        }
+        else if(touchMode == 1)
+        {
+            this.props.setLayoutTouchMode(1,e.target._internalFiberInstanceHandleDEV.memoizedProps.id);
+        }
+        
     }
     render() {
         console.log(Date.now()," : ","ImageView Component created");
@@ -36,6 +56,7 @@ class ImageView extends Component{
                     <Pressable style={{alignContent: 'center',   justifyContent: 'center', alignItems: "center", }}
                         id={this.state.thisData.ID}
                         onPress={this.onPressListener}
+                        onLongPress={this.onLongPressListener}
                         onPressIn={this.onPressInListener}
                         onPressOut={this.onPressOutListener}>
                         <Image

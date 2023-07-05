@@ -6,6 +6,8 @@ import TextView from './TextView';
 import ImageView from './ImageView';
 import OtherView from './OtherView';
 
+var layoutTouchMode;
+var childMoveId;
 class OtherLayout extends Component{
     constructor(props) {
         super(props);
@@ -14,6 +16,8 @@ class OtherLayout extends Component{
             UIList: this.props.UIList
             
         };
+
+        layoutTouchMode = 0;
         // console.log(Date.now()," : ","new OtherLayout instance created",props);
     }
     TextChangeListener=(e)=>{
@@ -22,12 +26,23 @@ class OtherLayout extends Component{
     }
 
     onPressInListener=(e)=>{
-        this.props.onPressInListener(e);
-        console.log(Date.now()," : ","this is dummy onPressInListener of LinearLayout");
+        // this.props.onPressInListener(e);
+        if(layoutTouchMode == 1)
+        {
+            this.props.moveComponent(childMoveId,e);
+            layoutTouchMode = 0;
+        }
     }
     onPressOutListener=(e)=>{
         this.props.onPressOutListener(e);
         console.log(Date.now()," : ","this is dummy onPressOutListener of LinearLayout");
+    }
+    LayoutPressInListener=(e)=>{
+        console.log(Date.now()," : ","this is dummy onPressOutListener of LinearLayout");
+    }
+    setLayoutTouchMode=(mode,id)=>{
+        layoutTouchMode=mode;
+        childMoveId=id;
     }
     render() {
         let UIs = this.state.UIList.map((item,index)=>{
@@ -76,6 +91,7 @@ class OtherLayout extends Component{
                             key={item.ID}
                             setImageView={item}
                             position={"coordinate"}
+                            setLayoutTouchMode={this.setLayoutTouchMode}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
                     )
@@ -103,8 +119,11 @@ class OtherLayout extends Component{
         return(
             <View 
                 key={this.state.thisData.ID}
-                style={{height: this.state.thisData.Height, width: this.state.thisData.Width, borderBottomWidth: StyleSheet.hairlineWidth}}>
+                style={{height: this.state.thisData.Height+ 10, width: this.state.thisData.Width + 10, backgroundColor: 'blanchedalmond',orderBottomWidth: StyleSheet.hairlineWidth}}>
+                <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, backgroundColor: 'lightblue',orderBottomWidth: StyleSheet.hairlineWidth}}
+                    onPressIn={this.onPressInListener}>
                 {UIs}
+                </Pressable>
             </View>
         )
         

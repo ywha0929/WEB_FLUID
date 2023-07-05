@@ -23,6 +23,8 @@ import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 
 
+
+
 //import com.hmsl.fluidlib.IFLUIDService;
 
 import java.io.BufferedOutputStream;
@@ -43,6 +45,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.*;
+
+
 
 import com.hmsl.fluidlib.IReverseConnection;
 
@@ -133,7 +141,27 @@ public class FLUIDManagerService extends Service {
     };
 
     public FLUIDManagerService() {
-
+//        WebSocketServer wss = new WebSocketServer() {
+//            @Override
+//            public void onOpen(WebSocket conn, ClientHandshake handshake) {
+//
+//            }
+//
+//            @Override
+//            public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+//
+//            }
+//
+//            @Override
+//            public void onMessage(WebSocket conn, String message) {
+//
+//            }
+//
+//            @Override
+//            public void onError(WebSocket conn, Exception ex) {
+//
+//            }
+//        }
     }
 
     @Override

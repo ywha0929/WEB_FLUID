@@ -101,7 +101,7 @@ class LinearLayout extends Component{
             return(
                 <View 
                     key={this.state.thisData.ID}
-                    style={{flexDirection: 'row'}}>
+                    style={{flexDirection: 'row', height: this.state.thisData.Height+ 10, width: this.state.thisData.Width + 10, backgroundColor: 'blanchedalmond'}}>
                     {UIs}
                 </View>
             )
@@ -112,7 +112,7 @@ class LinearLayout extends Component{
             return(
                 <View 
                     key={this.state.thisData.ID}
-                    style={{flexDirection: 'column'}}>
+                    style={{flexDirection: 'column', height: this.state.thisData.Height+ 10, width: this.state.thisData.Width + 10, backgroundColor: 'blanchedalmond'}}>
                     {UIs}
                 </View>
             )

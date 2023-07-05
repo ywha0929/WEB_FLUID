@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {StyleSheet,View,Pressable,Text} from 'react-native';
 
+
+var previousPressIn;
+var touchMode;
 class OtherView extends Component{
     constructor(props){
         super(props);
@@ -11,19 +14,22 @@ class OtherView extends Component{
     };
     onPressInListener = (e) => {
         console.log(Date.now()," : ","onPressInListener of OtherView");
-        // console.log(e.nativeEvent.locationX);
-        // console.log(e.nativeEvent.locationY);
-        this.props.onPressInListener(e);
+        // console.log("in: ",e.nativeEvent.locationX);
+        // console.log("in: ",e.nativeEvent.locationY);
+        // previousPressIn = e;
+        // touchMode = 0;
+        // this.props.onPressInListener(e);
     }
     onPressOutListener = (e) => {
         console.log(Date.now()," : ","onPressOutListener of OtherView");
+
         this.props.onPressOutListener(e);
     }
     render() {
         console.log(Date.now()," : ","OtherView Component");
         if(this.state.position=="coordinate") {
             return (
-                <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y,height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'black',borderBottomWidth: StyleSheet.hairlineWidth}}>
+                <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y,height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'gray',borderBottomWidth: StyleSheet.hairlineWidth}}>
                     <Pressable style={{ height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'red'}}
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}

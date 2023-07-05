@@ -645,7 +645,10 @@ public class FLUIDMain {
                 TextView text = (TextView) view;
                 param = text.getText().toString();
             }
-
+            if(method.contains("setColor"))
+            {
+                method="setImage";
+            }
             Log.d(TAG,"method : "+method);
 //            if (method.contains("setTextSize")){
 //                convertPixelsToDpFloat((float)params[0], instance.mContext);

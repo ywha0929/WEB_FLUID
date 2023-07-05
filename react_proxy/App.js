@@ -29,7 +29,7 @@ class App extends Component {
         LayoutList : new Array()
     };
     _Connect_to_Server = (bufer) => {
-        client = TcpSocket.createConnection({host: "192.168.0.11", port: 5673}, ()=>{
+        client = TcpSocket.createConnection({host: "192.168.0.9", port: 5673}, ()=>{
             console.log("connection established");
         });
         client.on('data', (data) => this.checkData(data));
@@ -592,6 +592,21 @@ class App extends Component {
             client.write(buffer);
 
     }
+
+    moveComponent = (id,e) => {
+        let tempArr = this.state.UIList;
+        var target_id = id;
+        tempArr.forEach(function (targetUI) {
+            if(targetUI.ID == target_id){
+                targetUI.X = e.nativeEvent.locationX
+                targetUI.Y = e.nativeEvent.locationY
+            }
+        });
+        this.setState({
+            UIList: tempArr
+        });
+    }
+
     TextChangeListener = (e) =>{
         console.log(e.target.id);
         const {name,type,text} = e.nativeEvent;
@@ -646,6 +661,7 @@ class App extends Component {
                             UIList={this.state.UIList}
                             setOtherLayout={item}
                             TextChangeListener={this.TextChangeListener}
+                            moveComponent={this.moveComponent}
                             onPressInListener={this.onPressInListener}
                             onPressOutListener={this.onPressOutListener}/>
                     </View>

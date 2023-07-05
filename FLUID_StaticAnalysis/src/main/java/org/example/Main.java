@@ -67,7 +67,8 @@ public class Main {
                 thisMethod.toString().equals("<android.widget.TextView: void setText(java.lang.CharSequence,android.widget.TextView$BufferType)>") ||
                 thisMethod.toString().equals("<android.widget.TextView: void setText(char[],int,int)>") ||
                 thisMethod.toString().equals("<android.widget.TextView: void setText(int,android.widget.TextView$BufferType)>") ||
-                thisMethod.toString().equals("<android.widget.TextView: void setTextColor(int)>")
+                thisMethod.toString().equals("<android.widget.TextView: void setTextColor(int)>") ||
+                thisMethod.toString().equals("<android.graphics.Paint: void setColor(int)>")
                 )
             {
                 System.out.println("adding method to listTargetMethod : "+thisMethod.toString());
