@@ -125,7 +125,7 @@ public class RPCIntfInjector extends BodyTransformer {
 
 		}
 
-		System.out.println("just print\n");
+//		System.out.println("just print\n");
 
 //		InjectOnActivity(b,s,map);
 //		SecondPass(b,s,map);
@@ -605,7 +605,7 @@ public class RPCIntfInjector extends BodyTransformer {
 
 	void injectUpdateCodebyBaseClass(JimpleBody body) {
 		UnitPatchingChain units = body.getUnits();
-		Boolean hasUpdateCode = false;
+		boolean hasUpdateCode = false;
 		// List<Unit> generated = new ArrayList<>();
 
 //		Local thisVar = body.getThisLocal();
@@ -691,18 +691,18 @@ public class RPCIntfInjector extends BodyTransformer {
 				SootClass baseSootClass = Scene.v().getSootClassUnsafe(baseClassString);
 				if(baseSootClass == null)
 				{
-					System.out.println("this is primitive");
-					System.err.println("this is primitive");
+					System.out.println(body.getMethod()+"this is primitive");
+					System.err.println(body.getMethod()+"this is primitive");
 					continue;
 				}
 
-				if(isView(baseSootClass))
+				if(!isView(baseSootClass))
 				{
-					System.out.println("this is View's Child class");
-					System.err.println("this is View's Child class");
+					System.out.println(body.getMethod()+"this is View's Child class "+baseSootClass.toString());
+					System.err.println(body.getMethod()+"this is View's Child class "+baseSootClass.toString());
 					continue;
 				}
-				if (!isView(baseSootClass))  {
+				if (isView(baseSootClass))  {
 
 					System.out.println(body.getMethod() + "- found base : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
 					System.err.println(body.getMethod() + "- found base : "+targetUnitString+"\n"+body.getMethod().toString()+"\n");
@@ -729,6 +729,7 @@ public class RPCIntfInjector extends BodyTransformer {
 					}
 
 					hasUpdateCode = true;
+					System.out.println(body.getMethod().toString()+"'s hasUpdateCode changed");
 					List<Unit> generated = new ArrayList<>();
 					List<Unit> generated_catch = new ArrayList<>();
 					generated.addAll(InstrumentUtil.generateLogStmts(body,"UI update signature : ",StringConstant.v(targetUnitString)));
@@ -807,6 +808,8 @@ public class RPCIntfInjector extends BodyTransformer {
 						if(signature.equals(token))
 						{
 							System.out.println(body.getMethod()+"     "+token + "\n"+ signature+"\ntrue");
+							hasUpdateCode = true;
+							System.out.println(body.getMethod().toString()+"'s hasUpdateCode changed");
 							indexSignature = k;
 							generated.add(Jimple.v().newAssignStmt(signatureVar,StringConstant.v(listUIUpdateTargetSignature.get(indexSignature))));
 
@@ -867,8 +870,10 @@ public class RPCIntfInjector extends BodyTransformer {
 		}
 
 		//wrap entire code with try catch
+		System.out.println(body.getMethod().toString() + "'s hasUpdateCode : "+hasUpdateCode);
 		if(hasUpdateCode == true)
 		{
+			System.out.println(body.getMethod()+"creating exception traps...");
 			Unit tryBegin = units.getFirst();
 			Unit tryEnd = units.getLast();
 
@@ -923,6 +928,7 @@ public class RPCIntfInjector extends BodyTransformer {
 //					units.insertBefore(generated, units.getSuccOf((Unit)unitarray[i]));
 
 			body.getTraps().add(trap);
+			System.out.println(body.getMethod()+"creating exception traps done");
 		}
 
 
