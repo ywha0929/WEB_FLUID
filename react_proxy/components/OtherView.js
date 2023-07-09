@@ -13,17 +13,33 @@ class OtherView extends Component{
         };
     };
     onPressInListener = (e) => {
-        console.log(Date.now()," : ","onPressInListener of OtherView");
-        // console.log("in: ",e.nativeEvent.locationX);
-        // console.log("in: ",e.nativeEvent.locationY);
-        // previousPressIn = e;
-        // touchMode = 0;
+        console.log(e.nativeEvent.locationX);
+        console.log(e.nativeEvent.locationY);
+        console.log(Date.now()," : ","onPressInListener of ImageView");
+        previousPressIn = e;
+        touchMode = 0;
         // this.props.onPressInListener(e);
     }
-    onPressOutListener = (e) => {
-        console.log(Date.now()," : ","onPressOutListener of OtherView");
+    onLongPressListener = (e) => {
+        console.log(Date.now()," : ","onLongPressListener of ImageView");
+        touchMode = 1;
+    }
 
-        this.props.onPressOutListener(e);
+    onPressOutListener = (e) => {
+        console.log(Date.now()," : ","onPressOutListener of ImageView");
+
+        console.log("out: ",e.nativeEvent.locationX);
+        console.log("out: ",e.nativeEvent.locationY);
+        if(touchMode == 0)
+        {
+            this.props.onPressInListener(e);
+            this.props.onPressOutListener(e);
+        }
+        else if(touchMode == 1)
+        {
+            this.props.setLayoutTouchMode(1,e.target._internalFiberInstanceHandleDEV.memoizedProps.id);
+        }
+        
     }
     render() {
         console.log(Date.now()," : ","OtherView Component");
@@ -33,6 +49,7 @@ class OtherView extends Component{
                     <Pressable style={{ height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'red'}}
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}
+                        onLongPress={this.onLongPressListener}
                         onPressOut={this.onPressOutListener}>
                         <Text 
                             style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}
@@ -50,6 +67,7 @@ class OtherView extends Component{
                     <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center',   justifyContent: 'center', alignItems: "center", backgroundColor: 'red'}}
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}
+                        onLongPress={this.onLongPressListener}
                         onPressOut={this.onPressOutListener}>
                         <Text 
                             style={{fontSize: 30, textAlign: 'center', alignContent: 'center', color: 'black'}}

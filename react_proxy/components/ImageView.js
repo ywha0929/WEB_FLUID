@@ -47,7 +47,7 @@ class ImageView extends Component{
         
     }
     render() {
-        console.log(Date.now()," : ","ImageView Component created");
+        console.log(Date.now()," : ","ImageView Component created ",this.state.thisData.ID);
         var image = this.state.thisData.Image;
         if(this.state.position=="coordinate")
         {
@@ -80,7 +80,7 @@ class ImageView extends Component{
                         <Image
                             id={this.state.thisData.ID}
                             source={{
-                                uri: `data:image/jpeg;base64,${image}`,
+                                uri: `data:image/png;base64,${image}`,
                                 }} style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}/>
                     </Pressable>
                 </View>

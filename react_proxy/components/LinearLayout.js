@@ -6,6 +6,7 @@ import TextView from './TextView';
 import ImageView from './ImageView';
 import OtherView from './OtherView';
 
+
 class LinearLayout extends Component{
     constructor(props) {
         super(props);

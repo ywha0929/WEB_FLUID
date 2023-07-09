@@ -14,9 +14,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51666edf-a32a-4fc2-bc9b-a00a2873453e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../FLUID_Injector/output/com.simplemobiletools.flashlight_5.9.0-62_minAPI23(nodpi)_apkmirror.com-dex2jar.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../FLUID_Injector/.gradle/7.3/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/hmsl/fluidmanager/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/Button.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/Button.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/EditText.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/EditText.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/ImageView.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/ImageView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/LinearLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/LinearLayout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/OtherLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/OtherLayout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/OtherView.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/OtherView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react_proxy/components/TextView.js" beforeDir="false" afterPath="$PROJECT_DIR$/../react_proxy/components/TextView.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../testapps/AmazeFileManager" beforeDir="false" afterPath="$PROJECT_DIR$/../testapps/AmazeFileManager" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../testapps/Camera" beforeDir="false" afterPath="$PROJECT_DIR$/../testapps/Camera" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../testapps/Simple-Camera" beforeDir="false" afterPath="$PROJECT_DIR$/../testapps/Simple-Camera" afterDir="false" />
@@ -30,7 +37,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[13201FDD40024R]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[12191FDD40010L]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

@@ -326,23 +326,24 @@ class App extends Component {
                 
                 var rest = data.length - offset;
                 
-                buffer_cur = 0;
+                // buffer_cur = 0;
                 let temp = data.toString('utf8',offset,data.length);
                 let current_bitmap = (''+temp).slice(1);
                 let UIdata = {
                     "WidgetType": widgetType,
                     "ID": id,
                     "Length": length,
-                    "Image": current_bitmap,
+                    
                     "Height": height,
                     "Width": width,
                     "Parent_ID": layoutId,
                     "X": X,
                     "Y": Y,
+                    "Image": current_bitmap,
                 };
-                buffer_cur += rest;
+                // buffer_cur += rest;
                 //console.log('client , ',client);
-                cur_id = id;
+                // cur_id = id;
                 //console.log("UIList ",this.state.UIList[0]);
                 UI_List_Buffer.push(UIdata);
                 // let tempArr = this.state.UIList;
@@ -606,7 +607,12 @@ class App extends Component {
             UIList: tempArr
         });
     }
-
+    rerender = () => {
+        let tempArr = this.state.UIList;
+        this.setState({
+            UIList: tempArr
+        });
+    }
     TextChangeListener = (e) =>{
         console.log(e.target.id);
         const {name,type,text} = e.nativeEvent;
@@ -662,6 +668,7 @@ class App extends Component {
                             setOtherLayout={item}
                             TextChangeListener={this.TextChangeListener}
                             moveComponent={this.moveComponent}
+                            rerender={this.rerender}
                             onPressInListener={this.onPressInListener}
                             onPressOutListener={this.onPressOutListener}/>
                     </View>

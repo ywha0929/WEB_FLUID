@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet,View, TextInput,Pressable} from 'react-native';
 
+var previousPressIn;
+var touchMode;
 class EditText extends Component{
     constructor(props){
         super(props);
@@ -10,18 +12,34 @@ class EditText extends Component{
         };
         console.log(Date.now()," : ",props);
     };
-    TextChangeListener = (e) => {
-        console.log(Date.now()," : ","this is dummy TextChangeListener of EditText");
-        this.props.TextChangeListener(e);
-        
-    }
     onPressInListener = (e) => {
-        console.log(Date.now()," : ","onPressInListener of EditText");
-        this.props.onPressInListener(e);
+        console.log(e.nativeEvent.locationX);
+        console.log(e.nativeEvent.locationY);
+        console.log(Date.now()," : ","onPressInListener of ImageView");
+        previousPressIn = e;
+        touchMode = 0;
+        // this.props.onPressInListener(e);
     }
+    onLongPressListener = (e) => {
+        console.log(Date.now()," : ","onLongPressListener of ImageView");
+        touchMode = 1;
+    }
+
     onPressOutListener = (e) => {
-        console.log(Date.now()," : ","onPressOutListener of EditText");
-        this.props.onPressOutListener(e);
+        console.log(Date.now()," : ","onPressOutListener of ImageView");
+
+        console.log("out: ",e.nativeEvent.locationX);
+        console.log("out: ",e.nativeEvent.locationY);
+        if(touchMode == 0)
+        {
+            this.props.onPressInListener(e);
+            this.props.onPressOutListener(e);
+        }
+        else if(touchMode == 1)
+        {
+            this.props.setLayoutTouchMode(1,e.target._internalFiberInstanceHandleDEV.memoizedProps.id);
+        }
+        
     }
     render() {
         console.log(Date.now()," : ","EditText Component created");
@@ -32,6 +50,7 @@ class EditText extends Component{
                     <Pressable style={{alignContent: 'center',   justifyContent: 'center', alignItems: "center", }}
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}
+                        onLongPress={this.onLongPressListener}
                         onPressOut={this.onPressOutListener}>
                     
                         <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
@@ -50,6 +69,7 @@ class EditText extends Component{
                     <Pressable style={{alignContent: 'center',   justifyContent: 'center', alignItems: "center", }}
                         id={this.state.thisData.ID}
                         onPressIn={this.onPressInListener}
+                        onLongPress={this.onLongPressListener}
                         onPressOut={this.onPressOutListener}>
                         <TextInput style={{fontSize: this.state.thisData.TextSize,  textAlign: 'left', padding: 2, color: this.state.thisData.Color}} 
                             value={this.state.thisData.Text}

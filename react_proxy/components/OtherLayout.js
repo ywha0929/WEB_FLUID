@@ -43,6 +43,7 @@ class OtherLayout extends Component{
     setLayoutTouchMode=(mode,id)=>{
         layoutTouchMode=mode;
         childMoveId=id;
+        this.props.rerender();
     }
     render() {
         let UIs = this.state.UIList.map((item,index)=>{
@@ -54,6 +55,7 @@ class OtherLayout extends Component{
                             key={item.ID}
                             setEditText={item}
                             position={"coordinate"}
+                            setLayoutTouchMode={this.setLayoutTouchMode}
                             TextChangeListener={this.TextChangeListener}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}
@@ -67,6 +69,7 @@ class OtherLayout extends Component{
                             key={item.ID}
                             setTextView={item}
                             position={"coordinate"}
+                            setLayoutTouchMode={this.setLayoutTouchMode}
                             TextChangeListener={this.props.TextChangeListener}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
@@ -80,6 +83,7 @@ class OtherLayout extends Component{
                             key={item.ID}
                             setButton={item} 
                             position={"coordinate"}
+                            setLayoutTouchMode={this.setLayoutTouchMode}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
                     )
@@ -103,6 +107,7 @@ class OtherLayout extends Component{
                             key={item.ID}
                             setOtherView={item}
                             position={"coordinate"}
+                            setLayoutTouchMode={this.setLayoutTouchMode}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
                     )
@@ -116,16 +121,30 @@ class OtherLayout extends Component{
 
 
         //console.log(Date.now()," : ","OtherLayout : ", this.state.thisData);
-        return(
-            <View 
-                key={this.state.thisData.ID}
-                style={{height: this.state.thisData.Height+ 10, width: this.state.thisData.Width + 10, backgroundColor: 'blanchedalmond',orderBottomWidth: StyleSheet.hairlineWidth}}>
-                <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, backgroundColor: 'lightblue',orderBottomWidth: StyleSheet.hairlineWidth}}
-                    onPressIn={this.onPressInListener}>
-                {UIs}
-                </Pressable>
-            </View>
-        )
+        if(layoutTouchMode== 0)
+        {
+            return(
+                <View 
+                    key={this.state.thisData.ID}
+                    style={{height: this.state.thisData.Height+ 10, width: this.state.thisData.Width + 10,orderBottomWidth: StyleSheet.hairlineWidth}}>
+                    {UIs}
+
+                </View>
+            )
+        }
+        else {
+            return(
+                <View 
+                    key={this.state.thisData.ID}
+                    style={{height: this.state.thisData.Height+ 10, width: this.state.thisData.Width + 10, backgroundColor: 'blanchedalmond',orderBottomWidth: StyleSheet.hairlineWidth}}>
+                    <Pressable style={{height: this.state.thisData.Height, width: this.state.thisData.Width, backgroundColor: 'lightblue',orderBottomWidth: StyleSheet.hairlineWidth}}
+                        onPressIn={this.onPressInListener}>
+                    {UIs}
+                    </Pressable>
+                </View>
+            )
+        }
+        
         
         
         
