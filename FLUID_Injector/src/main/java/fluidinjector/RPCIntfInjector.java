@@ -113,6 +113,14 @@ public class RPCIntfInjector extends BodyTransformer {
 				System.out.println("Thread ID : "+Thread.currentThread().getId() + "waiting");
 			}
 			System.out.println("Thread ID start : "+Thread.currentThread().getId());
+
+//			if( !b.getMethod().toString().contains("onTextChanged") && b.getMethod().toString().contains("on") && b.getMethod().toString().contains("Changed"))
+			if(b.getMethod().toString().contains("onProgressChanged") || b.getMethod().toString().contains("onCheckedChanged"))
+			{
+				performSecondPassOnListener(b,s,map);
+			}
+
+
 //			performSecondPassbySignature(b,s,map,threadNum,1);
 			if(!b.getMethod().toString().contains("init") && !b.getMethod().toString().contains("onCreate"))
 			{
@@ -524,7 +532,7 @@ public class RPCIntfInjector extends BodyTransformer {
 	void performSecondPassbyBaseClass(Body b, String s, Map<String, String> map,int onlyInjectedClass)
 	{
 		SootClass declaringClass = b.getMethod().getDeclaringClass();
-		if(declaringClass.isLibraryClass()|| declaringClass.toString().contains("androidx"))
+		if(declaringClass.isLibraryClass()|| declaringClass.toString().contains("androidx") || declaringClass.toString().contains("kotlin"))
 		{
 			System.out.println("this is Library Class : "+declaringClass.toString());
 			System.err.println("this is Library Class : "+declaringClass.toString());
@@ -602,7 +610,90 @@ public class RPCIntfInjector extends BodyTransformer {
 		}
 		return false;
 	}
+	void performSecondPassOnListener(Body b, String s, Map<String,String> map)
+	{
 
+
+
+		JimpleBody body = (JimpleBody) b;
+		UnitPatchingChain units = body.getUnits();
+		List<Unit> generated = new ArrayList<>();
+
+		Local exceptionVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Exception"));
+		Local methodVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.reflect.Method"));
+		Local dexLoaderVar = InstrumentUtil.generateNewLocal(body, RefType.v("dalvik.system.DexClassLoader"));
+		Local classVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Class"));
+		Local classArrayVar = InstrumentUtil.generateNewLocal(body, ArrayType.v(RefType.v("java.lang.Class"), 1));
+		Local objectArrayVar = InstrumentUtil.generateNewLocal(body, ArrayType.v(RefType.v("java.lang.Object"), 1));
+		Local objectFluidInterfaceVar = InstrumentUtil.generateNewLocal(body, RefType.v("java.lang.Object"));
+
+
+
+		SootClass thisActivity = Scene.v().getSootClass(MAIN_ACTIVITY_CLASS);
+		SootField fieldDex = thisActivity.getFieldByNameUnsafe("dex");
+		generated.add(Jimple.v().newAssignStmt(dexLoaderVar, Jimple.v().newStaticFieldRef(fieldDex.makeRef())));
+		thisActivity = Scene.v().getSootClass(MAIN_ACTIVITY_CLASS);
+		SootField fieldFluidInterface = thisActivity.getFieldByNameUnsafe("objFluidInterface");
+		generated.add(Jimple.v().newAssignStmt(objectFluidInterfaceVar,
+				Jimple.v().newStaticFieldRef(fieldFluidInterface.makeRef())));
+
+		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.ClassLoader",
+				"java.lang.Class loadClass(java.lang.String)", dexLoaderVar, classVar,
+				StringConstant.v(FLUID_MAIN_CLASS)));
+		Unit tryBegin = generated.get(generated.size() - 1);
+
+		// create class array for getDeclaredMethod
+		SootClass cls = Scene.v().getSootClass("java.lang.Class");
+		generated.add(Jimple.v().newAssignStmt(classArrayVar,
+				Jimple.v().newNewArrayExpr(cls.getType(), IntConstant.v(1))));
+
+		// insert class to class array
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(classArrayVar, IntConstant.v(0)),
+				ClassConstant.v("Landroid/view/View;")));
+		generated.addAll(InstrumentUtil.generateLogStmts(body,"UI Listener"));
+		// get runupdate
+		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Class",
+				"java.lang.reflect.Method getDeclaredMethod(java.lang.String,java.lang.Class[])", classVar,
+				methodVar, StringConstant.v("runListenerCapture"), classArrayVar));
+
+
+		SootClass cls2 = Scene.v().getSootClass("java.lang.Object");
+		generated.add(Jimple.v().newAssignStmt(objectArrayVar,
+				Jimple.v().newNewArrayExpr(cls2.getType(), IntConstant.v(1))));
+		generated.add(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(objectArrayVar, IntConstant.v(0)),
+				body.getParameterLocal(0)));
+		// invoke runupdate
+		generated.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.reflect.Method",
+				"java.lang.Object invoke(java.lang.Object,java.lang.Object[])", methodVar, null,
+				objectFluidInterfaceVar, objectArrayVar));
+
+		Unit target = units.getFirst();
+		while(target.toString().contains("@parameter") || target.toString().contains("@this"))
+		{
+			target = units.getSuccOf(target);
+		}
+		units.insertBefore(generated, target );
+		Unit tryEnd = units.getLast(); // return
+
+		// insert try-catch statement
+		CaughtExceptionRef exceptionRef = soot.jimple.Jimple.v().newCaughtExceptionRef();
+		Unit catchBegin = Jimple.v().newIdentityStmt(exceptionVar, exceptionRef);
+		units.add(catchBegin);
+		units.addAll(InstrumentUtil.generateVirtualInvokeStmt(body, "java.lang.Throwable", "void printStackTrace()",
+				exceptionVar, null));
+
+		units.add(Jimple.v().newReturnVoidStmt());
+		SootClass exceptionClass = Scene.v().getSootClass("java.lang.Exception");
+		Trap trap = soot.jimple.Jimple.v().newTrap(exceptionClass, tryBegin, tryEnd, catchBegin);
+		body.getTraps().add(trap);
+		System.out.println(body.getMethod()+" edit done");
+		System.out.println(body.getMethod()+"\n"+body.toString());
+		body.validate();
+
+
+
+
+	}
 	void injectUpdateCodebyBaseClass(JimpleBody body) {
 		UnitPatchingChain units = body.getUnits();
 		boolean hasUpdateCode = false;
@@ -679,7 +770,7 @@ public class RPCIntfInjector extends BodyTransformer {
 						Base = (Local)locals[j];
 
 				}
-				if(!local.contains("$"))
+				if(!local.contains("r"))
 				{
 					System.out.println("this is primitive");
 					System.err.println("this is primitive");
@@ -716,8 +807,7 @@ public class RPCIntfInjector extends BodyTransformer {
 						token = stk.nextToken();
 
 					}
-					if(listUIUpdateSignature.contains(token))
-					{
+					if(listUIUpdateSignature.contains(token)) {
 
 					}
 					else
@@ -2194,6 +2284,7 @@ public class RPCIntfInjector extends BodyTransformer {
 		body.validate();
 		System.out.println("edit onCreate done");
 		System.err.println("edit onCreate done");
+		System.out.println(body.getMethod()+"\n"+body.toString());
 	}
 
 	void injectCode_t(JimpleBody body) {

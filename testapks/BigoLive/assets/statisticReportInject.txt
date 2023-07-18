@@ -1,0 +1,22 @@
+<script id="performance-monitor">
+  (function(win, doc){
+    var bridge = win.webkit&&win.webkit.messageHandlers&&win.webkit.messageHandlers.postMessageToNative&&win.webkit.messageHandlers.postMessageToNative.postMessage.bind(win.webkit.messageHandlers.postMessageToNative) || win.bgo_bridge && win.bgo_bridge.postMessageToNative.bind(win.bgo_bridge);
+    var webkitSessionReport = function(event){
+        if(!bridge)return;
+        bridge(getJson({url:location.href, event:event, time:+new Date()},'webkitSessionReport'));
+    }
+
+    var getJson = function (params, method) {
+      return JSON.stringify({jsonrpc: '2.0', id:method+'-'+(+new Date()), method:method, params: JSON.stringify(params)})
+    };
+
+    webkitSessionReport('load_start');
+    win.addEventListener('load',function(){webkitSessionReport('load_finish');});
+  })(window, document);
+
+  var performanceMonitor = document.getElementById("performance-monitor");
+  if(performanceMonitor){
+    document.head.removeChild(performanceMonitor)
+    performanceMonitor = null;
+  }
+</script>

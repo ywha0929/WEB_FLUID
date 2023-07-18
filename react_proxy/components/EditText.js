@@ -41,6 +41,11 @@ class EditText extends Component{
         }
         
     }
+
+    TextChangeListener = (e) => {
+        console.log(e);
+        this.props.TextChangeListener(e);
+    }
     render() {
         console.log(Date.now()," : ","EditText Component created");
         if(this.state.position=="coordinate")

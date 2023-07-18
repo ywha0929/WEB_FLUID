@@ -5,8 +5,9 @@ import EditText from './EditText';
 import TextView from './TextView';
 import ImageView from './ImageView';
 import OtherView from './OtherView';
-
-
+import SwitchView from './Switch';
+import SeekBarView from './SeekBar';
+import RadioGroupView from './RadioGroup';
 class LinearLayout extends Component{
     constructor(props) {
         super(props);
@@ -76,6 +77,42 @@ class LinearLayout extends Component{
                             position={"automatic"}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("SeekBar")) {
+                    console.log(Date.now()," : ","LinearLayout : SeekBar");
+                    return (
+                        <SeekBarView
+                            key={item.ID}
+                            setSeekBar={item}
+                            position={"automatic"}
+                            onSlideListener={this.props.onSlideListener}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("RadioGroup")) {
+                    console.log(Date.now()," : ","LinearLayout : RadioGroup");
+                    return (
+                        <RadioGroupView
+                            key={item.ID}
+                            setRadioGroup={item}
+                            position={"automatic"}
+                            onItemClickListener={this.props.onItemClickListener}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("Switch")) {
+                    console.log(Date.now()," : ","LinearLayout : Switch");
+                    return (
+                        <SwitchView
+                        key={item.ID}
+                        setSwitch={item}
+                        position={"automatic"}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}
+                            onToggleListener={this.props.onToggleListener}/>
                     )
                 }
                 if(item.WidgetType.includes("OtherView")) {

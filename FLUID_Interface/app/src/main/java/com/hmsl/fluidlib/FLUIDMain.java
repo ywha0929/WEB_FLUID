@@ -40,10 +40,15 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -144,8 +149,53 @@ public class FLUIDMain {
             });
         }
         // distribute
+        public void reverseToggleEvent(Bundle bundle) {
+            Log.d(TAG,"this is reverseToggleEvent");
+            Activity activity = (Activity) mContext;
 
 
+            activity.runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+
+                    int ID = bundle.getInt("ID");
+                    Switch view = (Switch) activity.findViewById(ID);
+
+                    view.setChecked(!bundle.getBoolean("isChecked"));
+
+//                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "got message from service \nID : " + bundle.getInt("ID") + "\nobject: "+bundle.getParcelable("motionevent"),
+//                            Toast.LENGTH_SHORT);
+//                    toast.show();
+                }
+            });
+        }
+        public void reverseSlideEvent(Bundle bundle) {
+            Log.d(TAG, "reverseSlideEvent: ");
+            Activity activity = (Activity)mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    int ID = bundle.getInt("ID");
+                    SeekBar view = (SeekBar) activity.findViewById(ID);
+                    Float fProgress = bundle.getFloat("progress");
+
+                    view.setProgress(fProgress.intValue());
+                }
+            });
+        }
+
+        public void reverseChooseEvent(Bundle bundle) {
+            Activity activity = (Activity)mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    int ID = bundle.getInt("ID");
+                    RadioButton view = (RadioButton) activity.findViewById(ID);
+                    view.setChecked(true);
+                }
+            });
+        }
     };
 
 
@@ -245,11 +295,29 @@ public class FLUIDMain {
         Class EditText = EditText.class;
         Class Button = Button.class;
         Class TextView = TextView.class;
-
+        Class Switch = Switch.class;
         Class ImageView = ImageView.class;
+        Class SeekBar = android.widget.SeekBar.class;
+        Class RadioButton = android.widget.RadioButton.class;
+        Class RadioGroup = android.widget.RadioGroup.class;
         String classType="";
-
-        if(EditText.isInstance(view))
+        if(Switch.isInstance(view))
+        {
+            classType = Switch.toString();
+        }
+        else if(SeekBar.isInstance(view))
+        {
+            classType = SeekBar.toString();
+        }
+        else if(RadioButton.isInstance(view))
+        {
+            classType = RadioButton.toString();
+        }
+        else if(RadioGroup.isInstance(view))
+        {
+            classType = RadioGroup.toString();
+        }
+        else if(EditText.isInstance(view))
         {
             classType = EditText.toString();
         }
@@ -265,6 +333,7 @@ public class FLUIDMain {
         {
             classType = ImageView.toString();
         }
+
         else
         {
             classType = "OtherView";
@@ -359,14 +428,27 @@ public class FLUIDMain {
                 for(int i = 0; i<distributeList.size(); i++)
                 {
                     View thisView = distributeList.get(i);
-                    thisView.setForeground((Drawable) listBorder.get(thisView.getId()));
+                    Drawable border = (Drawable) listBorder.get(thisView.getId());
+                    if(RadioButton.class.isInstance(thisView))
+                    {
+                        RadioGroup radioGroup = (RadioGroup) thisView.getParent();
+                        radioGroup.setForeground(border);
+                        Log.d(TAG,"Distributing ["+i+"]th Widget(RadioGroup)");
+                        runDistribute(getViewType(radioGroup),radioGroup);
+                    }
+                    else
+                    {
+                        thisView.setForeground((Drawable) listBorder.get(thisView.getId()));
+
 //                    ViewGroup thisBorder = listBackground.get(thisView.getId());
 //                    WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 //                    windowManager.removeView(thisBorder);
-                    Log.d(TAG,"Distributing ["+i+"]th Widget");
-                    //todo
+                        Log.d(TAG,"Distributing ["+i+"]th Widget");
+                        //todo
 //                    runDistribute(thisView.getClass().toString(),thisView);
-                    runDistribute(getViewType(thisView),thisView);
+                        runDistribute(getViewType(thisView),thisView);
+                    }
+
 
                 }
 
@@ -428,7 +510,9 @@ public class FLUIDMain {
                 {
                     if(!distributeList.contains(targetView))
                     {
+
                         distributeList.add(targetView);
+
                         Drawable origin = targetView.getBackground();
                         GradientDrawable newBorder = new GradientDrawable();
                         if(origin != null)
@@ -440,7 +524,16 @@ public class FLUIDMain {
                         newBorder.setStroke(20,Color.RED);
                         newBorder.setColor(0);
                         listBorder.put(targetView.getId(),targetView.getForeground());
-                        targetView.setForeground(newBorder);
+                        if(RadioButton.class.isInstance(targetView))
+                        {
+                            RadioGroup radioGroup = (RadioGroup) targetView.getParent();
+                            radioGroup.setForeground(newBorder);
+                        }
+                        else
+                        {
+                            targetView.setForeground(newBorder);
+                        }
+
 //                        int[] location = new int[2];
 //                        targetView.getLocationOnScreen(location);
 //                        //create layout for box
@@ -514,7 +607,50 @@ public class FLUIDMain {
             e.printStackTrace();
         }
     }
+    public void runListenerCapture(View view) {
+        Log.d(TAG, "runListenerCapture: "+view.getClass().toString());
+        try{
+            if(Switch.class.isInstance(view))
+            {
 
+                Bundle bundle = new Bundle();
+                byte[] msg = generate_ubyteArray("isCheckedChange", view, ((Switch)view).isChecked());
+                if(msg == null)
+                {
+                    return;
+                }
+                bundle.putByteArray("key", msg);
+                Log.d(TAG, "runListenerCapture send : " + getTS());
+                mRemoteService.update(bundle);
+            }
+            else if(SeekBar.class.isInstance(view))
+            {
+                Bundle bundle = new Bundle();
+                byte[] msg = generate_ubyteArray("progressChange",view,((SeekBar)view).getProgress());
+                if(msg == null)
+                {
+                    return;
+                }
+                bundle.putByteArray("key",msg);
+                Log.d(TAG, "runListenerCapture send : " + getTS());
+                mRemoteService.update(bundle);
+            }
+            else if(RadioGroup.class.isInstance(view))
+            {
+                Bundle bundle = new Bundle();
+                byte[] msg = generate_ubyteArray("radioCheckedChange",view,((RadioGroup)view).getCheckedRadioButtonId());
+                if(msg == null)
+                {
+                    return;
+                }
+                bundle.putByteArray("key",msg);
+                Log.d(TAG, "runListenerCapture send : " + getTS());
+                mRemoteService.update(bundle);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
     @SuppressLint("ResourceType")
     public void runDistribute(String widgetType, View view) {
         Bundle bundle = new Bundle();
@@ -541,12 +677,24 @@ public class FLUIDMain {
             Log.d(TAG, "runDistribute send to service: " + getTS());
             if(widgetType.contains("TextView") || widgetType.contains("EditText"))
             {
-                Log.d(TAG, "runDistribute add Listener : " + getTS());
+                Log.d(TAG, "runDistribute add TextChangeListener : " + getTS());
                 TextView textView = (TextView) view;
                 textwatcher watcher = new textwatcher(textView);
                 textView.addTextChangedListener(watcher);
                 listTextListener.put(textView.getId(),watcher);
             }
+//            else if(widgetType.contains("Switch")){
+//                Log.d(TAG, "runDistribute add SwitchListener : " + getTS());
+//                Switch switchView = (Switch) view;
+//                switchView.
+//                switchView.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        return false;
+//                    }
+//                });
+//
+//            }
             mRemoteService.distribute(bundle);
 
         } catch (Exception e) {
@@ -640,15 +788,19 @@ public class FLUIDMain {
                 }
 
             }
-            if(method.contains("setText"))
+            else if(method.contains("setText"))
             {
                 TextView text = (TextView) view;
                 param = text.getText().toString();
             }
-            if(method.contains("setColor"))
+            else if(method.contains("setForeground") || method.contains("setBackground"))
             {
                 method="setImage";
             }
+//            else if(method.contains("setColor"))
+//            {
+//                method="setImage";
+//            }
             Log.d(TAG,"method : "+method);
 //            if (method.contains("setTextSize")){
 //                convertPixelsToDpFloat((float)params[0], instance.mContext);
@@ -758,7 +910,7 @@ public class FLUIDMain {
                         dataOutputStream.writeFloat((Float) param);
                         break;
                     case 2:
-                        dataOutputStream.writeInt((int) param);
+                        dataOutputStream.writeInt((Integer) param);
                         break;
                     case 3:
                         int length = ((String) param).getBytes(StandardCharsets.UTF_8).length;
@@ -1132,8 +1284,60 @@ public class FLUIDMain {
             dtoByteArray = byteArrayOutputStream.toByteArray();
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
+        else if(widgetType.contains("Switch"))
+        {
+            Switch thisSwitch = (Switch) view;
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
+            dataOutputStream.writeUTF(widgetType);
+            dataOutputStream.writeInt(convertPixelsToDpInt(view.getHeight(),instance.mContext));
+            dataOutputStream.writeInt(convertPixelsToDpInt(view.getWidth(),instance.mContext));
 
+            size = thisSwitch.getText().toString().getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
+            dataOutputStream.writeUTF(thisSwitch.getText().toString());
+            dataOutputStream.writeBoolean(thisSwitch.isChecked());
+            dataOutputStream.flush();
+            dtoByteArray = byteArrayOutputStream.toByteArray();
+        }
+        else if(widgetType.contains("SeekBar"))
+        {
+            SeekBar thisSeekBar = (SeekBar) view;
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
+            dataOutputStream.writeUTF(widgetType);
+            dataOutputStream.writeInt(convertPixelsToDpInt(view.getHeight(),instance.mContext));
+            dataOutputStream.writeInt(convertPixelsToDpInt(view.getWidth(),instance.mContext));
 
+            dataOutputStream.writeInt(thisSeekBar.getMax());
+            dataOutputStream.writeInt(thisSeekBar.getProgress());
+//            dataOutputStream.writeBoolean(thisSeekBar.isChecked());
+            dataOutputStream.flush();
+            dtoByteArray = byteArrayOutputStream.toByteArray();
+        }
+        else if(widgetType.contains("RadioGroup"))
+        {
+            RadioGroup radioGroup = (RadioGroup) view;
+            size = widgetType.getBytes(StandardCharsets.UTF_8).length;
+            dataOutputStream.writeInt(size);
+            dataOutputStream.writeUTF(widgetType);
+            dataOutputStream.writeInt(convertPixelsToDpInt(view.getHeight(),instance.mContext));
+            dataOutputStream.writeInt(convertPixelsToDpInt(view.getWidth(),instance.mContext));
+
+            dataOutputStream.writeInt(radioGroup.getChildCount());
+            dataOutputStream.writeInt(radioGroup.getCheckedRadioButtonId());
+            for(int i = 0; i< radioGroup.getChildCount() ; i++)
+            {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                dataOutputStream.writeInt(radioButton.getId());
+                String text = radioButton.getText().toString();
+                dataOutputStream.writeInt(text.getBytes(StandardCharsets.UTF_8).length);
+                dataOutputStream.writeUTF(text);
+                dataOutputStream.writeBoolean(radioButton.isChecked());
+            }
+            dataOutputStream.flush();
+            dtoByteArray = byteArrayOutputStream.toByteArray();
+        }
 
         else if(widgetType.contains("OtherView"))
         {
@@ -1218,6 +1422,7 @@ public class FLUIDMain {
 
         }
     }
+
 
 }
 class Layout_Tree {

@@ -297,6 +297,25 @@ public class FLUIDManagerService extends Service {
                         bundle.putCharSequence("text",text);
                         mRemoteService.reverseKeyboardEvent(bundle);
                     }
+                    else if(typeEvent == 3) { //Switch Toggle Event
+                        boolean isChecked = dataInputStream.readBoolean();
+                        Bundle switchBundle = new Bundle();
+                        switchBundle.putInt("ID",ID);
+                        switchBundle.putBoolean("isChecked",isChecked);
+                        mRemoteService.reverseToggleEvent(switchBundle);
+                    }
+                    else if(typeEvent == 4) { //SeekBar slide Event
+                        Float progress = dataInputStream.readFloat();
+                        Bundle seekBundle = new Bundle();
+                        seekBundle.putInt("ID",ID);
+                        seekBundle.putFloat("progress",progress);
+                        mRemoteService.reverseSlideEvent(seekBundle);
+                    }
+                    else if(typeEvent == 5) { // RadioButton Click Event;
+                        Bundle radioBundle = new Bundle();
+                        radioBundle.putInt("ID",ID);
+                        mRemoteService.reverseChooseEvent(radioBundle);
+                    }
                     else
                         Log.e(TAG,"invalid typeEvent num");
 

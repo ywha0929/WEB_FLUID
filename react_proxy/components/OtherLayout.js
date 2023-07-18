@@ -5,7 +5,9 @@ import EditText from './EditText';
 import TextView from './TextView';
 import ImageView from './ImageView';
 import OtherView from './OtherView';
-
+import SwitchView from './Switch';
+import SeekBarView from './SeekBar';
+import RadioGroupView from './RadioGroup';
 var layoutTouchMode;
 var childMoveId;
 class OtherLayout extends Component{
@@ -98,6 +100,47 @@ class OtherLayout extends Component{
                             setLayoutTouchMode={this.setLayoutTouchMode}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("SeekBar")) {
+                    console.log(Date.now()," : ","LinearLayout : SeekBar");
+                    return (
+                        <SeekBarView
+                            key={item.ID}
+                            setSeekBar={item}
+                            position={"coordinate"}
+                            onSlideListener={this.onSlideListener}
+                            setLayoutTouchMode={this.props.setLayoutTouchMode}
+                            onPressInListener={this.props.onPressInListener}
+                            onPressOutListener={this.props.onPressOutListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("Switch")) {
+                    console.log(Date.now()," : ","LinearLayout : Switch");
+                    return (
+                        <SwitchView
+                        key={item.ID}
+                        setSwitch={item}
+                        position={"coordinate"}
+                        
+                        setLayoutTouchMode={this.setLayoutTouchMode}
+                        onPressInListener={this.props.onPressInListener}
+                        onPressOutListener={this.props.onPressOutListener}
+                        onToggleListener={this.props.onToggleListener}/>
+                    )
+                }
+                if(item.WidgetType.includes("RadioGroup")) {
+                    console.log(Date.now()," : ","LinearLayout : Switch");
+                    return (
+                        <RadioGroupView
+                        key={item.ID}
+                        setRadioGroup={item}
+                        position={"coordinate"}
+                        onItemClickListener={this.props.onItemClickListener}
+                        setLayoutTouchMode={this.setLayoutTouchMode}
+                        onPressInListener={this.props.onPressInListener}
+                        onPressOutListener={this.props.onPressOutListener}
+                        onToggleListener={this.props.onToggleListener}/>
                     )
                 }
                 if(item.WidgetType.includes("OtherView")) {

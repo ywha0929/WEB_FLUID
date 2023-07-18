@@ -1,11 +1,12 @@
 import React, {useState, Component} from 'react';
-import {StyleSheet, View, Text,TextInput, Button, ScrollView, SafeAreaView, Pressable} from 'react-native';
+import {StyleSheet, View, Text,TextInput, Button, ScrollView, Pressable} from 'react-native';
 import TcpSocket from "react-native-tcp-socket";
 import utf8 from 'utf8';
 import {Buffer} from 'buffer';
 import LinearLayout from "./components/LinearLayout"
 import OtherLayout from "./components/OtherLayout"
-
+import SafeAreaView from 'react-native-safe-area-view';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 var client;
 var length_bitmap;
@@ -389,6 +390,105 @@ class App extends Component {
                 //     UIList: tempArr
                 // });
             }
+            else if(widgetType.includes("Switch"))
+            {
+                console.log(Date.now()," : ","handleData : creating Switch data")
+                var height = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                var width = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                stringSize = data.readUInt32BE(offset)+2;
+                offset += 4;
+                // console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
+                var temp_text = data.toString('utf8',offset,offset+stringSize);
+                var text = (''+temp_text).slice(1);
+                offset += stringSize;
+                var isChecked = data.readInt8(offset);
+                let UIdata = {
+                    "WidgetType": widgetType,
+                    "ID": id,
+                    "Text": text,
+                    "Height": height,
+                    "Parent_ID": layoutId,
+                    "Width": width,
+                    "X": X,
+                    "Y": Y,
+                    "isChecked":isChecked
+                };
+                UI_List_Buffer.push(UIdata);
+            }
+            else if(widgetType.includes("SeekBar"))
+            {
+                console.log(Date.now()," : ","handleData : creating SeekBar data")
+                var height = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                var width = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                var max = data.readUInt32BE(offset);
+                offset +=4;
+                var progress = data.readUInt32BE(offset);
+                let UIdata = {
+                    "WidgetType": widgetType,
+                    "ID": id,
+                    "Text": text,
+                    "Height": height,
+                    "Parent_ID": layoutId,
+                    "Width": width,
+                    "X": X,
+                    "Y": Y,
+                    "Max" : max,
+                    "Progress" : progress,
+                };
+                UI_List_Buffer.push(UIdata);
+            }
+            else if(widgetType.includes("RadioGroup"))
+            {
+                console.log(Date.now()," : ","handleData : creating RadioGroup data")
+                var height = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                var width = data.readUInt32BE(offset)*0.728;
+                offset +=4;
+                var childCount = data.readUInt32BE(offset);
+                console.log(childCount);
+                offset += 4;
+                var checkedChildID = data.readUInt32BE(offset);
+                offset +=4;
+                var childs = new Array();
+                for(var i = 0; i<childCount; i++) 
+                {
+                    var childID = data.readUInt32BE(offset);
+                    offset +=4;
+                    stringSize = data.readUInt32BE(offset)+2;
+                    offset += 4;
+                    // console.log('Text : ',data.toString('utf8',offset,offset+stringSize));
+                    var temp_text = data.toString('utf8',offset,offset+stringSize);
+                    var text = (''+temp_text).slice(1);
+                    offset += stringSize;
+                    var isChecked = data.readInt8(offset);
+                    offset += 1;
+                    let childData = {
+                        "ID" : childID,
+                        "Text" : text,
+                        "isChecked" : isChecked,
+                    }
+                    console.log(childData);
+                    childs.push(childData);
+                }
+                let UIdata = {
+                    "WidgetType": widgetType,
+                    "ID": id,
+                    "Text": text,
+                    "Height": height,
+                    "Parent_ID": layoutId,
+                    "Width": width,
+                    "X": X,
+                    "Y": Y,
+                    "ChildCount" : childCount,
+                    "CheckedChildID" : checkedChildID,
+                    "ChildrenData" : childs,
+                }
+                UI_List_Buffer.push(UIdata);
+            }
             else if(widgetType.includes("OtherView"))
             {
                 console.log(Date.now()," : ","handleData : creating OtherView data");
@@ -447,6 +547,10 @@ class App extends Component {
                         offset +=stringSize;
                         console.log("string : ", param);
                     }
+                    if(typeFlag == 4) {
+                        var param = data.readInt8(offset);
+                        offset+=1;
+                    }
 
                     //UI update
                     if(method.includes("setTextColor")){
@@ -478,6 +582,18 @@ class App extends Component {
                     }
                     else if(method.includes("setText")){
                         targetUI.Text = param;
+                    }
+                    else if(method.includes("isCheckedChange"))
+                    {
+                        targetUI.isChecked = param;
+                    }
+                    else if(method.includes("progressChange"))
+                    {
+                        targetUI.Progress = param;
+                    }
+                    else if(method.includes("radioCheckedChange"))
+                    {
+                        targetUI.CheckedChildID = param;
                     }
                 }
                 console.log(targetUI);
@@ -593,6 +709,40 @@ class App extends Component {
             client.write(buffer);
 
     }
+    onToggleListener = (id,isChecked) => {
+        console.log(id,isChecked);
+        let buffer = Buffer.alloc(1000);
+        let offset = 0;
+        buffer.writeUInt32BE(id,offset);
+        offset += 4;
+        buffer.writeUInt32BE(3,offset);
+        offset += 4;
+        buffer.writeInt8(isChecked,offset);
+        client.write(buffer);
+
+    }
+    onSlideListener = (id,value) => {
+        console.log(id,value);
+        let buffer = Buffer.alloc(1000);
+        let offset = 0;
+        buffer.writeUInt32BE(id,offset);
+        offset +=4;
+        buffer.writeUInt32BE(4,offset);
+        offset +=4;
+        buffer.writeFloatBE(value,offset);
+        client.write(buffer);
+    }
+
+    onItemClickListener = (id) => {
+        console.log(id);
+        let buffer = Buffer.alloc(1000);
+        let offset = 0;
+        buffer.writeUInt32BE(id,offset);
+        offset +=4;
+        buffer.writeUInt32BE(5,offset);
+        offset += 4;
+        client.write(buffer);
+    }
 
     moveComponent = (id,e) => {
         let tempArr = this.state.UIList;
@@ -653,9 +803,12 @@ class App extends Component {
                         <LinearLayout 
                             UIList={this.state.UIList} 
                             setLinearLayout={item}
+                            onSlideListener={this.onSlideListener}
                             TextChangeListener={this.TextChangeListener}
+                            onItemClickListener={this.onItemClickListener}
                             onPressInListener={this.onPressInListener}
-                            onPressOutListener={this.onPressOutListener}/>
+                            onPressOutListener={this.onPressOutListener}
+                            onToggleListener={this.onToggleListener}/>
                     </View>
                 )
 
@@ -669,8 +822,11 @@ class App extends Component {
                             TextChangeListener={this.TextChangeListener}
                             moveComponent={this.moveComponent}
                             rerender={this.rerender}
+                            onSlideListener={this.onSlideListener}
+                            onItemClickListener={this.onItemClickListener}
                             onPressInListener={this.onPressInListener}
-                            onPressOutListener={this.onPressOutListener}/>
+                            onPressOutListener={this.onPressOutListener}
+                            onToggleListener={this.onToggleListener}/>
                     </View>
                 )
             }
@@ -726,9 +882,11 @@ class App extends Component {
             
         // });
         return (
+            <SafeAreaProvider>
             <SafeAreaView Style={styles.container}>
                 {Layout}
             </SafeAreaView>
+            </SafeAreaProvider>
         );
     };
 }

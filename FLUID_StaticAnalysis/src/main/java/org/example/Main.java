@@ -92,6 +92,22 @@ public class Main {
                 listTargetMethod.add(thisMethod);
             }
         }
+        SootClass classView = Scene.v().getSootClass("android.view.View");
+
+        Object[] methodsView = classView.getMethods().toArray();
+//        System.out.println("methodsView.length : " + methodsView.length);
+        for(int i = 0; i< methodsView.length; i++)
+        {
+            SootMethod thisMethod = (SootMethod) methodsView[i];
+            if( thisMethod.toString().equals("<android.view.View: void setForeground(android.graphics.drawable.Drawable)>") ||
+                thisMethod.toString().equals("<android.view.View: void setBackground(android.graphics.drawable.Drawable)>") )
+            {
+                System.out.println("adding method to listTargetMethod : "+thisMethod.toString());
+                listTargetMethod.add(thisMethod);
+            }
+
+
+        }
         System.out.println("preparing listTargetMethod ... done");
         System.out.println("---------------------------------------------------------------------\n");
     }
@@ -574,10 +590,12 @@ public class Main {
                 Thread workerThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        lock.acquire();
-                        threadStartNum.incrementAndGet();
-                        System.out.println(threadStartNum.get()+" start");
-                        lock.release();
+//                        lock.acquire();
+                        int id = threadStartNum.incrementAndGet();
+
+                        System.out.println(id+" start" + thisMethod.toString());
+
+//                        lock.release();
                         List<CallEdge> subList = getAllReachableMethodsToList(thisMethod);
 
 //                        lock.acquire();
@@ -595,32 +613,39 @@ public class Main {
                                     output.add(thisMethod + " to " + thisEdge.getTgtMethod() + " true");
                                     String output = thisMethod + " to " + thisEdge.getTgtMethod() + "\n";
                                     byte[] outputs = output.getBytes(StandardCharsets.UTF_8);
+                                    lock.acquire();
                                     if( listBytesContains(outputBuffer,outputs) )
                                         continue;
                                     outputBuffer.add( outputs );
                                     System.out.println(output);
+                                    lock.release();
 //                                    System.out.println(thisEdge.getTgtMethod() + " true");
                                 }
                             }
 
                         }
+                        subList.clear();
+                        subList = null;
 
-
-                        lock.acquire();
+//                        lock.acquire();
 //                        System.out.println("thread + "+ threadEndNum.get());
-                        threadStartNum.getAndDecrement();
+//                        threadStartNum.getAndDecrement();
 //                        lock.release();
-                        System.out.println("Thread done"+ threadStartNum.get());
-                        lock.release();
+                        threadStartNum.getAndDecrement();
+                        System.out.println("Thread done"+ id);
+//                        lock.release();
                         return;
                     }
                 });
 //                if (i == listTargetMethod.size() - 1 && j == listMethod.size() - 1)
 //                    System.out.println("last Thread : " + thisMethod);
-                while(threadStartNum.get() > MAX_THREAD_NUM)
-                {
-                    System.err.println("thread list full, waiting ...");
-                }
+
+
+
+//                while(threadStartNum.get() > MAX_THREAD_NUM)
+//                {
+//                    System.err.println("thread list full, waiting ...");
+//                }
                 threads.add(workerThread);
                 workerThread.start();
 
@@ -631,15 +656,17 @@ public class Main {
         }
 //        lock.acquire();
         System.out.println("main Thread waiting : "+ threadStartNum.get());
-        lock.acquire();
+
+//        lock.acquire();
         while(threadStartNum.get()!=0)
         {
-            lock.release();
-//            System.err.println("thread not ending"+ (threadEndNum.get()-threadStartNum.get()));
+//            lock.release();
+            System.err.println("thread not ending"+ threadStartNum.get());
             for(int i = 0; i< 100000;i++);
-            lock.acquire();
+//            lock.acquire();
         }
-        lock.release();
+//        lock.release();
+
         for(int i = 0; i< 10000;i++);
         System.out.println("thread Execution complete");
 //        lock.acquire();
@@ -751,16 +778,20 @@ public class Main {
     }
     public static List<CallEdge> getAllReachableMethodsToList(SootMethod initialMethod){
         CallGraph callgraph = Scene.v().getCallGraph();
+        List<String> visited = new ArrayList<>();
         List<SootMethod> queue = new ArrayList<>();
         queue.add(initialMethod);
+        visited.add(initialMethod.getName());
         List<CallEdge> listCallEdges = new ArrayList<>();
 //        listCallSources.add(null);
 //        listCallTargets.add(initialMethod);
         listCallEdges.add(new CallEdge(null,initialMethod));
 //        System.out.println("NULL to " +initialMethod);
 //        listCallEdges.add(new CallEdge(null,initialMethod));
-        for(int i=0; i< queue.size(); i++){
-            SootMethod method = queue.get(i);
+        while(!queue.isEmpty()){
+            System.err.println("looping");
+            SootMethod method = queue.get(0);
+            queue.remove(0);
             for (Iterator<Edge> it = callgraph.edgesOutOf(method); it.hasNext(); ) {
                 Edge edge = it.next();
                 SootMethod childMethod = edge.tgt();
@@ -787,9 +818,17 @@ public class Main {
                 if( skipMethod(childMethod) )
                     continue;
                 else
-                    queue.add(childMethod);
+                {
+                    if(!visited.contains(childMethod.getName()))
+                    {
+                        queue.add(childMethod);
+                        visited.add(childMethod.getName());
+                    }
+                }
+
             }
         }
+
         return listCallEdges;
     }
     public static List<CallEdge> getReachableMethodsSubList(List<CallEdge> callEdges,SootMethod initialMethod)

@@ -16,6 +16,8 @@ com/hmsl/fluidlib/FLUIDMain.java
  com.hmsl.fluidlib.FLUIDMain$1$1
  com.hmsl.fluidlib.FLUIDMain$1$2
  com.hmsl.fluidlib.FLUIDMain$1$3
+ com.hmsl.fluidlib.FLUIDMain$1$4
+ com.hmsl.fluidlib.FLUIDMain$1$5
  com.hmsl.fluidlib.FLUIDMain$2
  com.hmsl.fluidlib.FLUIDMain$3
  com.hmsl.fluidlib.FLUIDMain$4

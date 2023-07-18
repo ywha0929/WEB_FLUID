@@ -11,4 +11,7 @@ interface IReverseConnection {
     void doCheck(String msg);
     void reverseMotionEvent(in Bundle bundle);
     void reverseKeyboardEvent(in Bundle bundle);
+    void reverseToggleEvent(in Bundle bundle);
+    void reverseSlideEvent(in Bundle bundle);
+    void reverseChooseEvent(in Bundle bundle);
 }

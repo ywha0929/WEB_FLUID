@@ -60,6 +60,7 @@ class TextView extends Component{
                                 style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}>
                                     <Text 
                                         style={{fontSize: this.state.thisData.TextSize, textAlign: 'left', alignContent: 'center', color: this.state.thisData.Color,fontWeight: '500'}}
+                                        
                                         id={this.state.thisData.ID}> 
                                             {this.state.thisData.Text} 
                                     </Text>
@@ -87,7 +88,7 @@ class TextView extends Component{
                                 source={{ uri: `data:image/png;base64,${image}`, }} 
                                 style={{alignItems:'center', height: this.state.thisData.Height, width: this.state.thisData.Width}} resizeMode={'contain'}>
                                     <Text  
-                                        style={{fontSize: this.state.thisData.TextSize, textAlign: 'left', fontWeight: '500', width: 350}}
+                                        style={{fontSize: this.state.thisData.TextSize, textAlign: 'left', alignContent: 'center', color: this.state.thisData.Color,fontWeight: '500'}}
                                         id={this.state.thisData.ID}>
                                             {this.state.thisData.Text}
                                     </Text>
