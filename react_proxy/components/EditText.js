@@ -48,6 +48,7 @@ class EditText extends Component{
     }
     render() {
         console.log(Date.now()," : ","EditText Component created");
+        console.log("FLUID(EXP) react: EditText Component created : ",global.nativePerformanceNow());
         if(this.state.position=="coordinate")
         {
             return (

@@ -16,6 +16,7 @@ var cur_id;
 var buffer;
 var socket_buffer;
 var UI_List_Buffer = new Array();
+var Layout_List_Buffer = new Array();
 
 class App extends Component {
     constructor(props){
@@ -30,7 +31,7 @@ class App extends Component {
         LayoutList : new Array()
     };
     _Connect_to_Server = (bufer) => {
-        client = TcpSocket.createConnection({host: "192.168.0.9", port: 5673}, ()=>{
+        client = TcpSocket.createConnection({host: "192.168.50.236", port: 5673}, ()=>{
             console.log("connection established");
         });
         client.on('data', (data) => this.checkData(data));
@@ -64,6 +65,7 @@ class App extends Component {
     // }
     checkData(data) {
         console.log(Date.now()," : ","this is checkData",data.length);
+        console.log("FLUID(EXP) react: read from socket : ",global.nativePerformanceNow());
 
         if(socket_buffer == null)
         {
@@ -93,9 +95,19 @@ class App extends Component {
             // console.log(Date.now()," : ","checkData : rest_length : ", rest_length);
             if(target_length == rest_length)
             {
-                // console.log(Date.now()," : ","checkData : target_length met");
-                target_Data = socket_buffer.subarray(4,4+target_length);
-                this.handleData(target_Data);
+                console.log(Date.now()," : ","checkData : target_length met");
+                mode = socket_buffer.readUInt32BE(4);
+                if(mode == 1)
+                {
+                    target_Data = socket_buffer.subarray(8,8+target_length);
+                    this.chopData(target_Data);
+                }
+                else if(mode == 2)
+                {
+                    target_Data = socket_buffer.subarray(8,8+target_length);
+                    this.handleUpdateData(target_Data)
+                }
+                // this.handleData(target_Data);
                 socket_buffer = null;
                 return;
             }
@@ -105,12 +117,23 @@ class App extends Component {
 
                 return;
             }
-            else //target_length > rest_length
+            else //target_length < rest_length
             {
-                // console.log(Date.now()," : ","checkData : target_length exceed");
-                var target_Data = socket_buffer.subarray(4,4+target_length);
-                var rest_Data = socket_buffer.subarray(4+target_length,socket_buffer.length);
-                this.handleData(target_Data);
+                console.log(Date.now()," : ","checkData : target_length exceed");
+                mode = socket_buffer.readUInt32BE(4);
+                if(mode == 1)
+                {
+                    target_Data = socket_buffer.subarray(8,8+target_length);
+                    this.chopData(target_Data);
+                }
+                else if(mode == 2)
+                {
+                    target_Data = socket_buffer.subarray(8,8+target_length);
+                    this.handleUpdateData(target_Data)
+                }
+                // var target_Data = socket_buffer.subarray(4,4+target_length);
+                var rest_Data = socket_buffer.subarray(8+target_length,socket_buffer.length);
+                // this.handleData(target_Data);
                 socket_buffer = Buffer.from(rest_Data);
                 this.checkData(Buffer.alloc(0));
                 return;
@@ -174,9 +197,146 @@ class App extends Component {
     //     }
         
     // }
+
+    chopData(data) {
+        console.log("FLUID(EXP) react: guest process start : ",global.nativePerformanceNow());
+        var rest = data;
+        while(rest.length != 0)
+        {
+            var offset = 0;
+            var len = rest.readUInt32BE(offset);
+            offset += 4;
+            var choppedData = rest.subarray(4,4+len);
+            rest = rest.subarray(4+len,rest.length)
+            this.handleData(choppedData);
+        }
+        console.log(Date.now()," : ", "chopData : endOf Distribution");
+        let tempArr = this.state.UIList;
+        let tempLayoutArr = this.state.LayoutList;
+        UI_List_Buffer.forEach( function(item) {
+            tempArr.push(item);
+        } )
+        Layout_List_Buffer.forEach(function(item){
+            tempLayoutArr.push(item);
+        })
+        UI_List_Buffer = new Array();
+        Layout_List_Buffer = new Array();
+        this.setState({
+                LayoutList: tempLayoutArr,
+                UIList: tempArr
+            });
+    }
+
+    handleUpdateData(data) {
+        console.log("FLUID(EXP) react: guest update process start : ",global.nativePerformanceNow());
+        var offset = 0;
+    
+        //console.log('message received',data);
+        console.log(Date.now()," : ",'id : ',offset, data.readUInt32BE(offset));
+        var id = data.readUInt32BE(offset);
+        offset += 4;
+        var isUpdate = data.readUInt32BE(offset);
+        // console.log(Date.now()," : ",'isUpdate : ',isUpdate);
+        offset +=4;
+        if(isUpdate == 1){//update mode
+            let tempArr = this.state.UIList;
+            tempArr.forEach(function (targetUI){
+                if(id == targetUI.ID){
+                    let stringSize = data.readUInt32BE(offset)+2;
+                    // console.log(Date.now()," : ","stringSize: ",offset, stringSize);
+                    offset += 4;
+                    let method = data.toString('utf8',offset,offset+stringSize);
+                    offset +=stringSize;
+                    let typeFlag = data.readUInt32BE(offset);
+                    offset += 4;
+                    //get parameters
+                    console.log("typeFlag : " + typeFlag);
+                    if(typeFlag == 1){
+                        var param = data.readFloatBE(offset);
+                        offset+=4;
+                    }
+                    if(typeFlag == 2){
+                        var param = data.readUInt32BE(offset);
+                        offset +=4;
+                    }
+                    if(typeFlag == 3){
+                        stringSize = data.readUInt32BE(offset)+2;
+                        offset +=4;
+                        let param_temp = data.toString('utf8',offset,offset+stringSize);
+                        var param = (''+param_temp).slice(1);
+                        offset +=stringSize;
+                        console.log("string : ", param);
+                    }
+                    if(typeFlag == 4) {
+                        var param = data.readInt8(offset);
+                        offset+=1;
+                    }
+
+                    //UI update
+                    if(method.includes("setTextColor")){
+                        // console.log(Date.now()," : ","color : ",param);
+                        let bb = param & 0x000000FF;
+                        let gg = param & 0x0000FF00;
+                        let rr = param & 0x00FF0000;
+                        let aa = param & 0xFF000000;
+                        rr = rr<<8;
+                        bb = bb<<8;
+                        gg = gg<<8;
+                        aa = aa>>>24;
+                        // console.log(Date.now()," : ",rr,bb,gg,aa)
+                        var newColor = rr|bb|gg|aa; //android native in aarrggbb react-native in rrggbbaa
+                        targetUI.Color = newColor>>>0;
+                        // if(param == 4278190335)
+                        // {
+                        //     targetUI.Color= newColor>>>0;
+                        // }
+                        // else if(param == 4294901760){
+                        //     targetUI.Color = newColor>>>0; //shift operator to make it unsigned
+                        // }
+                    }
+                    // else if(method.includes("setTextSize")){
+                    //     targetUI.TextSize = param;
+                    // }
+                    else if(method.includes("setImage")){
+                        targetUI.Image = param;
+                    }
+                    else if(method.includes("setText")){
+                        targetUI.Text = param;
+                    }
+                    else if(method.includes("isCheckedChange"))
+                    {
+                        targetUI.isChecked = param;
+                    }
+                    else if(method.includes("progressChange"))
+                    {
+                        targetUI.Progress = param;
+                    }
+                    else if(method.includes("radioCheckedChange"))
+                    {
+                        targetUI.CheckedChildID = param;
+                    }
+                    else if(method.includes("setChecked"))
+                    {
+                        targetUI.isChecked = param;
+                    }
+                    else if(method.includes("setProgress"))
+                    {
+                        targetUI.Progress = param;
+                    }
+                }
+                console.log(targetUI);
+            });
+            // console.log(Date.now()," : ","UIList ",this.state.UIList[0]);
+            this.setState({
+                UIList: tempArr
+            });
+            // console.log(Date.now()," : ","UIList", this.state.UIList[0]);
+        }
+    }
+
     handleData(data) {
         console.log(Date.now()," : ","handle data invocated");
-        
+        // console.log("FLUID(EXP) react: handleData from socket : ",global.nativePerformanceNow());
         // console.log(Date.now()," : ","data length : ",data.length);
         //var this_data = data;
         var offset = 0;
@@ -349,7 +509,7 @@ class App extends Component {
                 UI_List_Buffer.push(UIdata);
                 // let tempArr = this.state.UIList;
                 // tempArr.push(UIdata);
-                // // console.log("UIdata : ",UIdata);
+                console.log("UIdata : ",UIdata);
                 // //console.log("UIList ",this.state.UIList[0]);
                 // this.setState({
                 //     UIList: tempArr
@@ -518,92 +678,7 @@ class App extends Component {
             
         }
 
-        else if(isUpdate == 1){//update mode
-            let tempArr = this.state.UIList;
-            tempArr.forEach(function (targetUI){
-                if(id == targetUI.ID){
-                    let stringSize = data.readUInt32BE(offset)+2;
-                    // console.log(Date.now()," : ","stringSize: ",offset, stringSize);
-                    offset += 4;
-                    let method = data.toString('utf8',offset,offset+stringSize);
-                    offset +=stringSize;
-                    let typeFlag = data.readUInt32BE(offset);
-                    offset += 4;
-                    //get parameters
-                    console.log("typeFlag : " + typeFlag);
-                    if(typeFlag == 1){
-                        var param = data.readFloatBE(offset);
-                        offset+=4;
-                    }
-                    if(typeFlag == 2){
-                        var param = data.readUInt32BE(offset);
-                        offset +=4;
-                    }
-                    if(typeFlag == 3){
-                        stringSize = data.readUInt32BE(offset)+2;
-                        offset +=4;
-                        let param_temp = data.toString('utf8',offset,offset+stringSize);
-                        var param = (''+param_temp).slice(1);
-                        offset +=stringSize;
-                        console.log("string : ", param);
-                    }
-                    if(typeFlag == 4) {
-                        var param = data.readInt8(offset);
-                        offset+=1;
-                    }
-
-                    //UI update
-                    if(method.includes("setTextColor")){
-                        // console.log(Date.now()," : ","color : ",param);
-                        let bb = param & 0x000000FF;
-                        let gg = param & 0x0000FF00;
-                        let rr = param & 0x00FF0000;
-                        let aa = param & 0xFF000000;
-                        rr = rr<<8;
-                        bb = bb<<8;
-                        gg = gg<<8;
-                        aa = aa>>>24;
-                        // console.log(Date.now()," : ",rr,bb,gg,aa)
-                        var newColor = rr|bb|gg|aa; //android native in aarrggbb react-native in rrggbbaa
-                        targetUI.Color = newColor>>>0;
-                        // if(param == 4278190335)
-                        // {
-                        //     targetUI.Color= newColor>>>0;
-                        // }
-                        // else if(param == 4294901760){
-                        //     targetUI.Color = newColor>>>0; //shift operator to make it unsigned
-                        // }
-                    }
-                    // else if(method.includes("setTextSize")){
-                    //     targetUI.TextSize = param;
-                    // }
-                    else if(method.includes("setImage")){
-                        targetUI.Image = param;
-                    }
-                    else if(method.includes("setText")){
-                        targetUI.Text = param;
-                    }
-                    else if(method.includes("isCheckedChange"))
-                    {
-                        targetUI.isChecked = param;
-                    }
-                    else if(method.includes("progressChange"))
-                    {
-                        targetUI.Progress = param;
-                    }
-                    else if(method.includes("radioCheckedChange"))
-                    {
-                        targetUI.CheckedChildID = param;
-                    }
-                }
-                console.log(targetUI);
-            });
-            // console.log(Date.now()," : ","UIList ",this.state.UIList[0]);
-            this.setState({
-                UIList: tempArr
-            });
-            // console.log(Date.now()," : ","UIList", this.state.UIList[0]);
-        }
+        
         else if(isUpdate ==2) {//distribute layout
             
             var layout_type = data.readUInt32BE(offset);
@@ -644,11 +719,12 @@ class App extends Component {
                     "Y": Y,
                 }
             }
-            tempArr = this.state.LayoutList;
-            tempArr.push(layout_Data);
-            this.setState({
-                LayoutList: tempArr
-            });
+            Layout_List_Buffer.push(layout_Data);
+            // tempArr = this.state.LayoutList;
+            // tempArr.push(layout_Data);
+            // this.setState({
+            //     LayoutList: tempArr
+            // });
             console.log(Date.now()," : ",layout_Data);
             
         }
@@ -656,11 +732,17 @@ class App extends Component {
         {
             console.log(Date.now()," : ", "handleData : endOf Distribution");
             let tempArr = this.state.UIList;
+            let tempLayoutArr = this.state.LayoutList;
             UI_List_Buffer.forEach( function(item) {
                 tempArr.push(item);
             } )
+            Layout_List_Buffer.forEach(function(item){
+                tempLayoutArr.push(item);
+            })
             UI_List_Buffer = new Array();
+            Layout_List_Buffer = new Array();
             this.setState({
+                    LayoutList: tempLayoutArr,
                     UIList: tempArr
                 });
         }
@@ -686,7 +768,9 @@ class App extends Component {
             offset +=4;
             buffer.writeFloatBE(e.nativeEvent.locationY/0.728,offset);
             offset +=4;
+            
             client.write(buffer); 
+            console.log("FLUID(EXP)  : sent socket to host : ",global.nativePerformanceNow());
 
     }
     onPressOutListener = (e,H,W) => {

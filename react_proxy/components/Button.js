@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet,View,Pressable,Text,ImageBackground} from 'react-native';
+// const now = require('nano-time');
 var previousPressIn;
 var touchMode;
 class Button extends Component{
@@ -11,22 +12,20 @@ class Button extends Component{
         };
     };
     onPressInListener = (e) => {
-        console.log(e.nativeEvent.locationX);
-        console.log(e.nativeEvent.locationY);
-        console.log(Date.now()," : ","onPressInListener of ImageView");
+        // console.log(e.nativeEvent.locationX);
+        // console.log(e.nativeEvent.locationY);
+        console.log("FLUID(EXP)  : onPress In : ",global.nativePerformanceNow());
         previousPressIn = e;
         touchMode = 0;
         // this.props.onPressInListener(e);
     }
     onLongPressListener = (e) => {
-        console.log(Date.now()," : ","onLongPressListener of ImageView");
+        console.log(Date.now()," : ","onLongPressListener of Button");
         touchMode = 1;
     }
 
     onPressOutListener = (e) => {
-        console.log(Date.now()," : ","onPressOutListener of ImageView");
-
-        console.log("out: ",e.nativeEvent.locationX);
+        // console.log("FLUID(EXP)  : onPress out : ",global.nativePerformanceNow());
         console.log("out: ",e.nativeEvent.locationY);
         if(touchMode == 0)
         {
@@ -41,6 +40,7 @@ class Button extends Component{
     }
     render() {
         console.log(Date.now()," : ","Button Component created");
+        console.log("FLUID(EXP) react: Button Component created : ",global.nativePerformanceNow());
         var image = this.state.thisData.Image;
         if(this.state.position=="coordinate") {
             return (

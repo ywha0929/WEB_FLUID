@@ -43,6 +43,7 @@ class OtherView extends Component{
     }
     render() {
         console.log(Date.now()," : ","OtherView Component");
+        console.log("FLUID(EXP) react: OtherView Component created : ",global.nativePerformanceNow());
         if(this.state.position=="coordinate") {
             return (
                 <View key={this.state.thisData.ID} style={{position: "absolute",left: this.state.thisData.X, top: this.state.thisData.Y,height: this.state.thisData.Height, width: this.state.thisData.Width, alignContent: 'center', alignItems: "center",backgroundColor: 'gray',borderBottomWidth: StyleSheet.hairlineWidth}}>

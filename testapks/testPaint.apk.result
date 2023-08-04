@@ -1,0 +1,14 @@
+<android.widget.TextView: void setTextColor(int)> to <android.widget.TextView: void setTextColor(int)>
+<android.widget.TextView: void setText(java.lang.CharSequence)> to <android.widget.TextView: void setText(java.lang.CharSequence)>
+<android.widget.TextView: void setText(java.lang.CharSequence,android.widget.TextView$BufferType)> to <android.widget.TextView: void setText(java.lang.CharSequence,android.widget.TextView$BufferType)>
+<android.widget.TextView: void setText(char[],int,int)> to <android.widget.TextView: void setText(char[],int,int)>
+<android.widget.TextView: void setText(int)> to <android.widget.TextView: void setText(int)>
+<android.widget.TextView: void setText(int,android.widget.TextView$BufferType)> to <android.widget.TextView: void setText(int,android.widget.TextView$BufferType)>
+<android.widget.ImageView: void setImageResource(int)> to <android.widget.ImageView: void setImageResource(int)>
+<android.widget.ImageView: void setImageURI(android.net.Uri)> to <android.widget.ImageView: void setImageURI(android.net.Uri)>
+<android.widget.ImageView: void setImageDrawable(android.graphics.drawable.Drawable)> to <android.widget.ImageView: void setImageDrawable(android.graphics.drawable.Drawable)>
+<android.widget.ImageView: void setImageIcon(android.graphics.drawable.Icon)> to <android.widget.ImageView: void setImageIcon(android.graphics.drawable.Icon)>
+<android.widget.ImageView: void setImageBitmap(android.graphics.Bitmap)> to <android.widget.ImageView: void setImageBitmap(android.graphics.Bitmap)>
+<android.widget.ImageView: void setImageMatrix(android.graphics.Matrix)> to <android.widget.ImageView: void setImageMatrix(android.graphics.Matrix)>
+<android.view.View: void setBackground(android.graphics.drawable.Drawable)> to <android.view.View: void setBackground(android.graphics.drawable.Drawable)>
+<android.view.View: void setForeground(android.graphics.drawable.Drawable)> to <android.view.View: void setForeground(android.graphics.drawable.Drawable)>

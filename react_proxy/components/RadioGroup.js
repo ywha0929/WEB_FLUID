@@ -45,6 +45,7 @@ class RadioGroupView extends Component{
     }
     render() {
         console.log(Date.now()," : ","RadioGroup Component created");
+        console.log("FLUID(EXP) react: RadioGroup Component created : ",global.nativePerformanceNow());
         var image = this.state.thisData.Image;
 
         let RadioButtons = this.state.thisData.ChildrenData.map((item,index)=>{

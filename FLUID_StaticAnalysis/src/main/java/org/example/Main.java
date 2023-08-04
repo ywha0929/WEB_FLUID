@@ -108,6 +108,21 @@ public class Main {
 
 
         }
+//        SootClass classRadioButton = Scene.v().getSootClass("android.widget.RadioButton");
+//        Object[] methodsRadioButton = classRadioButton.getMethods().toArray();
+//        for(int i = 0; i< methodsRadioButton.length; i++)
+//        {
+//            SootMethod thisMethod = (SootMethod) methodsRadioButton[i];
+//            if( thisMethod.toString().equals("<android.widget.RadioButton: void setForeground(android.graphics.drawable.Drawable)>") ||
+//                    thisMethod.toString().equals("<android.view.View: void setBackground(android.graphics.drawable.Drawable)>") )
+//            {
+//                System.out.println("adding method to listTargetMethod : "+thisMethod.toString());
+//                listTargetMethod.add(thisMethod);
+//            }
+//
+//
+//        }
+
         System.out.println("preparing listTargetMethod ... done");
         System.out.println("---------------------------------------------------------------------\n");
     }
@@ -689,6 +704,41 @@ public class Main {
             String string = targetMethod.toString() + " to " + targetMethod.toString()+"\n";
             fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
         }
+        //EditText setText
+        String string = "<android.widget.EditText: void setText(java.lang.CharSequence)>" + " to " + "<android.widget.EditText: void setText(java.lang.CharSequence)>"+"\n";
+        fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
+
+        //ImageView setForeground
+        string = "<android.widget.ImageView: void setForeground(android.graphics.drawable.Drawable)>" + " to " +
+                "<android.widget.ImageView: void setForeground(android.graphics.drawable.Drawable)>"+"\n";
+        fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
+
+        //Button setText
+        string = "<android.widget.RadioButton: void setChecked(boolean)>" + " to " +
+                "<android.widget.RadioButton: void setChecked(boolean)>"+"\n";
+        fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
+
+        //RadioButton setChecked
+        string = "<android.widget.Button: void setText(java.lang.CharSequence)>" + " to " +
+                "<android.widget.Button: void setText(java.lang.CharSequence)>"+"\n";
+        fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
+
+        //SeekBar setProgress
+        string = "<android.widget.SeekBar: void setProgress(int)>" + " to " +
+                "<android.widget.SeekBar: void setProgress(int)>"+"\n";
+        fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
+
+        //Switch setChecked
+        string = "<android.widget.Switch: void setChecked(boolean)>" + " to " +
+                "<android.widget.Switch: void setChecked(boolean)>"+"\n";
+        fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
+
+
+        //Switch setChecked
+        string = "<android.widget.ImageView: void setScaleX(float)>" + " to " +
+                "<android.widget.ImageView: void setScaleX(float)>"+"\n";
+        fileOutputStream.write(string.getBytes(StandardCharsets.UTF_8));
+
         fileOutputStream.flush();
         fileOutputStream.close();
         System.out.println("StaticAnalysis Complete!!");

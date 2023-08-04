@@ -45,6 +45,7 @@ class SeekBarView extends Component{
     }
     render() {
         console.log(Date.now()," : ","Slider Component created");
+        console.log("FLUID(EXP) react: SeekBar Component created : ",global.nativePerformanceNow());
         var image = this.state.thisData.Image;
         if(this.state.position=="coordinate") {
             return (

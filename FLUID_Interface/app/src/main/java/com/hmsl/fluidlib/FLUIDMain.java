@@ -75,6 +75,7 @@ import java.util.StringTokenizer;
 
 public class FLUIDMain {
     private static final String TAG = "FLUID(FLUIDLib)";
+    private static final String TAG_EXP = "FLUID(EXP)";
     static public com.hmsl.fluidmanager.IFLUIDService mRemoteService = null;
     public ServiceConnection mServiceConnection;
     private static final int MAX_BUFFER = 1024;
@@ -105,6 +106,7 @@ public class FLUIDMain {
         {
             Log.d(TAG,"this is reverseMotionEvent");
             Activity activity = (Activity) mContext;
+            Log.d(TAG_EXP,"Interface sends event to app : "+getTS());
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -130,7 +132,7 @@ public class FLUIDMain {
             Log.d(TAG,"this is reverseMotionEvent");
             Activity activity = (Activity) mContext;
 
-
+            Log.d(TAG_EXP,"Interface sends event to app : "+getTS());
             activity.runOnUiThread(new Runnable(){
 
                 @Override
@@ -153,7 +155,7 @@ public class FLUIDMain {
             Log.d(TAG,"this is reverseToggleEvent");
             Activity activity = (Activity) mContext;
 
-
+            Log.d(TAG_EXP,"Interface sends event to app : "+getTS());
             activity.runOnUiThread(new Runnable(){
 
                 @Override
@@ -173,6 +175,7 @@ public class FLUIDMain {
         public void reverseSlideEvent(Bundle bundle) {
             Log.d(TAG, "reverseSlideEvent: ");
             Activity activity = (Activity)mContext;
+            Log.d(TAG_EXP,"Interface sends event to app : "+getTS());
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -187,6 +190,7 @@ public class FLUIDMain {
 
         public void reverseChooseEvent(Bundle bundle) {
             Activity activity = (Activity)mContext;
+            Log.d(TAG_EXP,"Interface sends event to app : "+getTS());
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -386,10 +390,12 @@ public class FLUIDMain {
     public int runTouchCheck(MotionEvent e) {
         //if return true, mainActivity will pass the event to view
         //if return false, mainActivity will not pass the event to view
-        Log.d(TAG,"runTouchCheck isChooseMode : "+isChooseMode);
-        Log.d(TAG, "runTouchCheck isChooseModeWait: " + isChooseModeWait);
-        Log.d(TAG, "runTouchCheck instance hash value: " + instance);
+//        Log.d(TAG,"runTouchCheck isChooseMode : "+isChooseMode);
+//        Log.d(TAG, "runTouchCheck isChooseModeWait: " + isChooseModeWait);
+//        Log.d(TAG, "runTouchCheck instance hash value: " + instance);
+        Log.d(TAG, "runTouchCheck: coordinate : "+e.getX() + " " +e.getY());
         Log.d(TAG,"This is motionEvent.getPointerCount, Action : "+e.getPointerCount()+", "+e.getAction());
+
         long Action = e.getAction();
         long filtered_Action = Action & 111;
         if(isChooseMode == 0) { //current mode is normal mode
@@ -425,6 +431,7 @@ public class FLUIDMain {
             if(e.getPointerCount() == 3 && filtered_Action == MotionEvent.ACTION_POINTER_DOWN) //switch to normal mode
             {
                 Log.d(TAG, "distribute and switch to normal mode");
+                Log.e(TAG_EXP, "distribute and switch to normal mode : " + getTS());
                 for(int i = 0; i<distributeList.size(); i++)
                 {
                     View thisView = distributeList.get(i);
@@ -675,6 +682,8 @@ public class FLUIDMain {
             bundle.putByteArray("layout", layout);
             bundle.putByteArray("widget", widget);
             Log.d(TAG, "runDistribute send to service: " + getTS());
+
+            //disable textwatcher
             if(widgetType.contains("TextView") || widgetType.contains("EditText"))
             {
                 Log.d(TAG, "runDistribute add TextChangeListener : " + getTS());
@@ -719,6 +728,7 @@ public class FLUIDMain {
     }
     public void runUpdate(String unit, View view) {
 //        StringTokenizer st = new StringTokenizer(unit, "<>");
+        Log.d(TAG_EXP,"Interface's runUpdate invoked : "+getTS());
         Log.d(TAG,"RunUpdate invoked : "+unit+"="+getTS());
         Log.d(TAG, "runUpdate: Id : " + view.getId());
 //        st.nextToken();                     // 앞에 virtualinvoke 부분 -> 필요없으므로 삭제
@@ -797,6 +807,21 @@ public class FLUIDMain {
             {
                 method="setImage";
             }
+            else if(method.contains("setProgress"))
+            {
+                param = ((SeekBar)view).getProgress();
+            }
+            else if(method.contains("setChecked"))
+            {
+                if(Switch.class.isInstance(view))
+                    param = ((CompoundButton)view).isChecked();
+                else
+                {
+                    view = (View) view.getParent();
+                    method = "radioCheckedChange";
+                    param = ((RadioGroup)view).getCheckedRadioButtonId();
+                }
+            }
 //            else if(method.contains("setColor"))
 //            {
 //                method="setImage";
@@ -841,7 +866,7 @@ public class FLUIDMain {
             type = param.getClass().toString();
         else
             type = "null";
-//        Log.d("TAG","type : " + param.getClass().toString());
+        Log.d("TAG","type : " + param.getClass().toString());
         if (type.contains("Float")) {
             return 1;
         } else if (type.contains("Integer")) {

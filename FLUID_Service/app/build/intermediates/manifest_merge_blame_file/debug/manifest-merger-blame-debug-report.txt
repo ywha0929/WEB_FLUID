@@ -19,7 +19,7 @@
 14        android:allowBackup="true"
 14-->/home/ywha/WEB_FLUID/FLUID_Service/app/src/main/AndroidManifest.xml:8:9-35
 15        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-15-->[androidx.core:core:1.7.0] /home/ywha/.gradle/caches/transforms-3/9339927e08badd09bc5459e4ba900d5f/transformed/core-1.7.0/AndroidManifest.xml:24:18-86
+15-->[androidx.core:core:1.7.0] /home/ywha/.gradle/caches/transforms-3/0b7e83cca44d88daf140d5afb0a7aac0/transformed/core-1.7.0/AndroidManifest.xml:24:18-86
 16        android:debuggable="true"
 17        android:extractNativeLibs="false"
 18        android:icon="@mipmap/ic_launcher"
@@ -72,25 +72,25 @@
 43        </service>
 44
 45        <provider
-45-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:26:9-34:20
+45-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/cdfabed696f0f73c5dc8a1e3cac93aa5/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:26:9-34:20
 46            android:name="androidx.startup.InitializationProvider"
-46-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:27:13-67
+46-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/cdfabed696f0f73c5dc8a1e3cac93aa5/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:27:13-67
 47            android:authorities="com.hmsl.fluidmanager.androidx-startup"
-47-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:28:13-68
+47-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/cdfabed696f0f73c5dc8a1e3cac93aa5/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:28:13-68
 48            android:exported="false" >
-48-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:29:13-37
+48-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/cdfabed696f0f73c5dc8a1e3cac93aa5/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:29:13-37
 49            <meta-data
-49-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:31:13-33:52
+49-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/cdfabed696f0f73c5dc8a1e3cac93aa5/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:31:13-33:52
 50                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-50-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:32:17-75
+50-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/cdfabed696f0f73c5dc8a1e3cac93aa5/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:32:17-75
 51                android:value="androidx.startup" />
-51-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/09b79be83fba3907471fe1de63f439d3/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:33:17-49
+51-->[androidx.emoji2:emoji2:1.0.0] /home/ywha/.gradle/caches/transforms-3/cdfabed696f0f73c5dc8a1e3cac93aa5/transformed/jetified-emoji2-1.0.0/AndroidManifest.xml:33:17-49
 52            <meta-data
-52-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha/.gradle/caches/transforms-3/0e4a425e61d135d109d64d5f17d999df/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:31:13-33:52
+52-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha/.gradle/caches/transforms-3/c22666d454137849ff5c598167a4515f/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:31:13-33:52
 53                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-53-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha/.gradle/caches/transforms-3/0e4a425e61d135d109d64d5f17d999df/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:32:17-78
+53-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha/.gradle/caches/transforms-3/c22666d454137849ff5c598167a4515f/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:32:17-78
 54                android:value="androidx.startup" />
-54-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha/.gradle/caches/transforms-3/0e4a425e61d135d109d64d5f17d999df/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:33:17-49
+54-->[androidx.lifecycle:lifecycle-process:2.4.0] /home/ywha/.gradle/caches/transforms-3/c22666d454137849ff5c598167a4515f/transformed/jetified-lifecycle-process-2.4.0/AndroidManifest.xml:33:17-49
 55        </provider>
 56    </application>
 57

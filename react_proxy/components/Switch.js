@@ -43,6 +43,7 @@ class SwitchView extends Component{
     }
     render() {
         console.log(Date.now()," : ","Switch Component created");
+        console.log("FLUID(EXP) react: Switch Component created : ",global.nativePerformanceNow());
         var image = this.state.thisData.Image;
         if(this.state.position=="coordinate") {
             return (
