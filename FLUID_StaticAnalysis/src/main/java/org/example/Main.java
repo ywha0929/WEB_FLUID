@@ -643,7 +643,7 @@ public class Main {
                         subList = null;
 
 //                        lock.acquire();
-//                        System.out.println("thread + "+ threadEndNum.get());
+////                        System.out.println("thread + "+ threadEndNum.get());
 //                        threadStartNum.getAndDecrement();
 //                        lock.release();
                         threadStartNum.getAndDecrement();
@@ -670,16 +670,16 @@ public class Main {
 			System.err.println("------------------------------------------------------");
         }
 //        lock.acquire();
-        System.out.println("main Thread waiting : "+ threadStartNum.get());
-
+//        System.out.println("main Thread waiting : "+ threadStartNum.get());
+//        for(int i = 0; i< 1000000;i++);
 //        lock.acquire();
-        while(threadStartNum.get()!=0)
-        {
-//            lock.release();
-            System.err.println("thread not ending"+ threadStartNum.get());
-            for(int i = 0; i< 100000;i++);
-//            lock.acquire();
-        }
+//        while(threadStartNum.get()!=0)
+//        {
+////            lock.release();
+//            System.err.println("thread not ending"+ threadStartNum.get());
+//
+////            lock.acquire();
+//        }
 //        lock.release();
 
         for(int i = 0; i< 10000;i++);

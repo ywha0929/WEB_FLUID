@@ -433,6 +433,8 @@ class App extends Component {
                     offset += 4;
                     let temp = data.toString('utf8',offset,data.length);
                     var image = (''+temp).slice(1);
+                    if(image.charAt(0) !='/')
+                    image = image.slice(1);
                 }
                 else
                 {
@@ -490,6 +492,8 @@ class App extends Component {
                 // buffer_cur = 0;
                 let temp = data.toString('utf8',offset,data.length);
                 let current_bitmap = (''+temp).slice(1);
+                if(current_bitmap.charAt(0) !='/')
+                    current_bitmap = current_bitmap.slice(1);
                 let UIdata = {
                     "WidgetType": widgetType,
                     "ID": id,

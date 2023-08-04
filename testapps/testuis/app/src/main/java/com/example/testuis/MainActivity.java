@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onLongClick(View view) {
                 if(imageViewSet.equals(false))
                 {
-                    imageView.setImageResource(R.drawable.ic_launcher_foreground);
+                    imageView.setImageResource(R.drawable.two);
                     imageViewSet = true;
                 }
                 else
@@ -170,10 +170,10 @@ public class MainActivity extends AppCompatActivity {
         btnTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(textView.getText().toString().equals("hello"))
-                    textView.setText("bye");
+                if(textView.getText().toString().equals("hellodfdfdfdfdfdfdfdf"))
+                    textView.setText("byedfdfdfdfdfdfdfdfdf");
                 else
-                    textView.setText("hello");
+                    textView.setText("hellodfdfdfdfdfdfdfdf");
             }
         });
 //        button.setOnClickListener(new View.OnClickListener() {

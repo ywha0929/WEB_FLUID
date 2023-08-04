@@ -1,60 +1,60 @@
-08-04 09:23:25.968 29416 29416 E FLUID(EXP): distribute and switch to normal mode : 2778111438109
-08-04 09:23:25.973 29387 29412 D FLUID(EXP): sent distribute message : 2778116719411
-08-04 09:23:26.039 32555 32605 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2773902.837631
-08-04 09:23:26.050 32555 32605 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2773913.984612
-08-04 09:23:26.069 32555 32605 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2773932.585343
-2774119849736
-08-04 09:23:37.571 29573 29573 E FLUID(EXP): distribute and switch to normal mode : 2789714529212
-08-04 09:23:37.577 29534 29559 D FLUID(EXP): sent distribute message : 2789720958015
-08-04 09:23:37.633 32765   556 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2785496.684464
-08-04 09:23:37.649 32765   556 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2785512.050663
-08-04 09:23:37.685 32765   556 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2785548.488219
-2785747835218
-08-04 09:23:49.138 29713 29713 E FLUID(EXP): distribute and switch to normal mode : 2801281793959
-08-04 09:23:49.144 29673 29699 D FLUID(EXP): sent distribute message : 2801287622501
-08-04 09:23:49.191   845  1072 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2797054.313792
-08-04 09:23:49.198   845  1072 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2797061.165251
-08-04 09:23:49.222   845  1072 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2797085.679837
-2797294229024
-08-04 09:24:00.687 29868 29868 E FLUID(EXP): distribute and switch to normal mode : 2812830543494
-08-04 09:24:00.699 29819 29848 D FLUID(EXP): sent distribute message : 2812842265318
-08-04 09:24:00.766  1331  1430 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2808629.11031
-08-04 09:24:00.782  1331  1430 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2808645.816405
-08-04 09:24:00.830  1331  1430 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2808693.890212
-2808946430497
-08-04 09:24:12.112 30031 30031 E FLUID(EXP): distribute and switch to normal mode : 2824255909945
-08-04 09:24:12.119 29992 30017 D FLUID(EXP): sent distribute message : 2824262501040
-08-04 09:24:12.210  1622  1679 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2820073.508116
-08-04 09:24:12.230  1622  1679 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2820093.277441
-08-04 09:24:12.265  1622  1679 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2820128.974945
-2820335231267
-08-04 09:24:22.400 30216 30216 E FLUID(EXP): distribute and switch to normal mode : 2834543391855
-08-04 09:24:22.412 30177 30202 D FLUID(EXP): sent distribute message : 2834555532117
-08-04 09:24:22.497  1891  2111 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2830360.537527
-08-04 09:24:22.502  1891  2111 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2830365.563725
-08-04 09:24:22.521  1891  2111 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2830384.990289
-2830585240101
-08-04 09:24:33.067 30356 30356 E FLUID(EXP): distribute and switch to normal mode : 2845211063491
-08-04 09:24:33.078 30317 30342 D FLUID(EXP): sent distribute message : 2845221762711
-08-04 09:24:33.151  2348  2443 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2841014.999473
-08-04 09:24:33.166  2348  2443 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2841029.251506
-08-04 09:24:33.213  2348  2443 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2841076.922969
-2841277251583
-08-04 09:24:43.156 30483 30483 E FLUID(EXP): distribute and switch to normal mode : 2855299875225
-08-04 09:24:43.166 30444 30469 D FLUID(EXP): sent distribute message : 2855309538976
-08-04 09:24:43.273  2705  2815 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2851136.865377
-08-04 09:24:43.287  2705  2815 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2851150.797098
-08-04 09:24:43.338  2705  2815 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2851201.266373
-2851431993636
-08-04 09:24:55.359 30655 30655 E FLUID(EXP): distribute and switch to normal mode : 2867502992378
-08-04 09:24:55.365 30609 30635 D FLUID(EXP): sent distribute message : 2867508752587
-08-04 09:24:55.432  2987  3056 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2863295.96987
-08-04 09:24:55.439  2987  3056 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2863302.861225
-08-04 09:24:55.460  2987  3056 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2863323.705967
-2863528616716
-08-04 09:25:06.502 30822 30822 E FLUID(EXP): distribute and switch to normal mode : 2878645420103
-08-04 09:25:06.511 30783 30808 D FLUID(EXP): sent distribute message : 2878654504843
-08-04 09:25:06.572  3300  3383 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 2874435.011344
-08-04 09:25:06.589  3300  3383 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 2874452.618273
-08-04 09:25:06.609  3300  3383 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 2874473.038744
-2874670893034
+08-04 16:25:07.675  7769  7769 E FLUID(EXP): distribute and switch to normal mode : 25763640274798
+08-04 16:25:07.685  7728  7755 D FLUID(EXP): sent distribute message : 25763649859538
+08-04 16:25:07.731 19876 19928 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28075594.753305
+08-04 16:25:07.747 19876 19928 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28075610.295911
+08-04 16:25:07.796 19876 19928 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28075659.520603
+28076078730593
+08-04 16:25:34.459  8200  8200 E FLUID(EXP): distribute and switch to normal mode : 25790424266945
+08-04 16:25:34.471  8155  8180 D FLUID(EXP): sent distribute message : 25790435961738
+08-04 16:25:34.488 20299 20351 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28102351.893783
+08-04 16:25:34.499 20299 20351 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28102363.04894
+08-04 16:25:34.535 20299 20351 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28102398.56884
+28102789991014
+08-04 16:25:50.758  8414  8414 E FLUID(EXP): distribute and switch to normal mode : 25806722789454
+08-04 16:25:50.765  8361  8386 D FLUID(EXP): sent distribute message : 25806730015549
+08-04 16:25:50.775 20584 20636 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28118638.623374
+08-04 16:25:50.786 20584 20636 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28118649.643427
+08-04 16:25:50.829 20584 20636 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28118692.943848
+28119079273783
+08-04 16:26:05.684  8885  8885 E FLUID(EXP): distribute and switch to normal mode : 25821648894535
+08-04 16:26:05.693  8830  8856 D FLUID(EXP): sent distribute message : 25821658070525
+08-04 16:26:05.700 20863 20918 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28133563.442517
+08-04 16:26:05.710 20863 20918 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28133573.447258
+08-04 16:26:05.740 20863 20918 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28133603.665959
+28133998139279
+08-04 16:26:19.391  9140  9140 E FLUID(EXP): distribute and switch to normal mode : 25835355690067
+08-04 16:26:19.399  9094  9119 D FLUID(EXP): sent distribute message : 25835363800120
+08-04 16:26:19.444 21116 21168 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28147307.324876
+08-04 16:26:19.455 21116 21168 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28147318.238419
+08-04 16:26:19.488 21116 21168 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28147351.316807
+28147760958046
+08-04 16:26:34.188  9384  9384 E FLUID(EXP): distribute and switch to normal mode : 25850152890916
+08-04 16:26:34.201  9331  9356 D FLUID(EXP): sent distribute message : 25850165606074
+08-04 16:26:34.219 21383 21435 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28162082.228796
+08-04 16:26:34.228 21383 21435 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28162091.317911
+08-04 16:26:34.258 21383 21435 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28162121.475987
+28162491622170
+08-04 16:26:49.263  9624  9624 E FLUID(EXP): distribute and switch to normal mode : 25865228121480
+08-04 16:26:49.274  9571  9596 D FLUID(EXP): sent distribute message : 25865239266586
+08-04 16:26:49.308 21662 21717 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28177171.550195
+08-04 16:26:49.324 21662 21717 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28177187.433738
+08-04 16:26:49.373 21662 21717 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28177236.624941
+28177644234565
+08-04 16:27:01.677  9849  9849 E FLUID(EXP): distribute and switch to normal mode : 25877641855582
+08-04 16:27:01.690  9801  9827 D FLUID(EXP): sent distribute message : 25877655005948
+08-04 16:27:01.681 21912 21968 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28189544.532677
+08-04 16:27:01.692 21912 21968 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28189555.74747
+08-04 16:27:01.725 21912 21968 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28189589.191119
+28189971156366
+08-04 16:27:15.394 10066 10066 E FLUID(EXP): distribute and switch to normal mode : 25891359154188
+08-04 16:27:15.408 10012 10044 D FLUID(EXP): sent distribute message : 25891372771689
+08-04 16:27:15.415 22168 22222 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28203278.303681
+08-04 16:27:15.424 22168 22222 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28203287.56988
+08-04 16:27:15.452 22168 22222 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28203316.261601
+28203702332213
+08-04 16:27:29.327 10340 10340 E FLUID(EXP): distribute and switch to normal mode : 25905292185107
+08-04 16:27:29.341 10287 10316 D FLUID(EXP): sent distribute message : 25905305983129
+08-04 16:27:29.363 22437 22492 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 28217226.212883
+08-04 16:27:29.378 22437 22492 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 28217241.78653
+08-04 16:27:29.412 22437 22492 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 28217276.103044
+28217667375895

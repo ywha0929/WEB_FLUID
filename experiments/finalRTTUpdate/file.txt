@@ -1,110 +1,123 @@
-08-04 09:47:43.500  3555  3582 D FLUID(EXP): Service received reverse update : 4235643730713
-08-04 09:47:43.503  3603  3622 D FLUID(EXP): Interface sends event to app : 4235646143265
-08-04 09:47:43.545  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4235688182123
-08-04 09:47:43.548  3555  3581 D FLUID(EXP): Service sent update message : 4235691100509
-08-04 09:47:43.340 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4231203.314889
-08-04 09:47:43.490 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4231353.575164
-08-04 09:47:43.549 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4231412.26767
-08-04 09:47:43.549 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4231413.168712
-08-04 09:47:43.561 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4231425.025276
-08-04 09:47:43.587 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4231450.872257
-4231639928214
-08-04 09:47:45.536  3555  3582 D FLUID(EXP): Service received reverse update : 4237678868936
-08-04 09:47:45.538  3603  3622 D FLUID(EXP): Interface sends event to app : 4237681571384
-08-04 09:47:45.581  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4237724704982
-08-04 09:47:45.584  3555  3581 D FLUID(EXP): Service sent update message : 4237727756024
-08-04 09:47:45.361 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4233224.262434
-08-04 09:47:45.513 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4233376.523908
-08-04 09:47:45.589 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4233452.54053
-08-04 09:47:45.590 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4233453.450009
-08-04 09:47:45.599 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4233462.837562
-08-04 09:47:45.631 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4233494.769388
-4233693226804
-08-04 09:47:47.443  3555  3582 D FLUID(EXP): Service received reverse update : 4239586569751
-08-04 09:47:47.446  3603  3622 D FLUID(EXP): Interface sends event to app : 4239589262460
-08-04 09:47:47.487  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4239630189704
-08-04 09:47:47.490  3555  3581 D FLUID(EXP): Service sent update message : 4239632351995
-08-04 09:47:47.278 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4235141.184604
-08-04 09:47:47.434 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4235297.427328
-08-04 09:47:47.492 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4235355.238584
-08-04 09:47:47.493 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4235356.186917
-08-04 09:47:47.501 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4235364.873376
-08-04 09:47:47.526 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4235389.434525
-4235595736524
-08-04 09:47:49.277  3555  3582 D FLUID(EXP): Service received reverse update : 4241420730767
-08-04 09:47:49.280  3603  3622 D FLUID(EXP): Interface sends event to app : 4241423797122
-08-04 09:47:49.321  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4241464837959
-08-04 09:47:49.325  3555  3581 D FLUID(EXP): Service sent update message : 4241468061970
-08-04 09:47:49.114 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4236978.031975
-08-04 09:47:49.269 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4237132.466105
-08-04 09:47:49.328 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4237191.591683
-08-04 09:47:49.329 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4237192.415329
-08-04 09:47:49.340 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4237203.454185
-08-04 09:47:49.367 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4237230.913094
-4237431725457
-08-04 09:47:50.956  3555  3582 D FLUID(EXP): Service received reverse update : 4243099292132
-08-04 09:47:50.958  3603  3622 D FLUID(EXP): Interface sends event to app : 4243101736508
-08-04 09:47:50.999  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4243142907137
-08-04 09:47:51.001  3555  3581 D FLUID(EXP): Service sent update message : 4243144944325
-08-04 09:47:50.781 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4238644.931568
-08-04 09:47:50.936 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4238799.64476
-08-04 09:47:51.004 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4238867.3081
-08-04 09:47:51.004 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4238868.142527
-08-04 09:47:51.014 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4238877.669403
-08-04 09:47:51.063 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4238926.540554
-4239112542500
-08-04 09:47:52.816  3555  3582 D FLUID(EXP): Service received reverse update : 4244959162787
-08-04 09:47:52.818  3603  3622 D FLUID(EXP): Interface sends event to app : 4244961797474
-08-04 09:47:52.859  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4245003094926
-08-04 09:47:52.862  3555  3581 D FLUID(EXP): Service sent update message : 4245005554249
-08-04 09:47:52.653 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4240516.160921
-08-04 09:47:52.808 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4240671.553436
-08-04 09:47:52.861 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4240725.211827
-08-04 09:47:52.862 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4240726.149952
-08-04 09:47:52.875 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4240738.256776
-08-04 09:47:52.899 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4240762.610633
-4240952616277
-08-04 09:47:54.606  3555  3582 D FLUID(EXP): Service received reverse update : 4246749389736
-08-04 09:47:54.609  3603  3622 D FLUID(EXP): Interface sends event to app : 4246752559528
-08-04 09:47:54.649  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4246792473855
-08-04 09:47:54.650  3555  3581 D FLUID(EXP): Service sent update message : 4246794021771
-08-04 09:47:54.459 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4242322.125163
-08-04 09:47:54.591 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4242454.394864
-08-04 09:47:54.651 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4242515.093828
-08-04 09:47:54.652 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4242515.644089
-08-04 09:47:54.660 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4242523.824871
-08-04 09:47:54.671 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4242534.899924
-4242738466038
-08-04 09:47:56.525  3555  3582 D FLUID(EXP): Service received reverse update : 4248668266177
-08-04 09:47:56.528  3603  3622 D FLUID(EXP): Interface sends event to app : 4248671827688
-08-04 09:47:56.571  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4248714409150
-08-04 09:47:56.572  3555  3581 D FLUID(EXP): Service sent update message : 4248715830452
-08-04 09:47:56.358 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4244221.509259
-08-04 09:47:56.515 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4244378.943024
-08-04 09:47:56.574 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4244437.689801
-08-04 09:47:56.575 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4244438.65777
-08-04 09:47:56.588 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4244451.377719
-08-04 09:47:56.614 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4244477.270274
-4244674344929
-08-04 09:47:58.190  3555  3582 D FLUID(EXP): Service received reverse update : 4250333783895
-08-04 09:47:58.192  3603  3622 D FLUID(EXP): Interface sends event to app : 4250336038843
-08-04 09:47:58.238  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4250381737754
-08-04 09:47:58.240  3555  3581 D FLUID(EXP): Service sent update message : 4250383560931
-08-04 09:47:58.027 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4245890.338279
-08-04 09:47:58.179 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4246042.479128
-08-04 09:47:58.241 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4246104.987519
-08-04 09:47:58.242 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4246105.853353
-08-04 09:47:58.253 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4246116.591062
-08-04 09:47:58.279 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4246142.599763
-4246343999678
-08-04 09:47:59.938  3555  3582 D FLUID(EXP): Service received reverse update : 4252081184538
-08-04 09:47:59.940  3603  3622 D FLUID(EXP): Interface sends event to app : 4252083621465
-08-04 09:47:59.983  3603  3603 D FLUID(EXP): Interface's runUpdate invoked : 4252126966209
-08-04 09:47:59.987  3555  3581 D FLUID(EXP): Service sent update message : 4252130145741
-08-04 09:47:59.779 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 4247642.533662
-08-04 09:47:59.929 18060 18115 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 4247793.002375
-08-04 09:47:59.988 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 4247852.176704
-08-04 09:47:59.989 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 4247853.216027
-08-04 09:48:00.001 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: RadioGroup Component created : ', 4247864.925195
-08-04 09:48:00.026 18060 18115 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 4247889.409676
-4248078253132
+08-04 13:16:20.626 31814 31840 D FLUID(EXP): Service received reverse update : 16752769126608
+08-04 13:16:20.630 31863 31881 D FLUID(EXP): Interface sends event to app : 16752773254473
+08-04 13:16:20.676 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16752819399009
+08-04 13:16:20.678 31814 31839 D FLUID(EXP): Service sent update message : 16752821817343
+08-04 13:16:20.428 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16748291.894167
+08-04 13:16:20.577 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16748440.653869
+08-04 13:16:20.653 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16748517.116012
+08-04 13:16:20.654 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16748517.682366
+08-04 13:16:20.659 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16748522.483252
+08-04 13:16:20.661 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16748524.435961
+16748555404401
+08-04 13:16:23.451 31814 31840 D FLUID(EXP): Service received reverse update : 16755594494754
+08-04 13:16:23.456 31863 31881 D FLUID(EXP): Interface sends event to app : 16755599053817
+08-04 13:16:23.494 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16755637760800
+08-04 13:16:23.496 31814 31839 D FLUID(EXP): Service sent update message : 16755639604603
+08-04 13:16:23.257 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16751120.619136
+08-04 13:16:23.414 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16751277.652485
+08-04 13:16:23.473 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16751336.85848
+08-04 13:16:23.474 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16751337.973012
+08-04 13:16:23.490 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16751353.297076
+08-04 13:16:23.496 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16751359.254628
+16751394682549
+08-04 13:16:26.015 31814 31840 D FLUID(EXP): Service received reverse update : 16758158296572
+08-04 13:16:26.019 31863 31881 D FLUID(EXP): Interface sends event to app : 16758162396312
+08-04 13:16:26.058 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16758201456056
+08-04 13:16:26.060 31814 31839 D FLUID(EXP): Service sent update message : 16758203350691
+08-04 13:16:25.810 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16753673.391421
+08-04 13:16:25.960 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16753823.308155
+08-04 13:16:26.037 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16753900.263423
+08-04 13:16:26.037 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16753901.210975
+08-04 13:16:26.049 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16753912.402695
+08-04 13:16:26.053 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16753916.746133
+16753945299001
+08-04 13:16:29.083 31814 31840 D FLUID(EXP): Service received reverse update : 16761225890628
+08-04 13:16:29.086 31863 31881 D FLUID(EXP): Interface sends event to app : 16761229537659
+08-04 13:16:29.128 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16761271949695
+08-04 13:16:29.131 31814 31839 D FLUID(EXP): Service sent update message : 16761274264591
+08-04 13:16:28.881 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16756744.747509
+08-04 13:16:29.035 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16756898.013149
+08-04 13:16:29.104 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16756967.501125
+08-04 13:16:29.104 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16756967.950968
+08-04 13:16:29.109 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16756972.965969
+08-04 13:16:29.111 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16756974.830969
+16757002115555
+08-04 13:16:33.168 31814 31840 D FLUID(EXP): Service received reverse update : 16765311407389
+08-04 13:16:33.173 31863 31881 D FLUID(EXP): Interface sends event to app : 16765316439681
+08-04 13:16:33.212 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16765355349216
+08-04 13:16:33.215 31814 31839 D FLUID(EXP): Service sent update message : 16765358414060
+08-04 13:16:32.980 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16760843.711406
+08-04 13:16:33.132 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16760995.391474
+08-04 13:16:33.192 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16761055.253355
+08-04 13:16:33.192 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16761056.024396
+08-04 13:16:33.202 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16761066.10497
+08-04 13:16:33.206 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16761069.953408
+16761104903203
+08-04 13:16:36.832 31814 31840 D FLUID(EXP): Service received reverse update : 16768975640098
+08-04 13:16:36.837 31863 31881 D FLUID(EXP): Interface sends event to app : 16768980555619
+08-04 13:16:36.874 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16769017968435
+08-04 13:16:36.876 31814 31839 D FLUID(EXP): Service sent update message : 16769019819165
+08-04 13:16:36.632 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16764495.687916
+08-04 13:16:36.781 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16764644.515327
+08-04 13:16:36.853 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16764716.383355
+08-04 13:16:36.854 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16764717.259292
+08-04 13:16:36.862 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16764725.617627
+08-04 13:16:36.866 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16764729.730908
+16764754309556
+08-04 13:16:39.762 31814 31840 D FLUID(EXP): Service received reverse update : 16771905385129
+08-04 13:16:39.764 31863 31881 D FLUID(EXP): Interface sends event to app : 16771907632942
+08-04 13:16:39.809 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16771953090655
+08-04 13:16:39.812 31814 31839 D FLUID(EXP): Service sent update message : 16771955138676
+08-04 13:16:39.563 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16767426.434823
+08-04 13:16:39.705 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16767569.003066
+08-04 13:16:39.788 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16767651.337345
+08-04 13:16:39.789 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16767652.631147
+08-04 13:16:39.797 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16767660.960054
+08-04 13:16:39.801 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16767664.642034
+16767691759380
+08-04 13:16:42.253 31814 31840 D FLUID(EXP): Service received reverse update : 16774396019336
+08-04 13:16:42.254 31863 31881 D FLUID(EXP): Interface sends event to app : 16774397178763
+08-04 13:16:42.302 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16774445418247
+08-04 13:16:42.313 31814 31839 D FLUID(EXP): Service sent update message : 16774456836477
+08-04 13:16:42.054 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16769917.743769
+08-04 13:16:42.209 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16770072.68144
+08-04 13:16:42.286 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16770149.733063
+08-04 13:16:42.286 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16770149.987438
+08-04 13:16:42.289 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16770152.622698
+08-04 13:16:42.290 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16770153.967334
+16770173064732
+08-04 13:16:44.802 31814 31840 D FLUID(EXP): Service received reverse update : 16776945507090
+08-04 13:16:44.807 31863 31881 D FLUID(EXP): Interface sends event to app : 16776950765788
+08-04 13:16:44.848 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16776991362980
+08-04 13:16:44.850 31814 31839 D FLUID(EXP): Service sent update message : 16776993248657
+08-04 13:16:44.588 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16772451.489594
+08-04 13:16:44.738 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16772602.143724
+08-04 13:16:44.826 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16772689.743941
+08-04 13:16:44.827 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16772690.478524
+08-04 13:16:44.840 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16772703.333161
+08-04 13:16:44.843 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16772707.169672
+16772731394622
+08-04 13:16:49.070 31814 31840 D FLUID(EXP): Service received reverse update : 16781213209025
+08-04 13:16:49.073 31863 31881 D FLUID(EXP): Interface sends event to app : 16781217029234
+08-04 13:16:49.114 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16781257358092
+08-04 13:16:49.116 31814 31839 D FLUID(EXP): Service sent update message : 16781259750176
+08-04 13:16:48.863 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : onPress In : ', 16776726.41153
+08-04 13:16:49.019 25293 25347 I ReactNativeJS: 'FLUID(EXP)  : sent socket to host : ', 16776882.789671
+08-04 13:16:49.091 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16776954.954939
+08-04 13:16:49.092 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: guest update process start : ', 16776955.840407
+08-04 13:16:49.101 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: TextView Component created : ', 16776964.873273
+08-04 13:16:49.106 25293 25347 I ReactNativeJS: 'FLUID(EXP) react: Button Component created : ', 16776969.286555
+16777005550673
+08-04 13:16:49.070 31814 31840 D FLUID(EXP): Service received reverse update : 16781213209025
+08-04 13:16:49.073 31863 31881 D FLUID(EXP): Interface sends event to app : 16781217029234
+08-04 13:16:49.111 31814 31840 D FLUID(EXP): Service received reverse update : 16781254136112
+08-04 13:16:49.112 31863 31881 D FLUID(EXP): Interface sends event to app : 16781255668561
+08-04 13:16:49.114 31863 31863 D FLUID(EXP): Interface's runUpdate invoked : 16781257358092
+08-04 13:16:49.116 31814 31839 D FLUID(EXP): Service sent update message : 16781259750176
+08-04 13:19:12.653  1178  1178 E FLUID(EXP): distribute and switch to normal mode : 16924796911974
+08-04 13:19:12.679  1028  1098 D FLUID(EXP): sent distribute message : 16924822089685
+08-04 13:19:12.742 27902 27958 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16920605.323624
+08-04 13:19:12.759 27902 27958 I ReactNativeJS: 'FLUID(EXP) react: read from socket : ', 16920622.755917
+08-04 13:19:12.764 27902 27958 I ReactNativeJS: 'FLUID(EXP) react: guest process start : ', 16920627.920709
+08-04 13:19:12.817 27902 27958 I ReactNativeJS: 'FLUID(EXP) react: ImageView Component created : ', 16920680.404256
+16921114255237
