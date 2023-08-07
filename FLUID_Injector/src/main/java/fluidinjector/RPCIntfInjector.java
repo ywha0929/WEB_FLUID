@@ -776,7 +776,8 @@ public class RPCIntfInjector extends BodyTransformer {
 					System.err.println("this is primitive");
 					continue;
 				}
-
+				if(Base == null)
+					continue;
 				Type baseType = Base.getType();
 				String baseClassString = baseType.toString();
 				SootClass baseSootClass = Scene.v().getSootClassUnsafe(baseClassString);
