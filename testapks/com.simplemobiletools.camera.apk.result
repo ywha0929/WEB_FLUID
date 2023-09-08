@@ -1,10 +1,12 @@
-<com.andrognito.patternlockview.PatternLockView: void z(java.util.List)> to <android.widget.TextView: void setText(int)>
-<com.simplemobiletools.commons.views.MyTextView: void a(int,int,int)> to <android.widget.TextView: void setTextColor(int)>
 <com.andrognito.patternlockview.PatternLockView: void D()> to <android.widget.TextView: void setText(int)>
-<com.simplemobiletools.commons.views.PatternTab: void k(com.simplemobiletools.commons.views.PatternTab)> to <android.widget.TextView: void setText(int)>
-<com.andrognito.patternlockview.PatternLockView: void w(android.view.MotionEvent)> to <android.widget.TextView: void setText(int)>
-<com.simplemobiletools.commons.views.PatternTab: void d(com.simplemobiletools.commons.views.PatternTab)> to <android.widget.TextView: void setText(int)>
+<com.andrognito.patternlockview.PatternLockView: void z(java.util.List)> to <android.widget.TextView: void setText(int)>
 <com.simplemobiletools.commons.views.MyAppCompatCheckbox: void b(int,int,int)> to <android.widget.TextView: void setTextColor(int)>
+<com.andrognito.patternlockview.PatternLockView: void w(android.view.MotionEvent)> to <android.widget.TextView: void setText(int)>
+<com.simplemobiletools.commons.views.MyTextView: void a(int,int,int)> to <android.widget.TextView: void setTextColor(int)>
+<com.simplemobiletools.commons.views.PatternTab: void d(com.simplemobiletools.commons.views.PatternTab)> to <android.widget.TextView: void setText(int)>
+<com.simplemobiletools.commons.views.PatternTab: void k(com.simplemobiletools.commons.views.PatternTab)> to <android.widget.TextView: void setText(int)>
+<com.simplemobiletools.commons.views.PatternTab: void i(java.lang.String)> to <android.widget.TextView: void setText(int)>
+<com.simplemobiletools.commons.views.PatternTab: void g(com.simplemobiletools.commons.views.PatternTab,java.lang.String)> to <android.widget.TextView: void setText(int)>
 <com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller: void Q(int)> to <android.widget.TextView: void setTextColor(int)>
 <android.widget.TextView: void setTextColor(int)> to <android.widget.TextView: void setTextColor(int)>
 <android.widget.TextView: void setText(java.lang.CharSequence)> to <android.widget.TextView: void setText(java.lang.CharSequence)>

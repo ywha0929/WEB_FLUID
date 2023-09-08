@@ -37,7 +37,6 @@ class App extends Component {
         client.on('data', (data) => this.checkData(data));
         
     };
-
     // accumulatedata(data) {
     //     console.log(Date.now()," : ","this is accumulatedata");
     //     let tempArr = this.state.UIList;

@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnEditText;
     Button btnSwitch;
     Button btnButton;
+    ImageView imageView2;
     Boolean imageViewSet = new Boolean(false);
 
 
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         seekBar = findViewById(R.id.seekBar);
         radioButton1 = findViewById(R.id.radioButton1);
         radioButton2 = findViewById(R.id.radioButton2);
-
+        imageView2 = findViewById(R.id.imageView2);
         btnButton = findViewById(R.id.buttonButton);
         btnImageView = findViewById(R.id.buttonImageView);
         btnEditText = findViewById(R.id.buttonEditText);
@@ -71,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
         btnSeekBar = findViewById(R.id.buttonSeekBar);
         btnSwitch = findViewById(R.id.buttonSwitch);
         btnTextView = findViewById(R.id.buttonTextView);
-        imageView.setImageResource(R.drawable.earth);
+        imageView.setImageResource(R.drawable.two);
+        imageView2.setImageResource(R.drawable.earth);
         switchB = switchUI.isChecked();
 
         btnEditText.setOnClickListener(new View.OnClickListener() {
@@ -88,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
             public boolean onLongClick(View view) {
                 if(imageViewSet.equals(false))
                 {
-                    imageView.setImageResource(R.drawable.two);
+                    imageView.setImageResource(R.drawable.earth);
                     imageViewSet = true;
                 }
                 else
                 {
-                    imageView.setImageResource(R.drawable.earth);
+                    imageView.setImageResource(R.drawable.two);
                     imageViewSet = false;
                 }
                 return true;

@@ -109,7 +109,7 @@ class OtherLayout extends Component{
                             key={item.ID}
                             setSeekBar={item}
                             position={"coordinate"}
-                            onSlideListener={this.onSlideListener}
+                            onSlideListener={this.props.onSlideListener}
                             setLayoutTouchMode={this.props.setLayoutTouchMode}
                             onPressInListener={this.props.onPressInListener}
                             onPressOutListener={this.props.onPressOutListener}/>

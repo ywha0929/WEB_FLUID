@@ -132,7 +132,7 @@ public class RPCIntfInjector extends BodyTransformer {
 			System.out.println("Thread ID end : "+Thread.currentThread().getId());
 
 		}
-
+//		b.validate();
 //		System.out.println("just print\n");
 
 //		InjectOnActivity(b,s,map);
@@ -898,7 +898,7 @@ public class RPCIntfInjector extends BodyTransformer {
 						System.out.println(body.getMethod()+"      signature : "+signature);
 						if(signature.equals(token))
 						{
-							System.out.println(body.getMethod()+"     "+token + "\n"+ signature+"\ntrue");
+							System.out.println(body.getMethod()+"     "+token + "\n"+ signature+"\ncheck true");
 							hasUpdateCode = true;
 							System.out.println(body.getMethod().toString()+"'s hasUpdateCode changed");
 							indexSignature = k;

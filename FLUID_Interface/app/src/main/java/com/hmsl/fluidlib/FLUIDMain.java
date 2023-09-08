@@ -343,6 +343,8 @@ public class FLUIDMain {
             classType = "OtherView";
         }
 
+        //todo
+//        classType = Button.toString();
 
 //        if(view.getClass().toString().contains("android"))
 //        {
@@ -1092,16 +1094,20 @@ public class FLUIDMain {
             dtoByteArray = byteArrayOutputStream.toByteArray();
 
         } else if (widgetType.contains("Button")) {
-            Button btn = (Button) view;
+            View btn = (View) view;
             size = widgetType.getBytes(StandardCharsets.UTF_8).length;
             dataOutputStream.writeInt(size);
             dataOutputStream.writeUTF(widgetType);
             //dataOutputStream.writeInt(btn.getId());
-            size = btn.getText().toString().getBytes(StandardCharsets.UTF_8).length;
+//            size = btn.getText().toString().getBytes(StandardCharsets.UTF_8).length;
+            size = "".getBytes(StandardCharsets.UTF_8).length;
             dataOutputStream.writeInt(size);
-            dataOutputStream.writeUTF(btn.getText().toString());
+//            dataOutputStream.writeUTF(btn.getText().toString());
+            dataOutputStream.writeUTF("");
             dataOutputStream.writeInt( convertPixelsToDpInt(btn.getHeight(), instance.mContext));
             dataOutputStream.writeInt( convertPixelsToDpInt(btn.getWidth(), instance.mContext));
+
+            //todo
             Drawable back = btn.getBackground();
             Drawable fore = btn.getForeground();
             if(back != null || fore != null) //if there is drawable
@@ -1124,6 +1130,7 @@ public class FLUIDMain {
             {
                 dataOutputStream.writeInt(0);
             }
+//            dataOutputStream.writeInt(0);
 //            dataOutputStream.writeInt( btn.getHeight());
 //            dataOutputStream.writeInt( btn.getWidth());
             dataOutputStream.flush();
